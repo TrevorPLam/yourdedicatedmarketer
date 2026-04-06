@@ -1,0 +1,95 @@
+{
+  "name": "@agency/monitoring",
+  "version": "1.0.0",
+  "description": "Comprehensive monitoring and error tracking system for marketing agency applications",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.js",
+      "require": "./dist/react.js",
+      "default": "./dist/react.js"
+    },
+    "./astro": {
+      "types": "./dist/astro.d.ts",
+      "import": "./dist/astro.js",
+      "require": "./dist/astro.js",
+      "default": "./dist/astro.js"
+    },
+    "./nextjs": {
+      "types": "./dist/nextjs.d.ts",
+      "import": "./dist/nextjs.js",
+      "require": "./dist/nextjs.js",
+      "default": "./dist/nextjs.js"
+    },
+    "./styles": {
+      "import": "./dist/styles.css",
+      "require": "./dist/styles.css",
+      "default": "./dist/styles.css"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix"
+  },
+  "dependencies": {
+    "@agency/types": "workspace:*",
+    "@agency/design-system": "workspace:*",
+    "@sentry/nextjs": "^8.47.0",
+    "@sentry/react": "^8.47.0",
+    "@sentry/node": "^8.47.0",
+    "@sentry/core": "^8.47.0",
+    "clsx": "^2.1.0",
+    "web-vitals": "^4.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.12.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "eslint": "^9.23.0",
+    "prettier": "^3.5.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.9.0",
+    "vitest": "^3.0.0"
+  },
+  "peerDependencies": {
+    "react": "^19.2.0",
+    "next": "^16.0.0",
+    "astro": "^6.0.0"
+  },
+  "peerDependenciesMeta": {
+    "next": {
+      "optional": true
+    },
+    "astro": {
+      "optional": true
+    }
+  },
+  "keywords": [
+    "monitoring",
+    "error-tracking",
+    "performance",
+    "sentry",
+    "web-vitals",
+    "analytics",
+    "observability"
+  ],
+  "author": "Your Agency",
+  "license": "MIT"
+}

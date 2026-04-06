@@ -1,0 +1,76 @@
+import { render, screen } from '@testing-library/react'
+import { {{pascalCase name}} } from './{{pascalCase name}}'
+import { expect, describe, it } from 'vitest'
+
+describe('{{pascalCase name}} component', () => {
+  it('renders children correctly', () => {
+    render(
+      <{{pascalCase name}}>
+        <span>Test content</span>
+      </{{pascalCase name}}>
+    )
+    
+    expect(screen.getByText('Test content')).toBeInTheDocument()
+  })
+
+  it('applies default variant styles', () => {
+    render(<{{pascalCase name}}>Default</{{pascalCase name}}>)
+    
+    const element = screen.getByText('Default')
+    expect(element).toHaveClass('bg-primary')
+  })
+
+  it('applies secondary variant styles', () => {
+    render(<{{pascalCase name}} variant="secondary">Secondary</{{pascalCase name}}>)
+    
+    const element = screen.getByText('Secondary')
+    expect(element).toHaveClass('bg-secondary')
+  })
+
+  it('applies outline variant styles', () => {
+    render(<{{pascalCase name}} variant="outline">Outline</{{pascalCase name}}>)
+    
+    const element = screen.getByText('Outline')
+    expect(element).toHaveClass('border', 'border-input')
+  })
+
+  it('applies size styles correctly', () => {
+    render(<{{pascalCase name}} size="lg">Large</{{pascalCase name}}>)
+    
+    const element = screen.getByText('Large')
+    expect(element).toHaveClass('h-11', 'px-8', 'text-lg')
+  })
+
+  it('merges custom className with variant classes', () => {
+    render(<{{pascalCase name}} className="custom-class">Custom</{{pascalCase name}}>)
+    
+    const element = screen.getByText('Custom')
+    expect(element).toHaveClass('bg-primary', 'custom-class')
+  })
+
+  it('forwards ref correctly', () => {
+    const ref = { current: null }
+    render(<{{pascalCase name}} ref={ref}>Ref test</{{pascalCase name}}>)
+    
+    expect(ref.current).not.toBeNull()
+    expect(ref.current).toBeInstanceOf(HTMLElement)
+  })
+
+  it('handles disabled state', () => {
+    render(<{{pascalCase name}} disabled>Disabled</{{pascalCase name}}>)
+    
+    const element = screen.getByText('Disabled')
+    expect(element).toHaveClass('disabled:opacity-50', 'disabled:pointer-events-none')
+    expect(element).toBeDisabled()
+  })
+
+  it('applies focus styles when focused', async () => {
+    render(<{{pascalCase name}}>Focusable</{{pascalCase name}}>)
+    
+    const element = screen.getByText('Focusable')
+    element.focus()
+    
+    expect(element).toHaveFocus()
+    expect(element).toHaveClass('focus-visible:outline-none', 'focus-visible:ring-2')
+  })
+})

@@ -1,0 +1,113 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "allowJs": true,
+    "checkJs": false,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    
+    // Strict type checking (2026 enhanced)
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": false,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "allowUnusedLabels": false,
+    "allowUnreachableCode": false,
+    
+    // 2026 enhanced type safety
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "noStrictGenericChecks": false,
+    
+    // Module and emit settings (2026 optimized)
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "removeComments": false,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "verbatimModuleSyntax": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    
+    // Performance and optimization (2026)
+    "incremental": true,
+    "composite": true,
+    "assumeChangesOnlyAffectDirectDependencies": true,
+    "disableSolutionSearching": false,
+    
+    // Path mapping for workspace packages (enhanced)
+    "baseUrl": ".",
+    "paths": {
+      "@agency/*": ["packages/*/src"],
+      "@agency/ui-components": ["packages/ui-components/src"],
+      "@agency/design-system": ["packages/design-system/src"],
+      "@agency/types": ["packages/types/src"],
+      "@agency/platform/*": ["packages/platform/*/src"],
+      "@agency/shared/*": ["packages/shared/*/src"],
+      "@agency/database": ["packages/platform/database/src"],
+      "@agency/cms": ["packages/platform/cms/src"],
+      "@agency/deployment": ["packages/platform/deployment/src"],
+      "@agency/analytics": ["packages/analytics/src"],
+      "@agency/seo": ["packages/shared/seo/src"],
+      "@agency/monitoring": ["packages/shared/monitoring/src"],
+      "@agency/testing": ["packages/testing/src"]
+    }
+  },
+  
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.jsx",
+    "**/*.cjs",
+    "**/*.mjs",
+    "**/*.astro"
+  ],
+  
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    ".next",
+    ".turbo",
+    "coverage",
+    "storybook-static",
+    "**/*.d.ts",
+    "packages/*/dist",
+    "apps/*/dist",
+    "tools/*/dist",
+    "*/dist/**",
+    "**/*.stories.*"
+  ],
+  
+  "references": [
+    { "path": "./packages/types" },
+    { "path": "./packages/design-system" },
+    { "path": "./packages/ui-components" },
+    { "path": "./packages/analytics" },
+    { "path": "./packages/platform/auth" },
+    { "path": "./packages/platform/database" },
+    { "path": "./packages/platform/cms" },
+    { "path": "./packages/platform/deployment" },
+    { "path": "./packages/shared/seo" },
+    { "path": "./packages/shared/monitoring" },
+    { "path": "./packages/shared/utils" },
+    { "path": "./packages/testing" }
+  ]
+}

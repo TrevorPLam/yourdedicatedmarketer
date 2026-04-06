@@ -1,0 +1,213 @@
+# Marketing Agency Monorepo - CODEOWNERS File
+# ================================================
+# 
+# This file defines code ownership rules for the marketing agency monorepo.
+# It ensures that pull requests are automatically routed to the appropriate
+# teams or individuals for review based on the files that were changed.
+#
+# GitHub automatically uses this file to:
+# - Request reviews from the appropriate code owners
+# - Mark PRs as approved when code owners review them
+# - Enforce code review requirements through branch protection rules
+#
+# Ownership Rules:
+# - @agency/core: Core platform team (database, auth, infrastructure)
+# - @agency/frontend: Frontend development team (UI components, design system)
+# - @agency/backend: Backend development team (APIs, services, database)
+# - @agency/devops: DevOps and platform engineering team
+# - @agency/security: Security and compliance team
+# - @trevor: Agency owner (final approval for critical changes)
+
+# ================================================
+# ROOT CONFIGURATION AND GOVERNANCE
+# ================================================
+
+# Root configuration files - Core platform team ownership
+/README.md @agency/core @trevor
+/ARCHITECTURE.md @agency/core @trevor
+/RESEARCH.md @agency/core @trevor
+/PROMPT.md @trevor
+/TODO.md @agency/core @trevor
+/.env.example @agency/core @agency/security
+/package.json @agency/core
+/pnpm-workspace.yaml @agency/core
+/turbo.json @agency/core @agency/devops
+/tsconfig.json @agency/core
+/eslint.config.js @agency/core
+/.prettierrc @agency/core
+/c8.config.js @agency/core
+/playwright.config.ts @agency/core @agency/frontend
+/vitest.config.ts @agency/core
+
+# Git and CI/CD configuration - DevOps team
+/.gitignore @agency/devops
+/.github/ @agency/devops @agency/security
+/.husky/ @agency/devops
+/.devcontainer/ @agency/devops
+/Dockerfile.dev @agency/devops
+/docker-compose.dev.yml @agency/devops
+
+# ================================================
+# APPLICATIONS LAYER
+# ================================================
+
+# Agency website - Frontend team
+/apps/agency-website/ @agency/frontend @agency/core
+
+# Client sites - Both frontend and core teams
+/apps/client-sites/ @agency/frontend @agency/core
+
+# Internal tools - Backend team with frontend oversight
+/apps/internal-tools/ @agency/backend @agency/frontend
+
+# ================================================
+# PACKAGES LAYER
+# ================================================
+
+# Design system - Frontend team ownership
+/packages/design-system/ @agency/frontend
+
+# UI components - Frontend team
+/packages/ui-components/ @agency/frontend
+
+# Platform packages - Core platform team
+/packages/platform/ @agency/core @agency/backend
+
+# Shared utilities - Core team with team-specific oversight
+/packages/shared/ @agency/core
+/packages/shared/analytics/ @agency/core @agency/backend
+/packages/shared/seo/ @agency/frontend @agency/core
+/packages/shared/monitoring/ @agency/core @agency/devops
+
+# Types package - Core team
+/packages/types/ @agency/core
+
+# Testing package - Core team with all teams as reviewers
+/packages/testing/ @agency/core @agency/frontend @agency/backend @agency/devops
+
+# ================================================
+# TOOLS AND AUTOMATION
+# ================================================
+
+# Generators - Core platform team
+/tools/generators/ @agency/core @agency/devops
+
+# Governance tools - Core team with security oversight
+/tools/governance/ @agency/core @agency/security
+
+# Build scripts - DevOps team
+/tools/build-scripts/ @agency/devops @agency/core
+
+# Deployment tools - DevOps team
+/tools/deployment/ @agency/devops @agency/security
+
+# ================================================
+# DOCUMENTATION
+# ================================================
+
+# Documentation - Core team with contributions from all teams
+/docs/ @agency/core @agency/frontend @agency/backend @agency/devops
+
+# ================================================
+# END-TO-END TESTS
+# ================================================
+
+# E2E tests - All teams with core team coordination
+/e2e/ @agency/core @agency/frontend @agency/backend
+
+# ================================================
+# SECURITY AND COMPLIANCE
+# ================================================
+
+# Security-related files - Security team with core oversight
+# This includes any files that might contain secrets, keys, or security configs
+**/*.pem @agency/security @agency/core
+**/*.key @agency/security @agency/core
+**/*.p12 @agency/security @agency/core
+**/secrets/ @agency/security @trevor
+**/.aws/ @agency/security @agency/devops
+
+# ================================================
+# FILE TYPE SPECIFIC OWNERSHIP
+# ================================================
+
+# Configuration files - Core team
+*.json @agency/core
+*.yaml @agency/core @agency/devops
+*.yml @agency/core @agency.devops
+*.toml @agency/core
+*.lock @agency/core
+
+# Documentation files - Core team with team contributions
+*.md @agency/core
+
+# TypeScript/JavaScript files - Team-specific based on location
+*.ts @agency/core
+*.tsx @agency/frontend
+*.js @agency/core
+*.jsx @agency/frontend
+
+# Style files - Frontend team
+*.css @agency/frontend
+*.scss @agency/frontend
+*.module.css @agency/frontend
+
+# Astro files - Frontend team
+*.astro @agency/frontend
+
+# Database files - Backend team
+*.sql @agency/backend
+**/migrations/ @agency/backend @agency/core
+**/seeds/ @agency/backend
+
+# Docker files - DevOps team
+Dockerfile* @agency/devops
+**/Dockerfile* @agency.devops
+
+# ================================================
+# DEFAULT OWNERSHIP
+# ================================================
+
+# Default fallback - Core team reviews anything not explicitly covered
+* @agency/core
+
+# Emergency fallback - Agency owner can review anything
+# This should only be used in emergency situations
+** @trevor
+
+# ================================================
+# REVIEW REQUIREMENTS
+# ================================================
+
+# Critical files require multiple approvals
+# These files affect the entire monorepo structure
+/turbo.json @agency/core @agency/devops @trevor
+/pnpm-workspace.yaml @agency/core @agency.devops @trevor
+/package.json @agency/core @agency/devops @trevor
+
+# Security-critical files require security team review
+.github/workflows/security.yml @agency/security @agency/core @agency.devops
+.github/workflows/deploy.yml @agency/security @agency/core @agency.devops
+
+# ================================================
+# NOTES AND MAINTENANCE
+# ================================================
+
+# To update this file:
+# 1. Consider the impact of changes on team workflows
+# 2. Test with a sample PR to ensure proper routing
+# 3. Communicate changes to all affected teams
+# 4. Update team documentation and onboarding materials
+#
+# Teams are defined as:
+# - @agency/core: Core platform team members
+# - @agency/frontend: Frontend development team members  
+# - @agency/backend: Backend development team members
+# - @agency/devops: DevOps and platform engineering team members
+# - @agency/security: Security and compliance team members
+# - @trevor: Agency owner and final decision maker
+#
+# For questions about this file, please contact:
+# - @agency/core for general ownership questions
+# - @agency/devops for CI/CD and infrastructure ownership
+# - @trevor for final approval on critical changes

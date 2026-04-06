@@ -1,0 +1,69 @@
+---
+import { SITE_CONFIG, CLIENT_CONFIG, SEO_CONFIG } from '../site.config.js';
+import { SEOHead } from '@agency/seo/astro';
+import '../styles/global.css';
+
+export interface Props {
+	title: string;
+	description?: string;
+	image?: string;
+	noIndex?: boolean;
+	locale?: string;
+}
+
+const { title, description, image, noIndex, locale = 'en' } = Astro.props;
+
+const pageTitle = title === SITE_CONFIG.title ? title : `${title} | ${SITE_CONFIG.title}`;
+const pageDescription = description || SITE_CONFIG.description;
+const pageImage = image || SEO_CONFIG.ogImage;
+---
+
+<!DOCTYPE html>
+<html lang={locale} class="scroll-smooth">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Inter+Display:wght@700;800;900&display=swap" rel="stylesheet" />
+		
+		<SEOHead 
+			title={pageTitle}
+			description={pageDescription}
+			image={pageImage}
+			url={new URL(Astro.url.pathname, SITE_CONFIG.site)}
+			noIndex={noIndex}
+			locale={locale}
+			siteName={CLIENT_CONFIG.name}
+		/>
+	</head>
+	<body class="bg-background text-foreground antialiased">
+		<div id="app">
+			<slot />
+		</div>
+		
+		<!-- Client Analytics -->
+		<script>
+			import('@agency/analytics/consent').then(({ ConsentManager }) => {
+				const consent = new ConsentManager({
+					locale: document.documentElement.lang,
+					region: 'US', // This would be dynamically detected
+					providers: ['google-analytics', 'plausible'],
+				});
+				consent.init();
+			});
+		</script>
+		
+		<!-- Performance Monitoring -->
+		<script>
+			import('@agency/monitoring/astro').then(({ PerformanceMonitor }) => {
+				const monitor = new PerformanceMonitor({
+					sampleRate: 0.1, // 10% sampling
+					endpoint: '/api/web-vitals',
+				});
+				monitor.init();
+			});
+		</script>
+	</body>
+</html>

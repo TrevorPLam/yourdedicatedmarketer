@@ -1,0 +1,88 @@
+{
+  "name": "@agency/deployment",
+  "version": "1.0.0",
+  "description": "Platform deployment package supporting Vercel, Netlify, Cloudflare Pages with zero-downtime deployments",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./adapters": {
+      "types": "./dist/adapters/index.d.ts",
+      "import": "./dist/adapters/index.js",
+      "require": "./dist/adapters/index.js",
+      "default": "./dist/adapters/index.js"
+    },
+    "./monitoring": {
+      "types": "./dist/monitoring/index.d.ts",
+      "import": "./dist/monitoring/index.js",
+      "require": "./dist/monitoring/index.js",
+      "default": "./dist/monitoring/index.js"
+    },
+    "./utils": {
+      "types": "./dist/utils/index.d.ts",
+      "import": "./dist/utils/index.js",
+      "require": "./dist/utils/index.js",
+      "default": "./dist/utils/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "lint": "eslint . --ext .ts,.tsx",
+    "type-check": "tsc --noEmit",
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\""
+  },
+  "dependencies": {
+    "@agency/types": "workspace:*",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.12.0",
+    "@types/node-fetch": "^2.6.11",
+    "eslint": "^9.23.0",
+    "prettier": "^3.5.0",
+    "tsup": "^8.3.5",
+    "typescript": "^5.9.0",
+    "vitest": "^3.0.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "keywords": [
+    "deployment",
+    "vercel",
+    "netlify",
+    "cloudflare",
+    "zero-downtime",
+    "ci-cd",
+    "automation",
+    "platform"
+  ],
+  "author": "Agency Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/marketing-agency-monorepo.git",
+    "directory": "packages/platform/deployment"
+  },
+  "bugs": {
+    "url": "https://github.com/your-org/marketing-agency-monorepo/issues"
+  },
+  "homepage": "https://github.com/your-org/marketing-agency-monorepo/tree/main/packages/platform/deployment",
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

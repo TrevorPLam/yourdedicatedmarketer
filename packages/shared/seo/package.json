@@ -1,0 +1,68 @@
+{
+  "name": "@agency/seo",
+  "version": "1.0.0",
+  "description": "Shared SEO package for marketing agency applications",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./astro": {
+      "types": "./dist/astro.d.ts",
+      "import": "./dist/astro.js",
+      "require": "./dist/astro.js",
+      "default": "./dist/astro.js"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.js",
+      "require": "./dist/react.js",
+      "default": "./dist/react.js"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts",
+      "import": "./dist/types.js",
+      "require": "./dist/types.js",
+      "default": "./dist/types.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@agency/types": "workspace:*",
+    "@agency/design-system": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.12.0",
+    "typescript": "^5.9.0",
+    "vitest": "^3.0.0",
+    "tsup": "^8.0.0"
+  },
+  "peerDependencies": {
+    "react": "^19.2.0",
+    "astro": "^6.0.0"
+  },
+  "keywords": [
+    "seo",
+    "meta-tags",
+    "structured-data",
+    "sitemap",
+    "core-web-vitals",
+    "marketing-agency"
+  ],
+  "author": "Agency Team",
+  "license": "MIT"
+}

@@ -1,0 +1,147 @@
+# ===========================================
+# CLIENT CONFIGURATION - {{pascalCase clientName}}
+# ===========================================
+
+# Core Infrastructure
+NODE_ENV=development
+NEXT_PUBLIC_SITE_URL={{#if domain}}https://{{domain}}{{else}}http://localhost:3000{{/if}}
+
+# ===========================================
+# DATABASE CONFIGURATION
+# ===========================================
+DATABASE_PROVIDER={{database}}
+
+{{#eq database 'supabase'}}
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+SUPABASE_ANON_KEY=your_supabase_anon_key
+{{/eq}}
+
+{{#eq database 'neon'}}
+# Neon Configuration
+DATABASE_URL=your_neon_database_url
+NEON_API_KEY=your_neon_api_key
+{{/eq}}
+
+{{#eq database 'postgres'}}
+# PostgreSQL Configuration
+DATABASE_URL=postgresql://user:password@localhost:5432/{{kebabCase clientName}}
+{{/eq}}
+
+# ===========================================
+# AUTHENTICATION CONFIGURATION
+# ===========================================
+{{#includes features 'auth'}}
+NEXTAUTH_SECRET=your_nextauth_secret_key
+NEXTAUTH_URL=http://localhost:3000
+{{#eq database 'supabase'}}
+SUPABASE_AUTH_URL=https://your-project-ref.supabase.co/auth/v1
+{{/eq}}
+{{/includes}}
+
+# ===========================================
+# ANALYTICS CONFIGURATION
+# ===========================================
+{{#includes features 'analytics'}}
+# Google Analytics
+NEXT_PUBLIC_GA_ID=GA_MEASUREMENT_ID
+NEXT_PUBLIC_GTM_ID=GTM_CONTAINER_ID
+
+# Agency Analytics
+AGENCY_ANALYTICS_API_KEY=your_agency_analytics_key
+AGENCY_ANALYTICS_ENDPOINT=https://analytics.your-agency.com/api/events
+{{/includes}}
+
+# ===========================================
+# CMS CONFIGURATION
+# ===========================================
+{{#includes features 'cms'}}
+# Storyblok CMS
+NEXT_PUBLIC_STORYBLOK_TOKEN=your_storyblok_access_token
+STORYBLOK_PREVIEW_TOKEN=your_storyblok_preview_token
+{{/includes}}
+
+# ===========================================
+# E-COMMERCE CONFIGURATION
+# ===========================================
+{{#includes features 'ecommerce'}}
+# Stripe Payment Processing
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_your_stripe_publishable_key
+STRIPE_SECRET_KEY=sk_test_your_stripe_secret_key
+STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret
+{{/includes}}
+
+# ===========================================
+# EMAIL CONFIGURATION
+# ===========================================
+{{#includes features 'contact'}}
+# Email Service (Resend, SendGrid, etc.)
+EMAIL_API_KEY=your_email_service_api_key
+EMAIL_FROM=noreply@{{#if domain}}{{domain}}{{else}}example.com{{/if}}
+EMAIL_FROM_NAME="{{pascalCase clientName}}"
+{{/includes}}
+
+# ===========================================
+# FEATURE FLAGS
+# ===========================================
+ENABLE_ANALYTICS={{#includes features 'analytics'}}true{{else}}false{{/includes}}
+ENABLE_BLOG={{#includes features 'blog'}}true{{else}}false{{/includes}}
+ENABLE_CONTACT={{#includes features 'contact'}}true{{else}}false{{/includes}}
+ENABLE_PORTFOLIO={{#includes features 'portfolio'}}true{{else}}false{{/includes}}
+ENABLE_ECOMMERCE={{#includes features 'ecommerce'}}true{{else}}false{{/includes}}
+ENABLE_AUTH={{#includes features 'auth'}}true{{else}}false{{/includes}}
+ENABLE_CMS={{#includes features 'cms'}}true{{else}}false{{/includes}}
+ENABLE_SEO={{#includes features 'seo'}}true{{else}}false{{/includes}}
+
+# ===========================================
+# DEVELOPMENT CONFIGURATION
+# ===========================================
+ENABLE_DEBUG_MODE=false
+ENABLE_ERROR_REPORTING=true
+ENABLE_PERFORMANCE_MONITORING={{#includes features 'analytics'}}true{{else}}false{{/includes}}
+ENABLE_STORYBOOK=false
+
+# ===========================================
+# SECURITY CONFIGURATION
+# ===========================================
+CORS_ORIGINS=http://localhost:3000{{#if domain}},https://{{domain}}{{/if}}
+API_RATE_LIMIT=100
+JWT_SECRET=your_jwt_secret_key_here
+ENCRYPTION_KEY=your_32_character_encryption_key
+
+# ===========================================
+# THEME CONFIGURATION
+# ===========================================
+NEXT_PUBLIC_THEME={{theme}}
+NEXT_PUBLIC_PRIMARY_COLOR={{#eq theme 'alpha'}}#2563eb{{/eq}}{{#eq theme 'beta'}}#16a34a{{/eq}}{{#eq theme 'gamma'}}#9333ea{{/eq}}{{#eq theme 'default'}}#3b82f6{{/eq}}{{#eq theme 'custom'}}#000000{{/eq}}
+NEXT_PUBLIC_SECONDARY_COLOR=#64748b
+NEXT_PUBLIC_ACCENT_COLOR={{#eq theme 'alpha'}}#0ea5e9{{/eq}}{{#eq theme 'beta'}}#84cc16{{/eq}}{{#eq theme 'gamma'}}#a855f7{{/eq}}{{#eq theme 'default'}}#f59e0b{{/eq}}{{#eq theme 'custom'}}#ef4444{{/eq}}
+
+# ===========================================
+# DEPLOYMENT CONFIGURATION
+# ===========================================
+# Vercel
+VERCEL_ORG_ID=your_vercel_org_id
+VERCEL_PROJECT_ID=your_vercel_project_id
+
+# Cloudflare Pages (for Astro)
+CLOUDFLARE_API_TOKEN=your_cloudflare_api_token
+CLOUDFLARE_ACCOUNT_ID=your_cloudflare_account_id
+
+# Custom Domain
+{{#if domain}}
+CUSTOM_DOMAIN={{domain}}
+SSL_ENABLED=true
+{{/if}}
+
+# ===========================================
+# MONITORING CONFIGURATION
+# ===========================================
+# Sentry (Optional)
+SENTRY_DSN=your_sentry_dsn
+SENTRY_AUTH_TOKEN=your_sentry_auth_token
+
+# Custom Monitoring
+MONITORING_ENDPOINT=https://monitoring.your-agency.com/api/logs
+MONITORING_API_KEY=your_monitoring_api_key

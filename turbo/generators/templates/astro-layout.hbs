@@ -1,0 +1,99 @@
+---
+import { clientConfig } from '../client.config'
+import Header from '../components/layout/Header.astro'
+import Footer from '../components/layout/Footer.astro'
+import '../styles/global.css'
+interface Props {
+  title: string
+  description?: string
+  image?: string
+  type?: string
+}
+
+const { title, description, image, type = 'website' } = Astro.props
+
+const siteConfig = clientConfig.site
+const themeConfig = clientConfig.theme
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href={siteConfig.icon} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <title>{title}</title>
+    <meta name="description" content={description || siteConfig.description} />
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description || siteConfig.description} />
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:image" content={image || siteConfig.image} />
+    <meta property="og:site_name" content={siteConfig.title} />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description || siteConfig.description} />
+    <meta name="twitter:image" content={image || siteConfig.image} />
+    
+    {{#includes features 'seo'}}
+    <!-- SEO Meta -->
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow" />
+    <link rel="canonical" href={Astro.url} />
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": siteConfig.title,
+      "description": siteConfig.description,
+      "url": siteConfig.url,
+      "image": siteConfig.image,
+      "author": {
+        "@type": "Organization",
+        "name": siteConfig.author
+      }
+    }
+    </script>
+    {{/includes}}
+    
+    <!-- Theme Configuration -->
+    <style>
+      :root {
+        --color-primary: {themeConfig.primaryColor};
+        --color-secondary: {themeConfig.secondaryColor};
+        --color-accent: {themeConfig.accentColor};
+        --font-family: {themeConfig.fontFamily};
+        --border-radius: {themeConfig.borderRadius};
+      }
+    </style>
+  </head>
+  <body>
+    <div class="min-h-screen bg-background text-foreground">
+      <Header />
+      <main class="flex-1">
+        <slot />
+      </main>
+      <Footer />
+    </div>
+    
+    {{#includes features 'analytics'}}
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'GA_MEASUREMENT_ID');
+    </script>
+    {{/includes}}
+  </body>
+</html>

@@ -1,0 +1,41 @@
+{
+  "name": "@agency/governance-tools",
+  "version": "1.0.0",
+  "description": "Governance and policy enforcement tools for the marketing agency monorepo",
+  "private": true,
+  "type": "module",
+  "main": "./policy-checker.js",
+  "scripts": {
+    "check": "node policy-checker.js",
+    "check:dependencies": "node policy-checker.js --check-dependencies",
+    "check:ownership": "node policy-checker.js --check-ownership",
+    "check:security": "node policy-checker.js --check-security",
+    "check:all": "node policy-checker.js --verbose",
+    "fix": "node policy-checker.js --fix",
+    "validate": "node policy-checker.js && node boundary-enforcer.js"
+  },
+  "keywords": [
+    "governance",
+    "policy",
+    "monorepo",
+    "compliance",
+    "security",
+    "architecture"
+  ],
+  "dependencies": {
+    "glob": "^10.3.10"
+  },
+  "devDependencies": {
+    "@types/node": "^22.12.0"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/marketing-agency-monorepo.git",
+    "directory": "tools/governance"
+  },
+  "author": "Agency Platform Team",
+  "license": "MIT"
+}

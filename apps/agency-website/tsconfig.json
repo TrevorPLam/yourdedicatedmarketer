@@ -1,0 +1,39 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": false,
+    "paths": {
+      "@/*": ["./src/*"],
+      "@/components/*": ["./src/components/*"],
+      "@/layouts/*": ["./src/layouts/*"],
+      "@/pages/*": ["./src/pages/*"],
+      "@agency/ui-components": ["../../packages/ui-components/src"],
+      "@agency/design-system": ["../../packages/design-system/src"],
+      "@agency/analytics": ["../../packages/analytics/src"]
+    }
+  },
+  "include": [
+    "src/**/*",
+    "src/**/*.astro"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ],
+  "references": [
+    {
+      "path": "../../packages/ui-components"
+    },
+    {
+      "path": "../../packages/design-system"
+    },
+    {
+      "path": "../../packages/analytics"
+    }
+  ]
+}

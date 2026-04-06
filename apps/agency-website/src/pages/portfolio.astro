@@ -1,0 +1,118 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import CTA from '../components/sections/CTA.astro';
+import { getCollection } from 'astro:content';
+
+const allProjects = await getCollection('portfolio');
+allProjects.sort((a, b) => b.data.completionDate.getTime() - a.data.completionDate.getTime());
+---
+
+<Base title="Portfolio - Your Dedicated Marketer" description="Explore our portfolio of digital marketing projects, web designs, and campaigns that have driven real results for our clients.">
+	<div class="min-h-screen flex flex-col">
+		<Header />
+
+		<main id="main-content" class="flex-1">
+			<!-- Page Header -->
+			<section class="bg-gradient-to-br from-blue-50 to-indigo-100 py-16">
+				<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+					<h1 class="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
+						Our Portfolio
+					</h1>
+					<p class="text-xl text-gray-600 max-w-3xl mx-auto">
+						Real results for real businesses. Explore the projects we've delivered for clients across industries.
+					</p>
+				</div>
+			</section>
+
+			<!-- Projects Grid -->
+			<section class="py-20 bg-white">
+				<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+					{allProjects.length > 0 ? (
+						<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+							{allProjects.map((project) => (
+								<div class="card hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+									<div class="bg-gray-100 rounded-t-lg overflow-hidden">
+										<img
+											src={project.data.imageUrl || '/images/placeholder-project.jpg'}
+											alt={project.data.imageAlt || `${project.data.title} project`}
+											class="w-full h-48 object-cover"
+											loading="lazy"
+										/>
+									</div>
+
+									<div class="p-6">
+										<div class="flex items-center justify-between mb-2">
+											<span class="text-sm text-blue-600 font-medium">
+												{project.data.client}
+											</span>
+											<span class="text-sm text-gray-500">
+												{project.data.industry}
+											</span>
+										</div>
+
+										<h2 class="text-xl font-semibold text-gray-900 mb-3">
+											{project.data.title}
+										</h2>
+
+										<p class="text-gray-600 mb-4 line-clamp-3">
+											{project.data.description}
+										</p>
+
+										<div class="flex flex-wrap gap-2 mb-4">
+											{project.data.technologies.slice(0, 3).map((tech) => (
+												<span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
+													{tech}
+												</span>
+											))}
+											{project.data.technologies.length > 3 && (
+												<span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
+													+{project.data.technologies.length - 3} more
+												</span>
+											)}
+										</div>
+
+										<div class="flex space-x-3">
+											{project.data.liveUrl && (
+												<a
+													href={project.data.liveUrl}
+													class="text-blue-600 hover:text-blue-700 text-sm font-medium"
+													target="_blank"
+													rel="noopener noreferrer"
+												>
+													View Live →
+												</a>
+											)}
+											{project.data.githubUrl && (
+												<a
+													href={project.data.githubUrl}
+													class="text-gray-600 hover:text-gray-700 text-sm font-medium"
+													target="_blank"
+													rel="noopener noreferrer"
+												>
+													GitHub →
+												</a>
+											)}
+										</div>
+									</div>
+								</div>
+							))}
+						</div>
+					) : (
+						<div class="text-center py-20">
+							<p class="text-xl text-gray-500 mb-6">Case studies are being prepared. Check back soon.</p>
+							<a href="/contact" class="btn btn-primary px-8 py-3 text-lg font-semibold">
+								Discuss Your Project
+							</a>
+						</div>
+					)}
+				</div>
+			</section>
+
+			<CTA />
+		</main>
+
+		<Footer />
+	</div>
+</Base>

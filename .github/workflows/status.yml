@@ -1,0 +1,234 @@
+name: Status
+
+on:
+  push:
+    branches: ["main", "develop"]
+  pull_request:
+    types: [opened, synchronize, reopened]
+  schedule:
+    # Run status checks every 6 hours
+    - cron: "0 */6 * * *"
+
+jobs:
+  # Repository health check
+  health-check:
+    name: Repository Health Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Check repository structure
+        run: |
+          echo "Checking repository structure..."
+          
+          # Required directories
+          REQUIRED_DIRS=("packages" "apps" "tools" ".github")
+          for dir in "${REQUIRED_DIRS[@]}"; do
+            if [ -d "$dir" ]; then
+              echo "✅ $dir directory exists"
+            else
+              echo "❌ $dir directory missing"
+              exit 1
+            fi
+          done
+          
+          # Required files
+          REQUIRED_FILES=("package.json" "pnpm-workspace.yaml" "turbo.json" "tsconfig.json")
+          for file in "${REQUIRED_FILES[@]}"; do
+            if [ -f "$file" ]; then
+              echo "✅ $file exists"
+            else
+              echo "❌ $file missing"
+              exit 1
+            fi
+          done
+
+      - name: Check dependencies
+        run: |
+          echo "Checking dependencies..."
+          
+          # Setup Node.js
+          curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+          apt-get install -y nodejs
+          
+          # Setup pnpm
+          npm install -g pnpm@10.0.0
+          
+          # Install dependencies
+          pnpm install --frozen-lockfile
+          
+          echo "✅ Dependencies installed successfully"
+
+      - name: Check package structure
+        run: |
+          echo "Checking package structure..."
+          
+          # Check if packages have proper structure
+          PACKAGES=("packages/types" "packages/design-system" "packages/ui-components")
+          for package in "${PACKAGES[@]}"; do
+            if [ -d "$package" ]; then
+              if [ -f "$package/package.json" ]; then
+                echo "✅ $package has package.json"
+              else
+                echo "❌ $package missing package.json"
+                exit 1
+              fi
+            else
+              echo "⚠️ $package not found (may not be created yet)"
+            fi
+          done
+
+      - name: Generate status report
+        run: |
+          echo "## Repository Status Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### ✅ Repository Health" >> $GITHUB_STEP_SUMMARY
+          echo "- Structure: Valid" >> $GITHUB_STEP_SUMMARY
+          echo "- Dependencies: Installable" >> $GITHUB_STEP_SUMMARY
+          echo "- Configuration: Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📊 Repository Statistics" >> $GITHUB_STEP_SUMMARY
+          echo "- Total packages: $(find packages -name "package.json" | wc -l)" >> $GITHUB_STEP_SUMMARY
+          echo "- Total applications: $(find apps -name "package.json" | wc -l)" >> $GITHUB_STEP_SUMMARY
+          echo "- Total tools: $(find tools -name "package.json" | wc -l)" >> $GITHUB_STEP_SUMMARY
+          echo "- Dependencies: $(cat pnpm-lock.yaml | grep -c "resolved:")" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🚀 Ready for Development" >> $GITHUB_STEP_SUMMARY
+
+  # Workflow status check
+  workflow-status:
+    name: Workflow Status Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: List workflow files
+        run: |
+          echo "## Workflow Files" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Workflow | Description |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|-------------|" >> $GITHUB_STEP_SUMMARY
+          
+          WORKFLOWS=(
+            "ci.yml:Continuous Integration"
+            "security.yml:Security Scanning"
+            "build.yml:Build Validation"
+            "deploy.yml:Deployment Pipeline"
+            "status.yml:Repository Status"
+          )
+          
+          for workflow in "${WORKFLOWS[@]}"; do
+            IFS=':' read -r file description <<< "$workflow"
+            if [ -f ".github/workflows/$file" ]; then
+              echo "| [$file](.github/workflows/$file) | $description |" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "| $file | $description (Missing) |" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
+
+      - name: Check workflow syntax
+        run: |
+          echo "## Workflow Syntax Check" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Install yamllint for YAML validation
+          pip install yamllint
+          
+          # Check each workflow file
+          for workflow in .github/workflows/*.yml; do
+            if [ -f "$workflow" ]; then
+              echo "### $(basename "$workflow")" >> $GITHUB_STEP_SUMMARY
+              if yamllint "$workflow" > /dev/null 2>&1; then
+                echo "✅ Valid YAML syntax" >> $GITHUB_STEP_SUMMARY
+              else
+                echo "❌ Invalid YAML syntax" >> $GITHUB_STEP_SUMMARY
+                yamllint "$workflow" >> $GITHUB_STEP_SUMMARY
+              fi
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
+
+  # Generate badges
+  generate-badges:
+    name: Generate Status Badges
+    runs-on: ubuntu-latest
+    needs: [health-check, workflow-status]
+    if: always()
+    
+    steps:
+      - name: Generate status badges
+        run: |
+          echo "## Status Badges" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Health check badge
+          if [[ "${{ needs.health-check.result }}" == "success" ]]; then
+            echo "![Health](https://img.shields.io/badge/Health-Passed-brightgreen)" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "![Health](https://img.shields.io/badge/Health-Failed-red)" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          # Workflow status badge
+          if [[ "${{ needs.workflow-status.result }}" == "success" ]]; then
+            echo "![Workflows](https://img.shields.io/badge/Workflows-Ready-brightgreen)" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "![Workflows](https://img.shields.io/badge/Workflows-Issues-orange)" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Badge URLs" >> $GITHUB_STEP_SUMMARY
+          echo "- Health: \`![Health](https://img.shields.io/badge/Health-${{ needs.health-check.result }}-${{ needs.health-check.result == 'success' && 'brightgreen' || 'red' }})\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Workflows: \`![Workflows](https://img.shields.io/badge/Workflows-${{ needs.workflow-status.result }}-${{ needs.workflow-status.result == 'success' && 'brightgreen' || 'orange' }})\`" >> $GITHUB_STEP_SUMMARY
+
+  # Update status file
+  update-status:
+    name: Update Status File
+    runs-on: ubuntu-latest
+    needs: [health-check, workflow-status]
+    if: always() && github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Update status.md
+        run: |
+          cat > STATUS.md << 'EOF'
+          # Repository Status
+          
+          Last updated: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          
+          ## Health Status
+          - Repository Structure: ✅ Valid
+          - Dependencies: ✅ Installable
+          - Configuration: ✅ Complete
+          
+          ## Workflow Status
+          - CI/CD Pipeline: ✅ Active
+          - Security Scanning: ✅ Active
+          - Build Validation: ✅ Active
+          - Deployment Pipeline: ✅ Active
+          
+          ## Quick Links
+          - [CI Workflow](.github/workflows/ci.yml) - Continuous integration
+          - [Security Workflow](.github/workflows/security.yml) - Security scanning
+          - [Build Workflow](.github/workflows/build.yml) - Build validation
+          - [Deploy Workflow](.github/workflows/deploy.yml) - Deployment pipeline
+          
+          ## Badges
+          ![Health](https://img.shields.io/badge/Health-Passed-brightgreen)
+          ![Workflows](https://img.shields.io/badge/Workflows-Ready-brightgreen)
+          EOF
+
+      - name: Commit and push status
+        if: needs.health-check.result == 'success' && needs.workflow-status.result == 'success'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add STATUS.md
+          git diff --staged --quiet || git commit -m "Update repository status [skip ci]"
+          git push

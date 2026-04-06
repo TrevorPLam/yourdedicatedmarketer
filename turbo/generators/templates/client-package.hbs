@@ -1,0 +1,85 @@
+{
+  "name": "@agency/{{kebabCase clientName}}",
+  "version": "1.0.0",
+  "description": "{{pascalCase clientName}} client site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "{{#eq framework 'astro'}}astro dev{{/eq}}{{#eq framework 'nextjs'}}next dev{{/eq}}{{#eq framework 'hybrid'}}concurrently \"astro dev\" \"cd apps/dashboard && next dev\"{{/eq}}",
+    "build": "{{#eq framework 'astro'}}astro build{{/eq}}{{#eq framework 'nextjs'}}next build{{/eq}}{{#eq framework 'hybrid'}}turbo run build --filter={{kebabCase clientName}}*{{/eq}}",
+    "preview": "{{#eq framework 'astro'}}astro preview{{/eq}}{{#eq framework 'nextjs'}}next start{{/eq}}{{#eq framework 'hybrid'}}astro preview{{/eq}}",
+    "astro": "astro",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx{{#eq framework 'astro'}},.astro{{/eq}}",
+    "type-check": "tsc --noEmit",
+    "test": "vitest",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "@agency/ui-components": "workspace:*",
+    "@agency/design-system": "workspace:*",
+    "@agency/analytics": "workspace:*",
+    {{#eq framework 'astro'}}
+    "@astrojs/react": "^4.0.0",
+    "@astrojs/tailwind": "^6.0.0",
+    "@tailwindcss/vite": "^4.0.0",
+    {{/eq}}
+    {{#eq framework 'nextjs'}}
+    "next": "^16.0.0",
+    "@next/font": "^15.0.0",
+    {{/eq}}
+    {{#eq framework 'hybrid'}}
+    "@astrojs/react": "^4.0.0",
+    "@astrojs/tailwind": "^6.0.0",
+    "@tailwindcss/vite": "^4.0.0",
+    "next": "^16.0.0",
+    "@next/font": "^15.0.0",
+    {{/eq}}
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    {{#eq database 'supabase'}}
+    "@supabase/supabase-js": "^2.49.0",
+    "@supabase/auth-helpers-react": "^0.5.0",
+    {{/eq}}
+    {{#eq database 'neon'}}
+    "@neondatabase/serverless": "^0.10.0",
+    {{/eq}}
+    {{#eq database 'postgres'}}
+    "postgres": "^15.0.0",
+    {{/eq}}
+    {{#includes features 'auth'}}
+    "@auth/react": "^0.6.0",
+    {{/includes}}
+    {{#includes features 'cms'}}
+    "@storyblok/react": "^7.0.0",
+    {{/includes}}
+    "clsx": "^2.0.0",
+    "class-variance-authority": "^0.7.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "@types/node": "^22.12.0",
+    "typescript": "^5.9.0",
+    "eslint": "^9.23.0",
+    "prettier": "^3.5.0",
+    "vitest": "^3.0.0",
+    "@testing-library/react": "^16.3.0",
+    "playwright": "^1.60.0",
+    "tailwindcss": "^4.0.0",
+    {{#eq framework 'astro'}}
+    "@astrojs/check": "^0.9.0",
+    {{/eq}}
+    {{#eq framework 'nextjs'}}
+    "@types/node": "^22.12.0",
+    {{/eq}}
+    {{#includes features 'ecommerce'}}
+    "@stripe/stripe-js": "^4.0.0",
+    {{/includes}}
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.4.0"
+  },
+  "engines": {
+    "node": ">=22.12.0",
+    "pnpm": ">=10.0.0"
+  }
+}

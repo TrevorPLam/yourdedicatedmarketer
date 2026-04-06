@@ -1,0 +1,399 @@
+/* Client Portal Styles */
+.client-portal {
+  space: 1.5rem;
+}
+
+/* Header */
+.portal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.portal-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Main Content Layout */
+.portal-content {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2rem;
+}
+
+@media (max-width: 1024px) {
+  .portal-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Client List */
+.client-list {
+  min-height: 600px;
+}
+
+.client-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.client-count {
+  background-color: #f3f4f6;
+  color: #6b7280;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+}
+
+.client-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.client-card {
+  transition: transform 0.2s ease;
+}
+
+.client-card:hover {
+  transform: translateY(-2px);
+}
+
+/* Client Details */
+.client-details {
+  min-height: 600px;
+}
+
+.selected-client-header {
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 1.5rem;
+}
+
+/* Tab Navigation */
+.tab-navigation {
+  display: flex;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 1.5rem;
+}
+
+.tab-button {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  background: none;
+  color: #6b7280;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.tab-button:hover {
+  color: #374151;
+  background-color: #f9fafb;
+}
+
+.tab-button.active {
+  color: #3b82f6;
+  border-bottom-color: #3b82f6;
+}
+
+/* Tab Content */
+.tab-content {
+  min-height: 400px;
+}
+
+.tab-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+/* Updates List */
+.updates-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.update-card {
+  transition: transform 0.2s ease;
+}
+
+.update-card:hover {
+  transform: translateY(-1px);
+}
+
+/* File Sharing */
+.file-item {
+  transition: transform 0.2s ease;
+}
+
+.file-item:hover {
+  transform: translateX(4px);
+}
+
+/* Messages List */
+.messages-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.message-item {
+  transition: all 0.2s ease;
+}
+
+.message-item:hover {
+  background-color: #f9fafb;
+}
+
+.message-item.unread {
+  background-color: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+/* Status Badges */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.status-badge.active {
+  background-color: #f0fdf4;
+  color: #166534;
+}
+
+.status-badge.inactive {
+  background-color: #fef2f2;
+  color: #991b1b;
+}
+
+.status-badge.pending {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+/* Priority Badges */
+.priority-badge.critical {
+  background-color: #fef2f2;
+  color: #991b1b;
+}
+
+.priority-badge.high {
+  background-color: #fff7ed;
+  color: #92400e;
+}
+
+.priority-badge.medium {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+}
+
+.priority-badge.low {
+  background-color: #f9fafb;
+  color: #374151;
+}
+
+/* Type Icons */
+.type-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.type-icon.milestone {
+  color: #059669;
+}
+
+.type-icon.progress {
+  color: #2563eb;
+}
+
+.type-icon.issue {
+  color: #dc2626;
+}
+
+.type-icon.announcement {
+  color: #7c3aed;
+}
+
+/* File Type Icons */
+.file-icon.pdf {
+  color: #dc2626;
+}
+
+.file-icon.image {
+  color: #059669;
+}
+
+.file-icon.archive {
+  color: #2563eb;
+}
+
+.file-icon.default {
+  color: #6b7280;
+}
+
+/* Empty State */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+  text-align: center;
+}
+
+.empty-state h3 {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: #111827;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+  color: #6b7280;
+  max-width: 400px;
+}
+
+/* Animations */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.update-card {
+  animation: slideInUp 0.3s ease-out;
+}
+
+.file-item {
+  animation: slideInLeft 0.3s ease-out;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .portal-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .portal-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .tab-navigation {
+    overflow-x: auto;
+  }
+
+  .tab-button {
+    white-space: nowrap;
+  }
+}
+
+/* Loading States */
+.loading-skeleton {
+  height: 8rem;
+  background-color: #e5e7eb;
+  border-radius: 0.75rem;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Focus States for Accessibility */
+.tab-button:focus,
+.button:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .client-card,
+  .update-card,
+  .file-item {
+    border-color: #000;
+  }
+  
+  .tab-button {
+    border-bottom-color: #000;
+  }
+  
+  .tab-button.active {
+    color: #000;
+    border-bottom-color: #000;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .client-card,
+  .update-card,
+  .file-item {
+    animation: none;
+  }
+  
+  .client-card:hover,
+  .update-card:hover,
+  .file-item:hover {
+    transform: none;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .portal-actions,
+  .tab-navigation {
+    display: none;
+  }
+  
+  .portal-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .client-card,
+  .update-card,
+  .file-item {
+    break-inside: avoid;
+  }
+}

@@ -1,0 +1,214 @@
+/**
+ * Client Configuration
+ * This file contains all client-specific settings and configurations
+ */
+
+export const clientConfig = {
+  // Client Information
+  client: {
+    name: '{{pascalCase clientName}}',
+    slug: '{{kebabCase clientName}}',
+    {{#if domain}}
+    domain: '{{domain}}',
+    {{/if}}
+    framework: '{{framework}}',
+    database: '{{database}}',
+    theme: '{{theme}}'
+  },
+  
+  // Feature Flags
+  features: {
+    {{#each features}}
+    {{this}}: true,
+    {{/each}}
+  },
+  
+  // Site Configuration
+  site: {
+    title: '{{pascalCase clientName}}',
+    description: 'Professional website for {{pascalCase clientName}}',
+    url: '{{#if domain}}https://{{domain}}{{else}}https://localhost:3000{{/if}}',
+    author: 'Marketing Agency',
+    image: '/images/og-image.jpg',
+    icon: '/images/favicon.ico',
+    locale: 'en-US'
+  },
+  
+  // Theme Configuration
+  theme: {
+    {{#eq theme 'default'}}
+    primaryColor: '#3b82f6',
+    secondaryColor: '#64748b',
+    accentColor: '#f59e0b',
+    {{/eq}}
+    {{#eq theme 'alpha'}}
+    primaryColor: '#2563eb',
+    secondaryColor: '#64748b',
+    accentColor: '#0ea5e9',
+    {{/eq}}
+    {{#eq theme 'beta'}}
+    primaryColor: '#16a34a',
+    secondaryColor: '#64748b',
+    accentColor: '#84cc16',
+    {{/eq}}
+    {{#eq theme 'gamma'}}
+    primaryColor: '#9333ea',
+    secondaryColor: '#64748b',
+    accentColor: '#a855f7',
+    {{/eq}}
+    {{#eq theme 'custom'}}
+    primaryColor: '#000000',
+    secondaryColor: '#6b7280',
+    accentColor: '#ef4444',
+    {{/eq}}
+    darkMode: true,
+    borderRadius: '0.5rem',
+    fontFamily: 'Inter, system-ui, sans-serif'
+  },
+  
+  // Database Configuration
+  database: {
+    {{#eq database 'supabase'}}
+    provider: 'supabase',
+    realtime: true,
+    auth: true,
+    storage: true,
+    {{/eq}}
+    {{#eq database 'neon'}}
+    provider: 'neon',
+    serverless: true,
+    pooling: true,
+    {{/eq}}
+    {{#eq database 'postgres'}}
+    provider: 'postgres',
+    native: true,
+    {{/eq}}
+  },
+  
+  // SEO Configuration
+  seo: {
+    enableSitemap: {{#includes features 'seo'}}true{{else}}false{{/includes}},
+    enableRobotsTxt: {{#includes features 'seo'}}true{{else}}false{{/includes}},
+    enableStructuredData: {{#includes features 'seo'}}true{{else}}false{{/includes}},
+    enableOpenGraph: true,
+    enableTwitterCards: true,
+    metaTitleTemplate: '%s | {{pascalCase clientName}}',
+    metaDescription: 'Professional website for {{pascalCase clientName}}'
+  },
+  
+  // Analytics Configuration
+  analytics: {
+    {{#includes features 'analytics'}}
+    enabled: true,
+    providers: {
+      googleAnalytics: process.env.NEXT_PUBLIC_GA_ID,
+      googleTagManager: process.env.NEXT_PUBLIC_GTM_ID,
+      agencyDashboard: true
+    },
+    {{else}}
+    enabled: false,
+    {{/includes}}
+  },
+  
+  // Content Management
+  content: {
+    {{#includes features 'cms'}}
+    provider: 'storyblok',
+    enablePreview: true,
+    enableVisualEditor: true,
+    {{/includes}}
+    {{#includes features 'blog'}}
+    enableBlog: true,
+    blogPath: '/blog',
+    postsPerPage: 12,
+    enableComments: false,
+    enableCategories: true,
+    enableTags: true,
+    {{/includes}}
+    {{#includes features 'portfolio'}}
+    enablePortfolio: true,
+    portfolioPath: '/portfolio',
+    projectsPerPage: 16,
+    enableCategories: true,
+    enableTags: true,
+    {{/includes}}
+  },
+  
+  // Contact Configuration
+  contact: {
+    {{#includes features 'contact'}}
+    enabled: true,
+    email: 'contact@{{#if domain}}{{domain}}{{else}}example.com{{/if}}',
+    phone: '+1-555-0123',
+    address: {
+      street: '123 Business St',
+      city: 'Business City',
+      state: 'BC',
+      zip: '12345',
+      country: 'USA'
+    },
+    social: {
+      twitter: 'https://twitter.com/{{kebabCase clientName}}',
+      linkedin: 'https://linkedin.com/company/{{kebabCase clientName}}',
+      facebook: 'https://facebook.com/{{kebabCase clientName}}',
+      instagram: 'https://instagram.com/{{kebabCase clientName}}'
+    },
+    {{else}}
+    enabled: false,
+    {{/includes}}
+  },
+  
+  // E-commerce Configuration
+  ecommerce: {
+    {{#includes features 'ecommerce'}}
+    enabled: true,
+    provider: 'stripe',
+    currency: 'USD',
+    enableShipping: true,
+    enableTaxes: true,
+    enableInventory: true,
+    {{else}}
+    enabled: false,
+    {{/includes}}
+  },
+  
+  // Authentication Configuration
+  auth: {
+    {{#includes features 'auth'}}
+    enabled: true,
+    provider: '{{#eq database "supabase"}}supabase{{else}}nextauth{{/eq}}',
+    enableSocialLogin: true,
+    enableEmailLogin: true,
+    enableMagicLink: true,
+    providers: {
+      google: true,
+      github: false,
+      twitter: false
+    },
+    {{else}}
+    enabled: false,
+    {{/includes}}
+  },
+  
+  // Performance Configuration
+  performance: {
+    enableImageOptimization: true,
+    enableFontOptimization: true,
+    enableCodeSplitting: true,
+    enableLazyLoading: true,
+    enableCaching: true,
+    enableCompression: true,
+    enableCDN: {{#if domain}}true{{else}}false{{/if}}
+  },
+  
+  // Development Configuration
+  development: {
+    enableHotReload: true,
+    enableErrorReporting: true,
+    enablePerformanceMonitoring: {{#includes features 'analytics'}}true{{else}}false{{/includes}},
+    enableDebugMode: process.env.NODE_ENV === 'development',
+    enableStorybook: false
+  }
+}
+
+export default clientConfig

@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🔍 Running pre-commit hooks..."
+
+# Run lint-staged for formatting and linting
+echo "📝 Running lint-staged..."
+npx lint-staged
+
+# Check for TypeScript compilation errors in changed files
+echo "🔧 Running TypeScript type checking..."
+npx turbo run type-check --filter="*"
+
+# Run tests on affected packages
+echo "🧪 Running tests on affected packages..."
+npx turbo run test --filter="*"
+
+# Check package.json for common issues
+echo "📦 Validating package.json files..."
+npx turbo run lint --filter="*" -- --no-fix
+
+echo "✅ Pre-commit checks completed!"

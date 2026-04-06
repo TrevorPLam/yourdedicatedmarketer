@@ -1,0 +1,40 @@
+{
+  "name": "@agency/client-alpha",
+  "version": "1.0.0",
+  "description": "Client Alpha marketing site built with Astro v6.0",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx,.astro",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write \"**/*.{astro,js,jsx,ts,tsx,json,md}\""
+  },
+  "dependencies": {
+    "@agency/ui-components": "workspace:*",
+    "@agency/design-system": "workspace:*",
+    "@agency/analytics": "workspace:*",
+    "@astrojs/react": "^4.2.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "astro": "^6.0.0",
+    "astro-i18n-aut": "^0.7.3"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "eslint": "^9.23.0",
+    "prettier": "^3.5.0",
+    "typescript": "^5.9.0",
+    "vitest": "^3.0.0",
+    "tailwindcss": "^4.0.0",
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.4.0"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

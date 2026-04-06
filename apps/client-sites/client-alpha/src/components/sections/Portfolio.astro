@@ -1,0 +1,50 @@
+---
+import { Button } from '@agency/ui-components/react';
+import { Card } from '@agency/ui-components/react';
+---
+
+<section class="py-20 bg-white">
+	<div class="container mx-auto px-4 sm:px-6 lg:px-8">
+		<div class="text-center mb-16">
+			<h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+				Recent Projects
+			</h2>
+			<p class="text-xl text-gray-600 max-w-3xl mx-auto">
+				Explore our latest work and see how we've helped businesses thrive
+			</p>
+		</div>
+
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+			<Card className="overflow-hidden hover:shadow-xl transition-shadow">
+				<div class="h-48 bg-gradient-to-br from-brand-400 to-brand-600"></div>
+				<div class="p-6">
+					<h3 class="text-xl font-semibold text-gray-900 mb-2">E-Commerce Platform</h3>
+					<p class="text-gray-600 mb-4">Modern online shopping experience with advanced features</p>
+					<Button variant="outline" size="sm">View Project</Button>
+				</div>
+			</Card>
+
+			<Card className="overflow-hidden hover:shadow-xl transition-shadow">
+				<div class="h-48 bg-gradient-to-br from-purple-400 to-purple-600"></div>
+				<div class="p-6">
+					<h3 class="text-xl font-semibold text-gray-900 mb-2">SaaS Dashboard</h3>
+					<p class="text-gray-600 mb-4">Analytics dashboard for business intelligence</p>
+					<Button variant="outline" size="sm">View Project</Button>
+				</div>
+			</Card>
+
+			<Card className="overflow-hidden hover:shadow-xl transition-shadow">
+				<div class="h-48 bg-gradient-to-br from-green-400 to-green-600"></div>
+				<div class="p-6">
+					<h3 class="text-xl font-semibold text-gray-900 mb-2">Mobile App</h3>
+					<p class="text-gray-600 mb-4">Cross-platform mobile application for customer engagement</p>
+					<Button variant="outline" size="sm">View Project</Button>
+				</div>
+			</Card>
+		</div>
+
+		<div class="text-center mt-12">
+			<Button variant="primary" size="lg">View All Projects</Button>
+		</div>
+	</div>
+</section>

@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE_CONFIG, CLIENT_CONFIG } from '../site.config.js';
+import Hero from '../components/sections/Hero.astro';
+import Services from '../components/sections/Services.astro';
+import Portfolio from '../components/sections/Portfolio.astro';
+import Testimonials from '../components/sections/Testimonials.astro';
+import Contact from '../components/sections/Contact.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+---
+
+<Base title={CLIENT_CONFIG.name} description={SITE_CONFIG.description}>
+	<div class="min-h-screen">
+		<Header />
+		<main>
+			<Hero />
+			<Services />
+			<Portfolio />
+			<Testimonials />
+			<Contact />
+		</main>
+		<Footer />
+	</div>
+</Base>

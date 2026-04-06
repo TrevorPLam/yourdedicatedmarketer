@@ -1,0 +1,98 @@
+import { clientConfig } from '@/client.config'
+import Header from '@/components/layout/Header'
+import Footer from '@/components/layout/Footer'
+import '@/styles/globals.css'
+import { Inter } from 'next/font/google'
+
+const inter = Inter({ subsets: ['latin'] })
+
+export const metadata = {
+  title: {
+    default: clientConfig.site.title,
+    template: `%s | ${clientConfig.site.title}`,
+  },
+  description: clientConfig.site.description,
+  keywords: [
+    'marketing agency',
+    'web development',
+    'digital marketing',
+    clientConfig.client.name.toLowerCase(),
+  ],
+  authors: [{ name: clientConfig.site.author }],
+  creator: clientConfig.site.author,
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: clientConfig.site.url,
+    siteName: clientConfig.site.title,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: clientConfig.site.title,
+    description: clientConfig.site.description,
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+  },
+}
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="en" className={inter.className}>
+      <head>
+        <meta name="theme-color" content={clientConfig.theme.primaryColor} />
+        <link rel="icon" href={clientConfig.site.icon} />
+        <link rel="canonical" href={clientConfig.site.url} />
+        
+        {{#includes features 'seo'}}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'WebSite',
+              name: clientConfig.site.title,
+              description: clientConfig.site.description,
+              url: clientConfig.site.url,
+              image: clientConfig.site.image,
+              author: {
+                '@type': 'Organization',
+                name: clientConfig.site.author,
+              },
+            }),
+          }}
+        />
+        {{/includes}}
+      </head>
+      <body className="min-h-screen bg-background text-foreground">
+        <div className="relative flex min-h-screen flex-col">
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </div>
+        
+        {{#includes features 'analytics'}}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'GA_MEASUREMENT_ID');
+            `,
+          }}
+        />
+        {{/includes}}
+      </body>
+    </html>
+  )
+}

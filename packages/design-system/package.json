@@ -1,0 +1,97 @@
+{
+  "name": "@agency/design-system",
+  "version": "1.0.0",
+  "description": "Design tokens, themes, and brand configurations for marketing agency",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./tokens": {
+      "types": "./dist/tokens/index.d.ts",
+      "import": "./dist/tokens/index.js",
+      "require": "./dist/tokens/index.js",
+      "default": "./dist/tokens/index.js"
+    },
+    "./themes": {
+      "types": "./dist/themes/index.d.ts",
+      "import": "./dist/themes/index.js",
+      "require": "./dist/themes/index.js",
+      "default": "./dist/themes/index.js"
+    },
+    "./brand-kits": {
+      "types": "./dist/brand-kits/index.d.ts",
+      "import": "./dist/brand-kits/index.js",
+      "require": "./dist/brand-kits/index.js",
+      "default": "./dist/brand-kits/index.js"
+    },
+    "./styles": {
+      "import": "./dist/styles.css",
+      "require": "./dist/styles.css",
+      "default": "./dist/styles.css"
+    },
+    "./tailwind": {
+      "import": "./tailwind.config.js",
+      "require": "./tailwind.config.js",
+      "default": "./tailwind.config.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "tailwind.config.js"
+  ],
+  "scripts": {
+    "build": "pnpm run build:tokens && pnpm run build:styles && pnpm run build:ts",
+    "build:tokens": "node scripts/build-tokens.js",
+    "build:styles": "pnpm exec tailwindcss -i ./src/styles/globals.css -o ./dist/styles.css",
+    "build:ts": "tsup",
+    "dev": "concurrently \"pnpm run build:tokens -- --watch\" \"pnpm run build:styles -- --watch\" \"pnpm run build:ts -- --watch\"",
+    "type-check": "tsc --noEmit",
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage"
+  },
+  "dependencies": {
+    "@agency/types": "workspace:*",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.0.0",
+    "tailwind-merge": "^2.0.0"
+  },
+  "peerDependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/node": "^22.12.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "tailwindcss": "^4.0.0",
+    "@tailwindcss/cli": "^4.0.0",
+    "@tailwindcss/typography": "^0.5.19",
+    "tsup": "^8.0.0",
+    "typescript": "^5.9.0",
+    "concurrently": "^9.1.0",
+    "cssnano": "^7.0.0",
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.4.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

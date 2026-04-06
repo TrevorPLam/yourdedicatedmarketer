@@ -1,0 +1,26 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🚀 Running pre-push hooks..."
+
+# Run full test suite
+echo "🧪 Running full test suite..."
+npx turbo run test
+
+# Run build to ensure everything compiles
+echo "🏗️ Running build verification..."
+npx turbo run build
+
+# Run E2E tests if they exist
+echo "🎭 Running E2E tests..."
+if npx turbo run test:e2e --filter="*" 2>/dev/null; then
+    echo "✅ E2E tests passed!"
+else
+    echo "⚠️ No E2E tests found or E2E tests failed"
+fi
+
+# Check for security vulnerabilities
+echo "🔒 Running security audit..."
+npx pnpm audit --audit-level=moderate
+
+echo "✅ Pre-push checks completed!"

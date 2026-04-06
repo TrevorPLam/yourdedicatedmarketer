@@ -1,0 +1,54 @@
+import type { CollectionConfig } from '@astrojs/starlight'
+
+export const blogConfig: CollectionConfig = {
+  label: 'Blog',
+  description: 'Blog posts and articles for {{pascalCase clientName}}',
+  icon: 'article',
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    publishDate: z.coerce.date(),
+    author: z.string().optional(),
+    image: z.string().optional(),
+    tags: z.array(z.string()).optional(),
+    category: z.string().optional(),
+    featured: z.boolean().optional().default(false),
+    draft: z.boolean().optional().default(false),
+  }),
+})
+
+export function getBlogPosts() {
+  return await getCollection('blog', ({ data, id }) => {
+    return !data.draft
+  })
+}
+
+export function getFeaturedBlogPosts() {
+  return await getCollection('blog', ({ data, id }) => {
+    return !data.draft && data.featured
+  })
+}
+
+export function getBlogPostsByCategory(category: string) {
+  return await getCollection('blog', ({ data, id }) => {
+    return !data.draft && data.category === category
+  })
+}
+
+export function getBlogPostsByTag(tag: string) {
+  return await getCollection('blog', ({ data, id }) => {
+    return !data.draft && data.tags?.includes(tag)
+  })
+}
+
+export function getBlogCategories() {
+  const posts = await getBlogPosts()
+  const categories = [...new Set(posts.map(post => post.data.category).filter(Boolean))]
+  return categories
+}
+
+export function getBlogTags() {
+  const posts = await getBlogPosts()
+  const tags = [...new Set(posts.flatMap(post => post.data.tags || []).filter(Boolean))]
+  return tags
+}

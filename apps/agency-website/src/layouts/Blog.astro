@@ -1,0 +1,132 @@
+---
+import Base from './Base.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import { SITE_CONFIG } from '../site.config.js';
+
+interface Props {
+	title?: string;
+	description?: string;
+	image?: string;
+	imageAlt?: string;
+	noIndex?: boolean;
+	canonical?: string;
+	publishedDate?: Date;
+	updatedDate?: Date;
+	author?: string;
+	tags?: string[];
+}
+
+const {
+	title,
+	description,
+	image,
+	imageAlt,
+	noIndex,
+	canonical,
+	publishedDate,
+	updatedDate,
+	author = SITE_CONFIG.title,
+	tags = [],
+} = Astro.props;
+
+const pageTitle = title ? `${title} | ${SITE_CONFIG.title}` : SITE_CONFIG.title;
+const pageDescription = description || SITE_CONFIG.description;
+---
+
+<Base 
+	title={pageTitle}
+	description={pageDescription}
+	image={image}
+	imageAlt={imageAlt}
+	noIndex={noIndex}
+	canonical={canonical}
+	type="article"
+>
+	<div class="min-h-screen flex flex-col">
+		<Header />
+		
+		<main id="main-content" class="flex-1">
+			<article class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+				<header class="mb-12">
+					<h1 class="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
+						{title}
+					</h1>
+					
+					<div class="flex flex-wrap items-center gap-4 text-gray-600 mb-8">
+						{publishedDate && (
+							<time datetime={publishedDate.toISOString()}>
+								{publishedDate.toLocaleDateString('en-US', { 
+									year: 'numeric', 
+									month: 'long', 
+									day: 'numeric' 
+								})}
+							</time>
+						)}
+						
+						{updatedDate && (
+							<>
+								<span>•</span>
+								<time datetime={updatedDate.toISOString()}>
+									Updated {updatedDate.toLocaleDateString('en-US', { 
+										year: 'numeric', 
+										month: 'long', 
+										day: 'numeric' 
+									})}
+								</time>
+							</>
+						)}
+						
+						<span>•</span>
+						<span>By {author}</span>
+					</div>
+					
+					{tags.length > 0 && (
+						<div class="flex flex-wrap gap-2 mb-8">
+							{tags.map((tag: string) => (
+								<span class="inline-block bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full">
+									{tag}
+								</span>
+							))}
+						</div>
+					)}
+				</header>
+				
+				<div class="prose prose-lg max-w-none">
+					<slot />
+				</div>
+			</article>
+		</main>
+		
+		<Footer />
+	</div>
+	
+	<!-- Article Structured Data -->
+	<script type="application/ld+json">
+	{
+		"@context": "https://schema.org",
+		"@type": "Article",
+		"headline": "{title}",
+		"description": "{pageDescription}",
+		"author": {
+			"@type": "Organization",
+			"name": "{author}"
+		},
+		"publisher": {
+			"@type": "Organization",
+			"name": "{SITE_CONFIG.title}",
+			"logo": {
+				"@type": "ImageObject",
+				"url": "{new URL('/logo.png', Astro.site).href}"
+			}
+		},
+		"datePublished": "{publishedDate?.toISOString()}",
+		"dateModified": "{updatedDate?.toISOString() || publishedDate?.toISOString()}",
+		"mainEntityOfPage": {
+			"@type": "WebPage",
+			"@id": "{canonical || new URL(Astro.url.pathname, Astro.site).href}"
+		},
+		"keywords": "{tags.join(', ')}"
+	}
+	</script>
+</Base>

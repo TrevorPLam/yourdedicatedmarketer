@@ -1,0 +1,35 @@
+FROM mcr.microsoft.com/devcontainers/javascript-node:22
+
+# Install pnpm
+RUN npm install -g pnpm@10.0.0
+
+# Install additional development tools
+RUN npm install -g @playwright/test@1.60.0
+
+# Install git-lfs
+RUN apt-get update && apt-get install -y git-lfs && git lfs install
+
+# Create workspace directory
+WORKDIR /workspace
+
+# Set environment variables
+ENV NODE_ENV=development
+ENV PNPM_STORE_DIR=/root/.pnpm-store
+
+# Copy package files
+COPY package*.json pnpm-workspace.yaml turbo.json ./
+
+# Install dependencies
+RUN pnpm install
+
+# Copy the rest of the workspace files
+COPY . .
+
+# Expose ports for development servers
+EXPOSE 3000-3004 6006 8911
+
+# Set the default user
+USER node
+
+# Command to keep the container running
+CMD ["sleep", "infinity"]

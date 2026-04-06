@@ -1,0 +1,73 @@
+{
+  "name": "@agency/platform-cms",
+  "version": "1.0.0",
+  "description": "Multi-provider CMS adapters and utilities with 2026 best practices",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./adapters": {
+      "types": "./dist/adapters/index.d.ts",
+      "import": "./dist/adapters/index.js",
+      "require": "./dist/adapters/index.js",
+      "default": "./dist/adapters/index.js"
+    },
+    "./generators": {
+      "types": "./dist/generators/index.d.ts",
+      "import": "./dist/generators/index.js",
+      "require": "./dist/generators/index.js",
+      "default": "./dist/generators/index.js"
+    },
+    "./preview": {
+      "types": "./dist/preview/index.d.ts",
+      "import": "./dist/preview/index.js",
+      "require": "./dist/preview/index.js",
+      "default": "./dist/preview/index.js"
+    },
+    "./types": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/types/index.js",
+      "require": "./dist/types/index.js",
+      "default": "./dist/types/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "type-check": "tsc --noEmit",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "generate:types": "tsx scripts/generate-types.ts",
+    "generate:sanity": "tsx scripts/generate-sanity-types.ts",
+    "generate:contentful": "tsx scripts/generate-contentful-types.ts"
+  },
+  "dependencies": {
+    "@agency/types": "workspace:*",
+    "contentful": "^11.0.0",
+    "@sanity/client": "^6.24.0",
+    "@sanity/codegen": "^6.0.0",
+    "graphql": "^16.9.0",
+    "graphql-request": "^7.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.12.0",
+    "tsup": "^8.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.9.0",
+    "vitest": "^3.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

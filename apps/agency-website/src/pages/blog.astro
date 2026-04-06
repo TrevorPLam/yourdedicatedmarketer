@@ -1,0 +1,115 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import CTA from '../components/sections/CTA.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('blog');
+allPosts.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+const categories = [...new Set(allPosts.map((p) => p.data.category))];
+---
+
+<Base title="Blog - Your Dedicated Marketer" description="Digital marketing insights, strategies, and tips from the Your Dedicated Marketer team.">
+	<div class="min-h-screen flex flex-col">
+		<Header />
+
+		<main id="main-content" class="flex-1">
+			<!-- Page Header -->
+			<section class="bg-gradient-to-br from-blue-50 to-indigo-100 py-16">
+				<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+					<h1 class="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
+						Blog
+					</h1>
+					<p class="text-xl text-gray-600 max-w-3xl mx-auto">
+						Marketing insights, practical guides, and industry trends to help you grow smarter.
+					</p>
+				</div>
+			</section>
+
+			<!-- Blog Posts -->
+			<section class="py-20 bg-white">
+				<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+					{allPosts.length > 0 ? (
+						<div>
+							{categories.length > 1 && (
+								<div class="flex flex-wrap gap-2 mb-12 justify-center">
+									{categories.map((cat) => (
+										<span class="bg-blue-50 text-blue-700 px-4 py-1 rounded-full text-sm font-medium capitalize">
+											{cat}
+										</span>
+									))}
+								</div>
+							)}
+
+							<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+								{allPosts.map((post) => (
+									<article class="card hover:shadow-lg transition-shadow duration-300 flex flex-col">
+										{post.data.imageUrl && (
+											<div class="overflow-hidden rounded-t-lg">
+												<img
+													src={post.data.imageUrl}
+													alt={post.data.imageAlt || post.data.title}
+													class="w-full h-48 object-cover"
+													loading="lazy"
+												/>
+											</div>
+										)}
+
+										<div class="p-6 flex flex-col flex-1">
+											<div class="flex items-center gap-3 mb-3">
+												<span class="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded-full font-medium capitalize">
+													{post.data.category}
+												</span>
+												{post.data.readingTime && (
+													<span class="text-xs text-gray-500">
+														{post.data.readingTime} min read
+													</span>
+												)}
+											</div>
+
+											<h2 class="text-xl font-semibold text-gray-900 mb-3 flex-1">
+												{post.data.title}
+											</h2>
+
+											<p class="text-gray-600 mb-4 line-clamp-3">
+												{post.data.description}
+											</p>
+
+											<div class="flex flex-wrap gap-2 mb-4">
+												{post.data.tags.slice(0, 3).map((tag) => (
+													<span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
+														{tag}
+													</span>
+												))}
+											</div>
+
+											<div class="flex items-center justify-between mt-auto">
+												<time
+													datetime={post.data.pubDate.toISOString()}
+													class="text-sm text-gray-500"
+												>
+													{post.data.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+												</time>
+												<span class="text-sm text-gray-500">{post.data.author}</span>
+											</div>
+										</div>
+									</article>
+								))}
+							</div>
+						</div>
+					) : (
+						<div class="text-center py-20">
+							<p class="text-xl text-gray-500">New articles are on the way. Check back soon.</p>
+						</div>
+					)}
+				</div>
+			</section>
+
+			<CTA />
+		</main>
+
+		<Footer />
+	</div>
+</Base>

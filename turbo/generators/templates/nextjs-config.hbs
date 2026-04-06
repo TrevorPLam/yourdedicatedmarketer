@@ -1,0 +1,70 @@
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  experimental: {
+    turbo: {
+      rules: {
+        '*.svg': ['@svgr/webpack'],
+      },
+    },
+  },
+  {{#eq framework 'nextjs'}}
+  output: 'standalone',
+  {{/eq}}
+  images: {
+    domains: [
+      {{#if domain}}
+      '{{domain}}',
+      {{/if}}
+      'images.unsplash.com',
+      'via.placeholder.com'
+    ],
+    formats: ['image/webp', 'image/avif'],
+  },
+  env: {
+    CUSTOM_KEY: process.env.CUSTOM_KEY,
+  },
+  {{#eq database 'supabase'}}
+  experimental: {
+    serverComponentsExternalPackages: ['@supabase/supabase-js'],
+  },
+  {{/eq}}
+  {{#includes features 'seo'}}
+  async rewrites() {
+    return [
+      {
+        source: '/sitemap.xml',
+        destination: '/api/sitemap',
+      },
+      {
+        source: '/robots.txt',
+        destination: '/api/robots',
+      },
+    ]
+  },
+  {{/includes}}
+  {{#includes features 'analytics'}}
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+        ],
+      },
+    ]
+  },
+  {{/includes}}
+  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
+    // Add custom webpack config here
+    return config
+  },
+}
+
+module.exports = nextConfig

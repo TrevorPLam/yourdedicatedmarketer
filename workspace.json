@@ -1,0 +1,262 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "name": "marketing-agency-monorepo",
+  "version": "2.0.0",
+  "description": "Enterprise-grade monorepo workspace configuration for marketing agency operations",
+  
+  "workspace": {
+    "packages": [
+      {
+        "name": "apps",
+        "path": "apps/*",
+        "description": "Deployable applications and client sites",
+        "packages": [
+          {
+            "name": "agency-website",
+            "path": "apps/agency-website",
+            "type": "astro",
+            "description": "Main agency marketing website",
+            "dependencies": ["@agency/ui-components", "@agency/design-system", "@agency/analytics"]
+          },
+          {
+            "name": "client-sites",
+            "path": "apps/client-sites/*",
+            "type": "mixed",
+            "description": "Client-specific websites and applications",
+            "packages": [
+              {
+                "name": "client-alpha",
+                "path": "apps/client-sites/client-alpha",
+                "type": "astro",
+                "dependencies": ["@agency/ui-components", "@agency/design-system"]
+              },
+              {
+                "name": "client-beta", 
+                "path": "apps/client-sites/client-beta",
+                "type": "nextjs",
+                "dependencies": ["@agency/ui-components", "@agency/design-system", "@agency/analytics"]
+              }
+            ]
+          },
+          {
+            "name": "internal-tools",
+            "path": "apps/internal-tools/*",
+            "type": "nextjs",
+            "description": "Agency internal applications",
+            "packages": [
+              {
+                "name": "project-manager",
+                "path": "apps/internal-tools/project-manager",
+                "dependencies": ["@agency/ui-components", "@agency/platform-auth", "@agency/analytics"]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "packages",
+        "path": "packages/*",
+        "description": "Shared code libraries and platform packages",
+        "packages": [
+          {
+            "name": "ui-components",
+            "path": "packages/ui-components",
+            "type": "library",
+            "description": "Shared UI component library",
+            "dependencies": ["@agency/design-system", "@agency/types"],
+            "exports": [".", "./react", "./astro", "./styles", "./tailwind"]
+          },
+          {
+            "name": "design-system",
+            "path": "packages/design-system", 
+            "type": "library",
+            "description": "Design tokens, themes, and brand configurations",
+            "dependencies": ["@agency/types"],
+            "exports": [".", "./tokens", "./themes", "./brand-kits", "./styles", "./tailwind"]
+          },
+          {
+            "name": "platform",
+            "path": "packages/platform/*",
+            "type": "platform",
+            "description": "Core platform packages",
+            "packages": [
+              {
+                "name": "auth",
+                "path": "packages/platform/auth",
+                "dependencies": ["@agency/types"]
+              },
+              {
+                "name": "cms",
+                "path": "packages/platform/cms", 
+                "dependencies": ["@agency/types"]
+              },
+              {
+                "name": "database",
+                "path": "packages/platform/database",
+                "dependencies": ["@agency/types"]
+              },
+              {
+                "name": "deployment",
+                "path": "packages/platform/deployment",
+                "dependencies": ["@agency/types"]
+              }
+            ]
+          },
+          {
+            "name": "shared",
+            "path": "packages/shared/*",
+            "type": "shared",
+            "description": "Business logic utilities",
+            "packages": [
+              {
+                "name": "analytics",
+                "path": "packages/shared/analytics",
+                "dependencies": ["@agency/types"]
+              },
+              {
+                "name": "monitoring",
+                "path": "packages/shared/monitoring",
+                "dependencies": ["@agency/types"]
+              },
+              {
+                "name": "seo",
+                "path": "packages/shared/seo",
+                "dependencies": ["@agency/types"]
+              },
+              {
+                "name": "utils",
+                "path": "packages/shared/utils",
+                "dependencies": ["@agency/types"]
+              }
+            ]
+          },
+          {
+            "name": "types",
+            "path": "packages/types",
+            "type": "types",
+            "description": "Shared TypeScript definitions"
+          },
+          {
+            "name": "testing",
+            "path": "packages/testing",
+            "type": "testing",
+            "description": "Testing utilities and configurations",
+            "dependencies": ["@agency/types"]
+          }
+        ]
+      },
+      {
+        "name": "tools",
+        "path": "tools/*",
+        "description": "Development and automation tools",
+        "packages": [
+          {
+            "name": "governance",
+            "path": "tools/governance",
+            "type": "tool",
+            "description": "Automated governance tools"
+          }
+        ]
+      },
+      {
+        "name": "docs",
+        "path": "docs",
+        "type": "documentation",
+        "description": "Documentation site"
+      }
+    ]
+  },
+
+  "dependencyCatalog": {
+    "coreFrameworks": {
+      "react": "^19.2.0",
+      "react-dom": "^19.2.0", 
+      "typescript": "^5.9.0",
+      "astro": "^6.0.0",
+      "next": "^16.0.0"
+    },
+    "databaseProviders": {
+      "@supabase/supabase-js": "^2.49.0",
+      "@neondatabase/serverless": "^0.10.0",
+      "postgres": "^15.0.0",
+      "prisma": "^5.22.0",
+      "drizzle-orm": "^0.35.0"
+    },
+    "buildSystem": {
+      "turbo": "^2.9.0",
+      "vite": "^6.0.0",
+      "esbuild": "^0.24.0"
+    },
+    "developmentTools": {
+      "vitest": "^3.0.0",
+      "playwright": "^1.59.0",
+      "eslint": "^9.23.0",
+      "prettier": "^3.5.0",
+      "typescript-eslint": "^8.29.0",
+      "husky": "^9.1.0",
+      "lint-staged": "^15.4.0"
+    },
+    "uiLibraries": {
+      "@tailwindcss/vite": "^4.0.0",
+      "@headlessui/react": "^2.2.0",
+      "framer-motion": "^12.0.0",
+      "lucide-react": "^0.487.0",
+      "class-variance-authority": "^0.7.0",
+      "clsx": "^2.0.0",
+      "tailwind-merge": "^2.0.0"
+    },
+    "testing": {
+      "@testing-library/react": "^16.3.0",
+      "@testing-library/jest-dom": "^6.6.0",
+      "@testing-library/user-event": "^14.5.0"
+    }
+  },
+
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build", "db:generate"],
+      "outputs": ["dist/**", ".next/**", "public/build/**"],
+      "cache": true
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "test": {
+      "dependsOn": ["build"],
+      "outputs": ["coverage/**"],
+      "cache": true
+    },
+    "lint": {
+      "outputs": [],
+      "cache": true
+    },
+    "type-check": {
+      "dependsOn": ["^build"],
+      "outputs": [],
+      "cache": true
+    }
+  },
+
+  "globalEnv": [
+    "NODE_ENV",
+    "DATABASE_URL", 
+    "NEXT_PUBLIC_SITE_URL",
+    "VERCEL_ENV",
+    "CF_PAGES",
+    "TURBO_TOKEN"
+  ],
+
+  "remoteCache": {
+    "enabled": true,
+    "team": "agency-team",
+    "token": "$TURBO_TOKEN"
+  },
+
+  "validation": {
+    "workspaceGraph": true,
+    "dependencies": true,
+    "exports": true,
+    "scripts": true
+  }
+}

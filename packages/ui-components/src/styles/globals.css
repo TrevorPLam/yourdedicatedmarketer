@@ -1,0 +1,6 @@
+@import '@agency/design-system/styles/globals.css';
+
+/* Additional component-specific styles */
+@layer components {
+  /* Component-specific overrides and utilities */
+}

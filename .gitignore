@@ -1,0 +1,390 @@
+# Marketing Agency Monorepo .gitignore (2026 Best Practices)
+# ==========================================
+# This file follows modern monorepo patterns and includes
+# comprehensive ignore rules for all supported frameworks
+
+# Core Dependencies
+# =================
+node_modules/
+.pnpm-store/
+.pnpm-debug.log*
+pnpm-lock.yaml
+
+# Build Outputs & Caches
+# =======================
+# Turborepo
+.turbo/
+dist/
+build/
+.next/
+.nuxt/
+.astro/
+.vercel/
+.netlify/
+
+# Storybook
+storybook-static/
+
+# Testing
+# ========
+coverage/
+.nyc_output/
+test-results/
+playwright-report/
+test-results.xml
+
+# Environment & Secrets
+# ====================
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+.env.*.local
+
+# IDE & Editor Files
+# ==================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS Generated Files
+# ==================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+# ====
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Runtime Data
+# ============
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Temporary Files
+# ===============
+.tmp/
+.temp/
+*.tmp
+*.temp
+
+# Package Manager Files
+# ====================
+# npm
+.npm
+
+# yarn
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# pnpm
+.pnpm-debug.log*
+
+# Framework Specific
+# =================
+# Astro
+.astro/cache/
+
+# Next.js
+.next/cache/
+
+# Vite
+.vite/
+
+# Rollup
+.rollup.cache/
+
+# esbuild
+.esbuild.cache/
+
+# Parcel
+.parcel-cache/
+
+# Database
+# ========
+# Supabase
+.supabase/
+
+# Prisma
+prisma/migrations/
+
+# Drizzle
+.drizzle/
+
+# TypeScript
+# ==========
+*.tsbuildinfo
+
+# ESLint
+# ======
+.eslintcache
+
+# Prettier
+# ========
+.prettierignore
+
+# Stylelint
+# =========
+.stylelintcache
+
+# CSS & Assets
+# ============
+.sass-cache/
+*.css.map
+*.scss.map
+*.less.map
+
+# Image & Media Files (Development)
+# =================================
+*.ai
+*.psd
+*.sketch
+
+# Documentation
+# =============
+docs/dist/
+docs/.vitepress/cache/
+
+# Deployment
+# ===========
+.serverless/
+.vercel-cache/
+.flaekr-cache/
+
+# Monitoring & Analytics
+# =====================
+.sentry-cli/
+
+# Security
+# ========
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# Local Development
+# =================
+local/
+.local/
+
+# Backup Files
+# ============
+*.bak
+*.backup
+*.old
+
+# Lock Files (Keep Source Control)
+# =================================
+# Uncomment these lines if you prefer NOT to track lock files
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# Development Tools
+# ================
+.cspellcache/
+.emojicache
+
+# AI/ML Development
+# ==================
+.mlflow/
+.dvc/
+.venv/
+venv/
+
+# Container Related
+# =================
+docker-compose.override.yml
+
+# Performance & Profiling
+# ======================
+.npm
+.cache/
+.parcel-cache/
+
+# Generator & Build Tools
+# =======================
+.generators/
+.scaffold/
+
+# Lint Staged Cache
+# =================
+.lintstagedrc
+
+# Husky
+# =====
+.husky/_/
+
+# Changesets
+# ==========
+.changeset/pre.json
+.changeset/README.md
+
+# Local Configuration Overrides
+# =============================
+.local.tsconfig.json
+.local.eslintrc.js
+.local.prettierrc
+
+# Temporary Development Servers
+# ============================
+.dev-server/
+
+# Benchmark & Performance Data
+# =============================
+.benchmarks/
+.perf/
+
+# Debug Files
+# ===========
+debug.log
+error.log
+
+# Build Tools Specific
+# ====================
+# Webpack
+.webpack/
+
+# Rollup
+.rollup/
+
+# Vite
+.vite/
+
+# ESBuild
+.esbuild/
+
+# SWC
+.swc/
+
+# Development Database
+# ===================
+*.sqlite
+*.sqlite3
+*.db
+
+# Cache & Temp Directories
+# ========================
+.cache/
+tmp/
+temp/
+
+# Generated Files
+# ===============
+generated/
+auto-generated/
+
+# Local Overrides
+# ===============
+override/
+overrides/
+
+# Test Coverage Reports
+# =====================
+coverage/
+coverage-html/
+lcov.info
+
+# Bundle Analysis
+# ===============
+bundle-analyzer/
+.nyc_output/
+
+# Platform Specific
+# =================
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# IDE Specific
+# ============
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# WebStorm
+.idea/
+*.iml
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Custom Agency Rules
+# ==================
+# Client-specific environment files
+clients/*/.env
+clients/*/.env.local
+
+# Client build artifacts
+clients/*/dist/
+clients/*/build/
+clients/*/.next/
+
+# Temporary client workspaces
+clients/*/tmp/
+clients/*/temp/
+
+# Agency internal tools data
+tools/*/data/
+tools/*/logs/
+
+# Generated client sites
+generated-sites/
+client-sites-built/
+
+# Security - Exclude sensitive files
+**/secrets/**
+# Security - Exclude sensitive files
+**/.aws/**

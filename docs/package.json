@@ -1,0 +1,34 @@
+{
+  "name": "@agency/docs",
+  "version": "1.0.0",
+  "description": "Documentation site for marketing agency monorepo",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "type-check": "astro check",
+    "generate-api": "typedoc --options docs/typedoc.json",
+    "generate-api:watch": "typedoc --options docs/typedoc.json --watch",
+    "sync-components": "node scripts/sync-storybook.js"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "^0.28.3",
+    "astro": "^4.16.12",
+    "sharp": "^0.33.5",
+    "@astrojs/check": "^0.9.4"
+  },
+  "devDependencies": {
+    "typedoc": "^0.26.7",
+    "typedoc-plugin-markdown": "^4.2.9",
+    "@types/node": "^22.9.0",
+    "typescript": "^5.9.0",
+    "eslint": "^9.23.0",
+    "prettier": "^3.5.0"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

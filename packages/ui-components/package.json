@@ -1,0 +1,111 @@
+{
+  "name": "@agency/ui-components",
+  "version": "1.0.0",
+  "description": "Shared UI component library for marketing agency applications",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "default": "./dist/index.mjs"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.mjs",
+      "require": "./dist/react.js",
+      "default": "./dist/react.mjs"
+    },
+    "./astro": {
+      "types": "./dist/astro.d.ts",
+      "import": "./dist/astro.mjs",
+      "require": "./dist/astro.js",
+      "default": "./dist/astro.mjs"
+    },
+    "./styles": {
+      "import": "./dist/styles.css",
+      "require": "./dist/styles.css",
+      "default": "./dist/styles.css"
+    },
+    "./tailwind": {
+      "import": "./tailwind.config.js",
+      "require": "./tailwind.config.js",
+      "default": "./tailwind.config.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "tailwind.config.js"
+  ],
+  "scripts": {
+    "build": "pnpm run build:ts",
+    "build:styles": "pnpm exec tailwindcss -i ./src/styles/globals.css -o ./dist/styles.css --postcss --minify",
+    "build:ts": "tsup --treeshake",
+    "dev": "concurrently \"pnpm run build:styles -- --watch\" \"pnpm run build:ts -- --watch\"",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "analyze": "pnpm run build && npx bundle-analyzer dist/index.js"
+  },
+  "dependencies": {
+    "@agency/design-system": "workspace:*",
+    "@agency/types": "workspace:*",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.0.0",
+    "tailwind-merge": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.12.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "@vitejs/plugin-react": "^4.0.0",
+    "@storybook/addon-essentials": "^8.0.0",
+    "@storybook/addon-interactions": "^8.0.0",
+    "@storybook/addon-links": "^8.0.0",
+    "@storybook/blocks": "^8.0.0",
+    "@storybook/react": "^8.0.0",
+    "@storybook/react-vite": "^8.0.0",
+    "@storybook/test": "^8.0.0",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/jest-dom": "^6.6.0",
+    "@testing-library/user-event": "^14.5.0",
+    "@vitest/coverage-v8": "^3.0.0",
+    "@vitest/ui": "^3.0.0",
+    "eslint": "^9.23.0",
+    "jsdom": "^25.0.0",
+    "postcss": "^8.4.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "storybook": "^8.0.0",
+    "tailwindcss": "^4.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.9.0",
+    "vitest": "^3.0.0",
+    "concurrently": "^9.1.0",
+    "cssnano": "^7.0.0",
+    "autoprefixer": "^10.4.0"
+  },
+  "peerDependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "astro": "^6.0.0"
+  },
+  "peerDependenciesMeta": {
+    "astro": {
+      "optional": true
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

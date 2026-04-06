@@ -1,0 +1,438 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Client Configuration Schema",
+  "description": "Validation schema for client site configurations",
+  "type": "object",
+  "required": [
+    "client",
+    "features",
+    "site",
+    "theme",
+    "database",
+    "seo",
+    "analytics",
+    "content",
+    "contact",
+    "ecommerce",
+    "auth",
+    "performance",
+    "development"
+  ],
+  "properties": {
+    "client": {
+      "type": "object",
+      "required": ["name", "slug", "framework", "database", "theme"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 100,
+          "pattern": "^[A-Za-z0-9\\s\\-_]+$",
+          "description": "Client display name"
+        },
+        "slug": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 50,
+          "pattern": "^[a-z0-9-]+$",
+          "description": "URL-safe client identifier"
+        },
+        "domain": {
+          "type": "string",
+          "format": "hostname",
+          "description": "Custom domain (optional)"
+        },
+        "framework": {
+          "type": "string",
+          "enum": ["astro", "nextjs", "hybrid"],
+          "description": "Frontend framework"
+        },
+        "database": {
+          "type": "string",
+          "enum": ["supabase", "neon", "postgres"],
+          "description": "Database provider"
+        },
+        "theme": {
+          "type": "string",
+          "enum": ["default", "alpha", "beta", "gamma", "custom"],
+          "description": "Theme/brand kit"
+        }
+      },
+      "additionalProperties": false
+    },
+    "features": {
+      "type": "object",
+      "description": "Feature flags",
+      "properties": {
+        "blog": { "type": "boolean" },
+        "contact": { "type": "boolean" },
+        "portfolio": { "type": "boolean" },
+        "analytics": { "type": "boolean" },
+        "seo": { "type": "boolean" },
+        "cms": { "type": "boolean" },
+        "ecommerce": { "type": "boolean" },
+        "auth": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "site": {
+      "type": "object",
+      "required": ["title", "description", "url", "author"],
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60,
+          "description": "Site title"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 50,
+          "maxLength": 160,
+          "description": "Site description for SEO"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Site URL"
+        },
+        "author": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Site author"
+        },
+        "image": {
+          "type": "string",
+          "format": "uri",
+          "description": "Default Open Graph image"
+        },
+        "icon": {
+          "type": "string",
+          "format": "uri",
+          "description": "Favicon path"
+        },
+        "locale": {
+          "type": "string",
+          "pattern": "^[a-z]{2}-[A-Z]{2}$",
+          "default": "en-US",
+          "description": "Site locale"
+        }
+      },
+      "additionalProperties": false
+    },
+    "theme": {
+      "type": "object",
+      "required": [
+        "primaryColor",
+        "secondaryColor",
+        "accentColor",
+        "fontFamily"
+      ],
+      "properties": {
+        "primaryColor": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$",
+          "description": "Primary brand color (hex)"
+        },
+        "secondaryColor": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$",
+          "description": "Secondary color (hex)"
+        },
+        "accentColor": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$",
+          "description": "Accent color (hex)"
+        },
+        "darkMode": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable dark mode support"
+        },
+        "borderRadius": {
+          "type": "string",
+          "pattern": "^\\d+(\\.\\d+)?(rem|px|em)$",
+          "description": "Default border radius"
+        },
+        "fontFamily": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Primary font family"
+        }
+      },
+      "additionalProperties": false
+    },
+    "database": {
+      "type": "object",
+      "required": ["provider"],
+      "properties": {
+        "provider": {
+          "type": "string",
+          "enum": ["supabase", "neon", "postgres"],
+          "description": "Database provider"
+        },
+        "realtime": {
+          "type": "boolean",
+          "description": "Enable real-time features (Supabase only)"
+        },
+        "auth": {
+          "type": "boolean",
+          "description": "Enable built-in auth (Supabase only)"
+        },
+        "storage": {
+          "type": "boolean",
+          "description": "Enable file storage (Supabase only)"
+        },
+        "serverless": {
+          "type": "boolean",
+          "description": "Serverless configuration (Neon only)"
+        },
+        "pooling": {
+          "type": "boolean",
+          "description": "Connection pooling (Neon only)"
+        },
+        "native": {
+          "type": "boolean",
+          "description": "Native PostgreSQL (Postgres only)"
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": { "properties": { "provider": { "const": "supabase" } } },
+          "then": {
+            "required": ["provider"],
+            "properties": {
+              "realtime": { "type": "boolean", "default": true },
+              "auth": { "type": "boolean", "default": true },
+              "storage": { "type": "boolean", "default": true }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "provider": { "const": "neon" } } },
+          "then": {
+            "required": ["provider"],
+            "properties": {
+              "serverless": { "type": "boolean", "default": true },
+              "pooling": { "type": "boolean", "default": true }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "provider": { "const": "postgres" } } },
+          "then": {
+            "required": ["provider"],
+            "properties": {
+              "native": { "type": "boolean", "default": true }
+            }
+          }
+        }
+      ]
+    },
+    "seo": {
+      "type": "object",
+      "required": [
+        "enableSitemap",
+        "enableRobotsTxt",
+        "metaTitleTemplate",
+        "metaDescription"
+      ],
+      "properties": {
+        "enableSitemap": { "type": "boolean" },
+        "enableRobotsTxt": { "type": "boolean" },
+        "enableStructuredData": { "type": "boolean" },
+        "enableOpenGraph": { "type": "boolean", "default": true },
+        "enableTwitterCards": { "type": "boolean", "default": true },
+        "metaTitleTemplate": {
+          "type": "string",
+          "pattern": ".*%s.*",
+          "description": "Title template with %s placeholder"
+        },
+        "metaDescription": {
+          "type": "string",
+          "minLength": 50,
+          "maxLength": 160,
+          "description": "Default meta description"
+        }
+      },
+      "additionalProperties": false
+    },
+    "analytics": {
+      "type": "object",
+      "required": ["enabled"],
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "providers": {
+          "type": "object",
+          "properties": {
+            "googleAnalytics": {
+              "type": "string",
+              "pattern": "^GA-[A-Z0-9]+$"
+            },
+            "googleTagManager": {
+              "type": "string",
+              "pattern": "^GTM-[A-Z0-9]+$"
+            },
+            "agencyDashboard": { "type": "boolean" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "content": {
+      "type": "object",
+      "properties": {
+        "provider": {
+          "type": "string",
+          "enum": ["storyblok", "contentful", "strapi"],
+          "description": "CMS provider"
+        },
+        "enablePreview": { "type": "boolean" },
+        "enableVisualEditor": { "type": "boolean" },
+        "enableBlog": { "type": "boolean" },
+        "blogPath": {
+          "type": "string",
+          "pattern": "^/[a-z0-9-]*$",
+          "description": "Blog URL path"
+        },
+        "postsPerPage": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "description": "Blog posts per page"
+        },
+        "enableComments": { "type": "boolean" },
+        "enableCategories": { "type": "boolean" },
+        "enableTags": { "type": "boolean" },
+        "enablePortfolio": { "type": "boolean" },
+        "portfolioPath": {
+          "type": "string",
+          "pattern": "^/[a-z0-9-]*$",
+          "description": "Portfolio URL path"
+        },
+        "projectsPerPage": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "description": "Portfolio projects per page"
+        }
+      },
+      "additionalProperties": false
+    },
+    "contact": {
+      "type": "object",
+      "required": ["enabled"],
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Contact email"
+        },
+        "phone": {
+          "type": "string",
+          "pattern": "^\\+?[1-9]\\d{1,14}$",
+          "description": "Phone number in E.164 format"
+        },
+        "address": {
+          "type": "object",
+          "properties": {
+            "street": { "type": "string" },
+            "city": { "type": "string" },
+            "state": { "type": "string" },
+            "zip": { "type": "string", "pattern": "^\\d{5}(-\\d{4})?$" },
+            "country": { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        "social": {
+          "type": "object",
+          "properties": {
+            "twitter": { "type": "string", "format": "uri" },
+            "linkedin": { "type": "string", "format": "uri" },
+            "facebook": { "type": "string", "format": "uri" },
+            "instagram": { "type": "string", "format": "uri" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "ecommerce": {
+      "type": "object",
+      "required": ["enabled"],
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "provider": {
+          "type": "string",
+          "enum": ["stripe", "shopify", "paypal"],
+          "description": "Payment provider"
+        },
+        "currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$",
+          "description": "Currency code (ISO 4217)"
+        },
+        "enableShipping": { "type": "boolean" },
+        "enableTaxes": { "type": "boolean" },
+        "enableInventory": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "auth": {
+      "type": "object",
+      "required": ["enabled"],
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "provider": {
+          "type": "string",
+          "enum": ["supabase", "nextauth", "auth0", "clerk"],
+          "description": "Authentication provider"
+        },
+        "enableSocialLogin": { "type": "boolean" },
+        "enableEmailLogin": { "type": "boolean" },
+        "enableMagicLink": { "type": "boolean" },
+        "providers": {
+          "type": "object",
+          "properties": {
+            "google": { "type": "boolean" },
+            "github": { "type": "boolean" },
+            "twitter": { "type": "boolean" },
+            "facebook": { "type": "boolean" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "performance": {
+      "type": "object",
+      "required": ["enableImageOptimization", "enableFontOptimization"],
+      "properties": {
+        "enableImageOptimization": { "type": "boolean" },
+        "enableFontOptimization": { "type": "boolean" },
+        "enableCodeSplitting": { "type": "boolean" },
+        "enableLazyLoading": { "type": "boolean" },
+        "enableCaching": { "type": "boolean" },
+        "enableCompression": { "type": "boolean" },
+        "enableCDN": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "development": {
+      "type": "object",
+      "required": ["enableHotReload"],
+      "properties": {
+        "enableHotReload": { "type": "boolean" },
+        "enableErrorReporting": { "type": "boolean" },
+        "enablePerformanceMonitoring": { "type": "boolean" },
+        "enableDebugMode": { "type": "boolean" },
+        "enableStorybook": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

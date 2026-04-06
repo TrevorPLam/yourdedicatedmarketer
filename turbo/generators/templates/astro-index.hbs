@@ -1,0 +1,50 @@
+---
+import Base from '../layouts/Base.astro'
+import { clientConfig } from '../client.config'
+import Hero from '../components/sections/Hero.astro'
+import Services from '../components/sections/Services.astro'
+{{#includes features 'portfolio'}}
+import Portfolio from '../components/sections/Portfolio.astro'
+{{/includes}}
+{{#includes features 'blog'}}
+import Blog from '../components/sections/Blog.astro'
+{{/includes}}
+{{#includes features 'contact'}}
+import Contact from '../components/sections/Contact.astro'
+{{/includes}}
+---
+
+<Base title={clientConfig.site.title} description={clientConfig.site.description}>
+  <main>
+    <Hero 
+      title={`Welcome to ${clientConfig.client.name}`}
+      subtitle={clientConfig.site.description}
+      ctaText="Get Started"
+      ctaLink="/contact"
+    />
+    
+    <Services />
+    
+    {{#includes features 'portfolio'}}
+    <Portfolio />
+    {{/includes}}
+    
+    {{#includes features 'blog'}}
+    <Blog />
+    {{/includes}}
+    
+    {{#includes features 'contact'}}
+    <Contact />
+    {{/includes}}
+  </main>
+</Base>
+
+<style>
+  main {
+    min-height: 100vh;
+  }
+  
+  section {
+    scroll-margin-top: 4rem;
+  }
+</style>

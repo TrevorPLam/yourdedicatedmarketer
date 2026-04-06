@@ -1,0 +1,127 @@
+{
+  "name": "Marketing Agency Monorepo",
+  "dockerComposeFile": "../docker-compose.dev.yml",
+  "service": "workspace",
+  "workspaceFolder": "/workspace",
+
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "22.12.0",
+      "pnpm": "10.0.0"
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": true,
+      "configureZshAsDefaultShell": true,
+      "upgradeUackages": true
+    },
+    "ghcr.io/devcontainers/features/git:1": {
+      "version": "latest",
+      "ppa": "false"
+    },
+    "ghcr.io/devcontainers/features/git-lfs:1": {
+      "version": "latest"
+    }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss",
+        "ms-vscode.vscode-typescript-next",
+        "astro-build.astro-vscode",
+        "ms-vscode.vscode-json",
+        "redhat.vscode-yaml",
+        "ms-vscode-remote.remote-containers",
+        "github.copilot",
+        "github.copilot-chat",
+        "ms-vscode.vscode-turbo",
+        "nrwl.angular-console",
+        "ms-playwright.playwright"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit",
+          "source.organizeImports": "explicit"
+        },
+        "typescript.preferences.preferTypeOnlyAutoImports": true,
+        "typescript.suggest.autoImports": true,
+        "typescript.updateImportsOnFileMove.enabled": "always",
+        "eslint.workingDirectories": ["*"],
+        "eslint.validate": [
+          "javascript",
+          "javascriptreact",
+          "typescript",
+          "typescriptreact",
+          "astro"
+        ],
+        "prettier.configPath": ".prettierrc",
+        "prettier.ignorePath": ".gitignore",
+        "files.associations": {
+          "*.astro": "astro"
+        },
+        "emmet.includeLanguages": {
+          "astro": "html"
+        },
+        "tailwindCSS.includeLanguages": {
+          "astro": "html"
+        },
+        "files.watcherExclude": {
+          "**/node_modules/**": true,
+          "**/dist/**": true,
+          "**/.next/**": true,
+          "**/.turbo/**": true
+        }
+      }
+    }
+  },
+
+  "postCreateCommand": "pnpm install && turbo run db:migrate && turbo run db:seed",
+  "postStartCommand": "turbo run dev --parallel",
+  "forwardPorts": [3000, 3001, 3002, 3003, 3004, 6006, 8911, 5432],
+  "portsAttributes": {
+    "3000": {
+      "label": "Agency Website (Astro)",
+      "onAutoForward": "notify"
+    },
+    "3001": {
+      "label": "Client Alpha (Next.js)",
+      "onAutoForward": "notify"
+    },
+    "3002": {
+      "label": "Client Beta (Next.js)",
+      "onAutoForward": "notify"
+    },
+    "3003": {
+      "label": "Project Manager (Next.js)",
+      "onAutoForward": "notify"
+    },
+    "3004": {
+      "label": "Analytics Dashboard (Next.js)",
+      "onAutoForward": "notify"
+    },
+    "6006": {
+      "label": "Storybook",
+      "onAutoForward": "notify"
+    },
+    "8911": {
+      "label": "Database Studio",
+      "onAutoForward": "notify"
+    },
+    "5432": {
+      "label": "PostgreSQL Database",
+      "onAutoForward": "notify"
+    }
+  },
+
+  "remoteUser": "vscode",
+  "mounts": [
+    "source=${localWorkspaceFolder}/node_modules,target=/workspace/node_modules,type=volume"
+  ],
+
+  "runArgs": ["--cap-add=SYS_PTRACE", "--security-opt=seccomp=unconfined"]
+}

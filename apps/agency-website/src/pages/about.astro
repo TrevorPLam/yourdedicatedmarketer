@@ -1,0 +1,131 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import CTA from '../components/sections/CTA.astro';
+import { getCollection } from 'astro:content';
+
+const teamMembers = await getCollection('team');
+teamMembers.sort((a, b) => a.data.order - b.data.order);
+---
+
+<Base title="About Us - Your Dedicated Marketer" description="Learn about Your Dedicated Marketer — our story, our team, and the values that drive everything we do for our clients.">
+	<div class="min-h-screen flex flex-col">
+		<Header />
+
+		<main id="main-content" class="flex-1">
+			<!-- Page Header -->
+			<section class="bg-gradient-to-br from-blue-50 to-indigo-100 py-16">
+				<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+					<h1 class="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
+						About Us
+					</h1>
+					<p class="text-xl text-gray-600 max-w-3xl mx-auto">
+						We're a dedicated marketing agency committed to helping businesses grow through smart, data-driven digital strategies.
+					</p>
+				</div>
+			</section>
+
+			<!-- Our Story -->
+			<section class="py-20 bg-white">
+				<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+					<div class="prose prose-lg max-w-none">
+						<h2 class="text-3xl font-bold text-gray-900 mb-6">Our Story</h2>
+						<p class="text-gray-600 text-lg mb-6">
+							Your Dedicated Marketer was founded with one goal in mind: to be the marketing partner that businesses actually want — one that listens, adapts, and delivers results without the agency runaround.
+						</p>
+						<p class="text-gray-600 text-lg mb-6">
+							We believe great marketing isn't about tricks or shortcuts. It's about understanding your audience, communicating your value clearly, and showing up consistently across every channel that matters.
+						</p>
+						<p class="text-gray-600 text-lg">
+							From solo entrepreneurs to growing enterprises, we've helped businesses across dozens of industries build a digital presence that works — and keeps working.
+						</p>
+					</div>
+				</div>
+			</section>
+
+			<!-- Values -->
+			<section class="py-20 bg-gray-50">
+				<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+					<div class="text-center mb-16">
+						<h2 class="text-3xl font-bold text-gray-900 mb-4">What We Stand For</h2>
+						<p class="text-xl text-gray-600 max-w-2xl mx-auto">
+							Our values shape every project, every client relationship, and every decision we make.
+						</p>
+					</div>
+					<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+						<div class="bg-white rounded-xl p-6 shadow-sm text-center">
+							<div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+								<svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+								</svg>
+							</div>
+							<h3 class="text-lg font-semibold text-gray-900 mb-2">Honesty</h3>
+							<p class="text-gray-600 text-sm">We tell you what you need to hear, not just what you want to hear.</p>
+						</div>
+						<div class="bg-white rounded-xl p-6 shadow-sm text-center">
+							<div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+								<svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+								</svg>
+							</div>
+							<h3 class="text-lg font-semibold text-gray-900 mb-2">Results</h3>
+							<p class="text-gray-600 text-sm">Every strategy we build is measured against real business outcomes.</p>
+						</div>
+						<div class="bg-white rounded-xl p-6 shadow-sm text-center">
+							<div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+								<svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+								</svg>
+							</div>
+							<h3 class="text-lg font-semibold text-gray-900 mb-2">Partnership</h3>
+							<p class="text-gray-600 text-sm">We become an extension of your team, not just a vendor you call.</p>
+						</div>
+						<div class="bg-white rounded-xl p-6 shadow-sm text-center">
+							<div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+								<svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+								</svg>
+							</div>
+							<h3 class="text-lg font-semibold text-gray-900 mb-2">Adaptability</h3>
+							<p class="text-gray-600 text-sm">Digital marketing moves fast. We stay ahead so you don't fall behind.</p>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- Team -->
+			{teamMembers.length > 0 && (
+				<section class="py-20 bg-white">
+					<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+						<div class="text-center mb-16">
+							<h2 class="text-3xl font-bold text-gray-900 mb-4">Meet Our Team</h2>
+							<p class="text-xl text-gray-600 max-w-2xl mx-auto">
+								The people behind your results.
+							</p>
+						</div>
+						<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+							{teamMembers.map((member) => (
+								<div class="text-center">
+									<img
+										src={member.data.imageUrl}
+										alt={member.data.imageAlt}
+										class="w-32 h-32 rounded-full object-cover mx-auto mb-4 shadow-md"
+										loading="lazy"
+									/>
+									<h3 class="text-lg font-semibold text-gray-900">{member.data.name}</h3>
+									<p class="text-blue-600 text-sm mb-3">{member.data.role}</p>
+									<p class="text-gray-600 text-sm">{member.data.bio}</p>
+								</div>
+							))}
+						</div>
+					</div>
+				</section>
+			)}
+
+			<CTA />
+		</main>
+
+		<Footer />
+	</div>
+</Base>

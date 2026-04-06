@@ -1,0 +1,67 @@
+import { clientConfig } from '@/client.config'
+import Hero from '@/components/sections/Hero'
+import Services from '@/components/sections/Services'
+{{#includes features 'portfolio'}}
+import Portfolio from '@/components/sections/Portfolio'
+{{/includes}}
+{{#includes features 'blog'}}
+import Blog from '@/components/sections/Blog'
+{{/includes}}
+{{#includes features 'contact'}}
+import Contact from '@/components/sections/Contact'
+{{/includes}}
+
+export const metadata = {
+  title: clientConfig.site.title,
+  description: clientConfig.site.description,
+  openGraph: {
+    title: clientConfig.site.title,
+    description: clientConfig.site.description,
+    url: clientConfig.site.url,
+    siteName: clientConfig.site.title,
+    images: [clientConfig.site.image],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: clientConfig.site.title,
+    description: clientConfig.site.description,
+    images: [clientConfig.site.image],
+  },
+  {{#includes features 'seo'}}
+  robots: {
+    index: true,
+    follow: true,
+  },
+  alternates: {
+    canonical: clientConfig.site.url,
+  },
+  {{/includes}}
+}
+
+export default function HomePage() {
+  return (
+    <main className="min-h-screen">
+      <Hero 
+        title={`Welcome to ${clientConfig.client.name}`}
+        subtitle={clientConfig.site.description}
+        ctaText="Get Started"
+        ctaLink="/contact"
+      />
+      
+      <Services />
+      
+      {{#includes features 'portfolio'}}
+      <Portfolio />
+      {{/includes}}
+      
+      {{#includes features 'blog'}}
+      <Blog />
+      {{/includes}}
+      
+      {{#includes features 'contact'}}
+      <Contact />
+      {{/includes}}
+    </main>
+  )
+}
