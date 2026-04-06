@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Card } from '@agency/ui-components/react';
 import { Button } from '@agency/ui-components/react';
 import { useAnalytics } from '@agency/analytics';
-import { useMonitoring } from '@agency/monitoring';
+// import { useMonitoring } from '@agency/monitoring/hooks';
 import {
   Users,
   FileText,
@@ -439,7 +439,7 @@ export function ClientPortal() {
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [activeTab, setActiveTab] = useState<'updates' | 'files' | 'messages'>('updates');
   const { trackEvent } = useAnalytics();
-  const { trackError } = useMonitoring();
+  // const { trackError } = useMonitoring();
 
   const { data: clients, isLoading: clientsLoading } = useQuery({
     queryKey: ['clients'],

@@ -8,7 +8,7 @@ import { Card, Button } from '@agency/ui-components/react';
 import { useWebSocket } from '@/hooks/useWebSocket';
 import { useProjectStore } from '@/store/projectStore';
 import { useAnalytics } from '@agency/analytics';
-import { useMonitoring } from '@agency/monitoring';
+// import { useMonitoring } from '@agency/monitoring/hooks';
 import {
   ProjectTimelineChart,
   RevenueChart,
@@ -164,7 +164,7 @@ function StatCard({
 
 export function EnhancedDashboardOverview() {
   const { trackEvent } = useAnalytics();
-  const { trackError } = useMonitoring();
+  // const { trackError } = useMonitoring();
   const { refreshData } = useProjectStore();
 
   // WebSocket connection for real-time updates

@@ -44,7 +44,7 @@ export async function warmCriticalPages(): Promise<void> {
 
     // Revalidate critical cache tags
     for (const tag of CRITICAL_CACHE_TAGS) {
-      revalidateTag(tag);
+      revalidateTag(tag, 'cache-warming'); // Add second parameter for Next.js 16
     }
 
     console.log('Client cache warming completed for critical pages and tags');
@@ -71,7 +71,7 @@ export async function warmPage(path: string): Promise<void> {
  */
 export async function warmCacheTag(tag: string): Promise<void> {
   try {
-    revalidateTag(tag);
+    revalidateTag(tag, 'cache-warming'); // Add second parameter for Next.js 16
     console.log(`Client cache warmed for tag: ${tag}`);
   } catch (error) {
     console.error(`Client cache warming failed for tag ${tag}:`, error);

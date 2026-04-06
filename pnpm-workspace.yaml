@@ -23,7 +23,7 @@ catalog:
   'react-dom': '^19.2.0'
   typescript: '^5.9.0'
   astro: '^6.0.0'
-  next: '^16.0.10'
+  next: '^16.2.2'
   
   # Database Providers
   '@supabase/supabase-js': '^2.49.0'

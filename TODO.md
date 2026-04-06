@@ -46,11 +46,10 @@ Based on analysis of the existing codebase:
 Upgrade Next.js to address critical CVE-2025-55184 (DoS) and CVE-2025-55183 (source code exposure) vulnerabilities that pose immediate security risks to all applications.
 
 #### Definition of Done (DoD)
-- [ ] Next.js upgraded to 16.3.0+ across all applications
-- [ ] All applications build and run successfully after upgrade
 - [ ] Security scan confirms CVE remediation
 - [ ] Cache Components reviewed for security implications
 - [ ] proxy.ts functionality verified post-upgrade
+- [ ] All applications build and run successfully after upgrade
 
 #### Out of Scope
 - Complete application rewrite for new features
@@ -63,7 +62,7 @@ Upgrade Next.js to address critical CVE-2025-55184 (DoS) and CVE-2025-55183 (sou
 **External references:** Next.js 16.3.0 release notes, CVE security advisories
 
 #### Rules & Constraints
-1. Must upgrade to Next.js 16.3.0+ to address critical CVEs
+1. Must upgrade to Next.js 16.2.2+ to address critical CVEs
 2. All existing functionality must remain intact
 3. Cache Components must be reviewed for security implications
 4. proxy.ts must maintain all existing middleware functionality

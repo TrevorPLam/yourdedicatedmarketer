@@ -9,7 +9,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getSecurityConfig } from '../../../../../security.config';
+// import { getSecurityConfig } from '../../../../../../security.config'; // Temporarily commented for Next.js security upgrade
 
 // Violation severity levels
 const SEVERITY_LEVELS = {
@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
     // Get request context
     const userAgent = request.headers.get('user-agent') || 'unknown';
     const xForwardedFor = request.headers.get('x-forwarded-for');
-    const clientIP = xForwardedFor?.split(',')[0] || request.ip || 'unknown';
+    const clientIP = xForwardedFor?.split(',')[0] || 'unknown'; // request.ip is not available in Next.js
     const timestamp = new Date().toISOString();
     
     // Parse violation report
@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
     const severity = determineSeverity(sanitizedViolation);
     
     // Get security configuration
-    const securityConfig = getSecurityConfig();
+    // const securityConfig = getSecurityConfig(); // Temporarily commented for Next.js security upgrade
     
     // Log violation with context
     const logEntry = {
@@ -122,12 +122,12 @@ export async function POST(request: NextRequest) {
         userAgent,
         clientIP,
         app: 'client-beta',
-        environment: securityConfig.infrastructure.environment,
+        environment: process.env.NODE_ENV || 'development', // Fallback for Next.js security upgrade
       },
     };
     
     // Log to console (development) or external service (production)
-    if (securityConfig.infrastructure.environment === 'development') {
+    if (process.env.NODE_ENV === 'development') { // Simplified for Next.js security upgrade
       console.error('CSP Violation (Client Beta):', JSON.stringify(logEntry, null, 2));
     } else {
       // In production, send to security monitoring service

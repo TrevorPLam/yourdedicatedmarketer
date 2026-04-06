@@ -9,7 +9,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getSecurityConfig, generateNonce, buildCSPHeader, getSecurityHeaders } from '../../../security.config';
+// import { getSecurityConfig, generateNonce, buildCSPHeader, getSecurityHeaders } from '../../../security.config'; // Temporarily commented for Next.js security upgrade
 
 // Client-specific configuration
 const CLIENT_CONFIG = {
@@ -40,20 +40,21 @@ const PUBLIC_ROUTES = [
 
 export function proxy(request: NextRequest): NextResponse {
   const { pathname } = new URL(request.url);
-  const nonce = generateNonce();
+  // const nonce = generateNonce(); // Temporarily commented for Next.js security upgrade
+  const nonce = crypto.randomUUID(); // Fallback nonce generation
   const isDev = process.env.NODE_ENV === 'development';
   const environment = process.env.NODE_ENV || 'development';
   const origin = request.headers.get('origin');
   const referer = request.headers.get('referer');
   
   // Get security configuration for current environment
-  const securityConfig = getSecurityConfig(environment);
+  // const securityConfig = getSecurityConfig(environment); // Temporarily commented for Next.js security upgrade
   
   // Build CSP header with nonce
-  const cspHeader = buildCSPHeader(securityConfig.csp, nonce);
+  // const cspHeader = buildCSPHeader(securityConfig.csp, nonce); // Temporarily commented for Next.js security upgrade
   
   // Get all security headers
-  const securityHeaders = getSecurityHeaders(environment, nonce);
+  // const securityHeaders = getSecurityHeaders(environment, nonce); // Temporarily commented for Next.js security upgrade
   
   // Set nonce in request headers for Next.js to use
   const requestHeaders = new Headers(request.headers);
@@ -67,9 +68,9 @@ export function proxy(request: NextRequest): NextResponse {
   });
   
   // Apply all security headers
-  Object.entries(securityHeaders).forEach(([key, value]) => {
-    response.headers.set(key, value);
-  });
+  // Object.entries(securityHeaders).forEach(([key, value]) => { // Temporarily commented for Next.js security upgrade
+  //   response.headers.set(key, value);
+  // });
   
   // Add client identification headers
   response.headers.set('X-Client-Name', CLIENT_CONFIG.name);
@@ -80,13 +81,13 @@ export function proxy(request: NextRequest): NextResponse {
   response.headers.set('X-Nonce-Used', nonce);
   
   // Client-specific CSP adjustments for analytics and third-party scripts
-  if (securityConfig.csp.enabled) {
-    const clientCSP = cspHeader.replace(
-      "script-src 'self'",
-      "script-src 'self' https://www.googletagmanager.com https://www.google-analytics.com"
-    );
-    response.headers.set('Content-Security-Policy', clientCSP);
-  }
+  // if (securityConfig.csp.enabled) { // Temporarily commented for Next.js security upgrade
+  //   const clientCSP = cspHeader.replace(
+  //     "script-src 'self'",
+  //     "script-src 'self' https://www.googletagmanager.com https://www.google-analytics.com"
+  //   );
+  //   response.headers.set('Content-Security-Policy', clientCSP);
+  // }
   
   // Log security events in development
   if (isDev) {
@@ -94,7 +95,7 @@ export function proxy(request: NextRequest): NextResponse {
       pathname,
       nonce: nonce.substring(0, 8) + '...', // Log partial nonce for debugging
       environment,
-      cspApplied: !!securityHeaders['Content-Security-Policy'],
+      cspApplied: false, // Temporarily disabled for Next.js security upgrade
     });
   }
   

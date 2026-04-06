@@ -7,7 +7,6 @@
     "declarationMap": true,
     "sourceMap": true,
     "composite": true,
-    "incremental": true,
     "baseUrl": ".",
     "paths": {
       "@agency/*": ["../../../packages/*/src"],

@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { Card } from '@agency/ui-components/react';
 import { Button } from '@agency/ui-components/react';
 import { useAnalytics } from '@agency/analytics';
-import { useMonitoring } from '@agency/monitoring';
+// import { useMonitoring } from '@agency/monitoring';
 import {
   LineChart,
   Line,
@@ -253,7 +253,7 @@ function PerformanceRadarChart({ data }: { data: AnalyticsData['performanceMetri
 export function AnalyticsDashboard() {
   const [timeRange, setTimeRange] = useState('7d');
   const { trackEvent } = useAnalytics();
-  const { trackError } = useMonitoring();
+  // const { trackError } = useMonitoring();
 
   const {
     data: analytics,

@@ -12,14 +12,6 @@ const nextConfig = {
     turbopackFileSystemCacheForBuild: true,
     
     optimizePackageImports: ['@agency/ui-components', 'lucide-react'],
-    turbo: {
-      rules: {
-        '*.svg': {
-          loaders: ['@svgr/webpack'],
-          as: '*.js',
-        },
-      },
-    },
   },
   images: {
     remotePatterns: [
@@ -103,7 +95,7 @@ const nextConfig = {
       },
       {
         // Cache headers for pages (client-side caching)
-        source: '/(?!api|_next/static|_next/image|images).*/',
+        source: '/((?!api|_next/static|_next/image|images).*)',
         headers: [
           {
             key: 'Cache-Control',
@@ -141,7 +133,6 @@ const nextConfig = {
   
   // Enable React Compiler for Next.js 16
   reactStrictMode: true,
-  swcMinify: true,
   
   // Performance optimizations
   poweredByHeader: false,
