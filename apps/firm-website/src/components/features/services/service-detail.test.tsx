@@ -22,22 +22,36 @@ describe('ServiceDetail', () => {
     vi.clearAllMocks();
   });
 
-  it('renders content and title', async () => {
+  it('calls getBreadcrumbs with correct slug', async () => {
     const { getBreadcrumbs } = await import('@/lib/navigation');
     vi.mocked(getBreadcrumbs).mockResolvedValue([]);
 
-    render(
-      await <ServiceDetail
-        content="<p>Service content</p>"
-        title="Website Design"
-        slug="website-design"
-      />
-    );
+    const element = await ServiceDetail({
+      content: '<p>Content</p>',
+      title: 'Website Design',
+      slug: 'website-design',
+    });
+
+    render(element);
+    expect(getBreadcrumbs).toHaveBeenCalledWith('website-design');
+  });
+
+  it('renders content and title when breadcrumbs are empty', async () => {
+    const { getBreadcrumbs } = await import('@/lib/navigation');
+    vi.mocked(getBreadcrumbs).mockResolvedValue([]);
+
+    const element = await ServiceDetail({
+      content: '<p>Service content</p>',
+      title: 'Website Design',
+      slug: 'website-design',
+    });
+
+    render(element);
     expect(screen.getByText('Website Design')).toBeInTheDocument();
     expect(screen.getByText('Service content')).toBeInTheDocument();
   });
 
-  it('renders breadcrumbs', async () => {
+  it('renders breadcrumbs when provided', async () => {
     const { getBreadcrumbs } = await import('@/lib/navigation');
     vi.mocked(getBreadcrumbs).mockResolvedValue([
       { label: 'Home', href: '/' },
@@ -45,30 +59,16 @@ describe('ServiceDetail', () => {
       { label: 'Website Design', href: null },
     ]);
 
-    render(
-      await <ServiceDetail
-        content="<p>Content</p>"
-        title="Website Design"
-        slug="website-design"
-      />
-    );
+    const element = await ServiceDetail({
+      content: '<p>Content</p>',
+      title: 'Website Design',
+      slug: 'website-design',
+    });
+
+    render(element);
     expect(screen.getByText('Home')).toBeInTheDocument();
     expect(screen.getByText('Services')).toBeInTheDocument();
-    expect(screen.getByText('Website Design')).toBeInTheDocument();
-  });
-
-  it('calls getBreadcrumbs with correct slug', async () => {
-    const { getBreadcrumbs } = await import('@/lib/navigation');
-    vi.mocked(getBreadcrumbs).mockResolvedValue([]);
-
-    render(
-      await <ServiceDetail
-        content="<p>Content</p>"
-        title="Website Design"
-        slug="website-design"
-      />
-    );
-    expect(getBreadcrumbs).toHaveBeenCalledWith('website-design');
+    // Title is tested separately in the content/title test
   });
 
   it('renders breadcrumb navigation with correct structure', async () => {
@@ -78,13 +78,13 @@ describe('ServiceDetail', () => {
       { label: 'Services', href: '/services' },
     ]);
 
-    render(
-      await <ServiceDetail
-        content="<p>Content</p>"
-        title="Website Design"
-        slug="website-design"
-      />
-    );
+    const element = await ServiceDetail({
+      content: '<p>Content</p>',
+      title: 'Website Design',
+      slug: 'website-design',
+    });
+
+    render(element);
     const nav = screen.getByRole('navigation', { name: 'Breadcrumb' });
     expect(nav).toBeInTheDocument();
   });

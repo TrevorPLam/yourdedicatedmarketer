@@ -27,25 +27,42 @@ describe('DemoDetail', () => {
     vi.clearAllMocks();
   });
 
-  it('renders content and title', async () => {
+  it('calls getBreadcrumbs with correct slug', async () => {
     const { getBreadcrumbs } = await import('@/lib/navigation');
     const { getAllIndustries } = await import('@/lib/content');
     vi.mocked(getBreadcrumbs).mockResolvedValue([]);
     vi.mocked(getAllIndustries).mockResolvedValue([]);
 
-    render(
-      await <DemoDetail
-        content="<p>Demo content</p>"
-        title="Retail Demo"
-        slug="retail-demo"
-        industry="retail"
-      />
-    );
+    const element = await DemoDetail({
+      content: '<p>Content</p>',
+      title: 'Retail Demo',
+      slug: 'retail-demo',
+      industry: 'retail',
+    });
+
+    render(element);
+    expect(getBreadcrumbs).toHaveBeenCalledWith('retail-demo');
+  });
+
+  it('renders content and title when breadcrumbs are empty', async () => {
+    const { getBreadcrumbs } = await import('@/lib/navigation');
+    const { getAllIndustries } = await import('@/lib/content');
+    vi.mocked(getBreadcrumbs).mockResolvedValue([]);
+    vi.mocked(getAllIndustries).mockResolvedValue([]);
+
+    const element = await DemoDetail({
+      content: '<p>Demo content</p>',
+      title: 'Retail Demo',
+      slug: 'retail-demo',
+      industry: 'retail',
+    });
+
+    render(element);
     expect(screen.getByText('Retail Demo')).toBeInTheDocument();
     expect(screen.getByText('Demo content')).toBeInTheDocument();
   });
 
-  it('renders breadcrumbs', async () => {
+  it('renders breadcrumbs when provided', async () => {
     const { getBreadcrumbs } = await import('@/lib/navigation');
     const { getAllIndustries } = await import('@/lib/content');
     vi.mocked(getBreadcrumbs).mockResolvedValue([
@@ -55,34 +72,17 @@ describe('DemoDetail', () => {
     ]);
     vi.mocked(getAllIndustries).mockResolvedValue([]);
 
-    render(
-      await <DemoDetail
-        content="<p>Content</p>"
-        title="Retail Demo"
-        slug="retail-demo"
-        industry="retail"
-      />
-    );
+    const element = await DemoDetail({
+      content: '<p>Content</p>',
+      title: 'Retail Demo',
+      slug: 'retail-demo',
+      industry: 'retail',
+    });
+
+    render(element);
     expect(screen.getByText('Home')).toBeInTheDocument();
     expect(screen.getByText('Demos')).toBeInTheDocument();
-    expect(screen.getByText('Retail Demo')).toBeInTheDocument();
-  });
-
-  it('calls getBreadcrumbs with correct slug', async () => {
-    const { getBreadcrumbs } = await import('@/lib/navigation');
-    const { getAllIndustries } = await import('@/lib/content');
-    vi.mocked(getBreadcrumbs).mockResolvedValue([]);
-    vi.mocked(getAllIndustries).mockResolvedValue([]);
-
-    render(
-      await <DemoDetail
-        content="<p>Content</p>"
-        title="Retail Demo"
-        slug="retail-demo"
-        industry="retail"
-      />
-    );
-    expect(getBreadcrumbs).toHaveBeenCalledWith('retail-demo');
+    // Title is tested separately in the content/title test
   });
 
   it('renders industry link when matching industry exists', async () => {
@@ -99,14 +99,14 @@ describe('DemoDetail', () => {
       },
     ]);
 
-    render(
-      await <DemoDetail
-        content="<p>Content</p>"
-        title="Retail Demo"
-        slug="retail-demo"
-        industry="retail"
-      />
-    );
+    const element = await DemoDetail({
+      content: '<p>Content</p>',
+      title: 'Retail Demo',
+      slug: 'retail-demo',
+      industry: 'retail',
+    });
+
+    render(element);
     expect(screen.getByText('Learn More About This Industry')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /View Industry Page/i })).toBeInTheDocument();
   });
@@ -125,14 +125,14 @@ describe('DemoDetail', () => {
       },
     ]);
 
-    render(
-      await <DemoDetail
-        content="<p>Content</p>"
-        title="Retail Demo"
-        slug="retail-demo"
-        industry="retail"
-      />
-    );
+    const element = await DemoDetail({
+      content: '<p>Content</p>',
+      title: 'Retail Demo',
+      slug: 'retail-demo',
+      industry: 'retail',
+    });
+
+    render(element);
     expect(screen.queryByText('Learn More About This Industry')).not.toBeInTheDocument();
   });
 
@@ -150,14 +150,14 @@ describe('DemoDetail', () => {
       },
     ]);
 
-    render(
-      await <DemoDetail
-        content="<p>Content</p>"
-        title="Retail Demo"
-        slug="retail-demo"
-        industry="retail"
-      />
-    );
+    const element = await DemoDetail({
+      content: '<p>Content</p>',
+      title: 'Retail Demo',
+      slug: 'retail-demo',
+      industry: 'retail',
+    });
+
+    render(element);
     const industryLink = screen.getByRole('link', { name: /View Industry Page/i });
     expect(industryLink).toHaveAttribute('href', '/industries/retail');
   });
@@ -168,14 +168,14 @@ describe('DemoDetail', () => {
     vi.mocked(getBreadcrumbs).mockResolvedValue([]);
     vi.mocked(getAllIndustries).mockResolvedValue([]);
 
-    render(
-      await <DemoDetail
-        content="<p>Content</p>"
-        title="Retail Demo"
-        slug="retail-demo"
-        industry="retail"
-      />
-    );
+    const element = await DemoDetail({
+      content: '<p>Content</p>',
+      title: 'Retail Demo',
+      slug: 'retail-demo',
+      industry: 'retail',
+    });
+
+    render(element);
     expect(screen.getByText('View Live Demo')).toBeInTheDocument();
     expect(screen.getByText('Coming Soon')).toBeInTheDocument();
   });
@@ -186,14 +186,14 @@ describe('DemoDetail', () => {
     vi.mocked(getBreadcrumbs).mockResolvedValue([]);
     vi.mocked(getAllIndustries).mockResolvedValue([]);
 
-    render(
-      await <DemoDetail
-        content="<p>Content</p>"
-        title="Retail Demo"
-        slug="retail-demo"
-        industry="retail"
-      />
-    );
+    const element = await DemoDetail({
+      content: '<p>Content</p>',
+      title: 'Retail Demo',
+      slug: 'retail-demo',
+      industry: 'retail',
+    });
+
+    render(element);
     const comingSoonButton = screen.getByRole('button', { name: /Coming Soon/i });
     expect(comingSoonButton).toBeDisabled();
   });

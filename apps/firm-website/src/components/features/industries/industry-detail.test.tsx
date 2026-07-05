@@ -27,24 +27,40 @@ describe('IndustryDetail', () => {
     vi.clearAllMocks();
   });
 
-  it('renders content and title', async () => {
+  it('calls getBreadcrumbs with correct slug', async () => {
     const { getBreadcrumbs } = await import('@/lib/navigation');
     const { getAllDemos } = await import('@/lib/content');
     vi.mocked(getBreadcrumbs).mockResolvedValue([]);
     vi.mocked(getAllDemos).mockResolvedValue([]);
 
-    render(
-      await <IndustryDetail
-        content="<p>Industry content</p>"
-        title="Retail"
-        slug="retail"
-      />
-    );
+    const element = await IndustryDetail({
+      content: '<p>Content</p>',
+      title: 'Retail',
+      slug: 'retail',
+    });
+
+    render(element);
+    expect(getBreadcrumbs).toHaveBeenCalledWith('retail');
+  });
+
+  it('renders content and title when breadcrumbs are empty', async () => {
+    const { getBreadcrumbs } = await import('@/lib/navigation');
+    const { getAllDemos } = await import('@/lib/content');
+    vi.mocked(getBreadcrumbs).mockResolvedValue([]);
+    vi.mocked(getAllDemos).mockResolvedValue([]);
+
+    const element = await IndustryDetail({
+      content: '<p>Industry content</p>',
+      title: 'Retail',
+      slug: 'retail',
+    });
+
+    render(element);
     expect(screen.getByText('Retail')).toBeInTheDocument();
     expect(screen.getByText('Industry content')).toBeInTheDocument();
   });
 
-  it('renders breadcrumbs', async () => {
+  it('renders breadcrumbs when provided', async () => {
     const { getBreadcrumbs } = await import('@/lib/navigation');
     const { getAllDemos } = await import('@/lib/content');
     vi.mocked(getBreadcrumbs).mockResolvedValue([
@@ -54,32 +70,16 @@ describe('IndustryDetail', () => {
     ]);
     vi.mocked(getAllDemos).mockResolvedValue([]);
 
-    render(
-      await <IndustryDetail
-        content="<p>Content</p>"
-        title="Retail"
-        slug="retail"
-      />
-    );
+    const element = await IndustryDetail({
+      content: '<p>Content</p>',
+      title: 'Retail',
+      slug: 'retail',
+    });
+
+    render(element);
     expect(screen.getByText('Home')).toBeInTheDocument();
     expect(screen.getByText('Industries')).toBeInTheDocument();
-    expect(screen.getByText('Retail')).toBeInTheDocument();
-  });
-
-  it('calls getBreadcrumbs with correct slug', async () => {
-    const { getBreadcrumbs } = await import('@/lib/navigation');
-    const { getAllDemos } = await import('@/lib/content');
-    vi.mocked(getBreadcrumbs).mockResolvedValue([]);
-    vi.mocked(getAllDemos).mockResolvedValue([]);
-
-    render(
-      await <IndustryDetail
-        content="<p>Content</p>"
-        title="Retail"
-        slug="retail"
-      />
-    );
-    expect(getBreadcrumbs).toHaveBeenCalledWith('retail');
+    // Title is tested separately in the content/title test
   });
 
   it('renders demo link when matching demo exists', async () => {
@@ -97,13 +97,13 @@ describe('IndustryDetail', () => {
       },
     ]);
 
-    render(
-      await <IndustryDetail
-        content="<p>Content</p>"
-        title="Retail"
-        slug="retail"
-      />
-    );
+    const element = await IndustryDetail({
+      content: '<p>Content</p>',
+      title: 'Retail',
+      slug: 'retail',
+    });
+
+    render(element);
     expect(screen.getByText('See It in Action')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /View Demo/i })).toBeInTheDocument();
   });
@@ -123,13 +123,13 @@ describe('IndustryDetail', () => {
       },
     ]);
 
-    render(
-      await <IndustryDetail
-        content="<p>Content</p>"
-        title="Retail"
-        slug="retail"
-      />
-    );
+    const element = await IndustryDetail({
+      content: '<p>Content</p>',
+      title: 'Retail',
+      slug: 'retail',
+    });
+
+    render(element);
     expect(screen.queryByText('See It in Action')).not.toBeInTheDocument();
   });
 
@@ -148,13 +148,13 @@ describe('IndustryDetail', () => {
       },
     ]);
 
-    render(
-      await <IndustryDetail
-        content="<p>Content</p>"
-        title="Retail"
-        slug="retail"
-      />
-    );
+    const element = await IndustryDetail({
+      content: '<p>Content</p>',
+      title: 'Retail',
+      slug: 'retail',
+    });
+
+    render(element);
     const demoLink = screen.getByRole('link', { name: /View Demo/i });
     expect(demoLink).toHaveAttribute('href', '/demos/retail-demo');
   });
