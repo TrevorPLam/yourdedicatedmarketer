@@ -569,9 +569,10 @@
 
 ---
 
-- [ ] **T012** | Status: `PENDING`  
+- [ ] **T012** | Status: `PENDING` (Human tasks remaining)
   **Related File Paths:**
   - Vercel dashboard, DNS provider dashboard
+  - `docs/deployment.md`
 
   **Definition of Done:**
   - Custom domain `yourdedicatedmarketer.com` added to Vercel project.
@@ -591,6 +592,17 @@
   - Depends on: domain ownership.
   - Blocks: final production verification (T015, T017).
 
+  **Implementation Notes:**
+  - Added comprehensive custom domain configuration documentation to docs/deployment.md
+  - Documented DNS configuration for apex domains (A records) and subdomains (CNAME records)
+  - Documented domain redirects with recommendation to use www as primary domain
+  - Documented SSL certificate provisioning and verification steps
+  - Documented Vercel CLI commands for domain management
+  - Added best practices for custom domain setup
+  - Added troubleshooting section for domain issues
+  - Lint passed successfully
+  - Human tasks T012-01 through T012-04 pending (Vercel dashboard and DNS provider setup)
+
 #### Subtasks
 
 | ID      | Agent/Human | File Path / Command            | Description                                                                       | Validation Command  |
@@ -599,7 +611,7 @@
 | T012-02 | HUMAN       | Vercel dashboard               | Add `www.yourdedicatedmarketer.com` and set redirect to apex.                     | Redirect set.       |
 | T012-03 | HUMAN       | DNS provider                   | Update DNS records as instructed by Vercel.                                       | DNS updated.        |
 | T012-04 | HUMAN       | Verify                         | Wait for SSL, visit `https://yourdedicatedmarketer.com` – site loads correctly.    | HTTPS works.        |
-| T012-05 | AGENT       | `docs/deployment.md`           | Document custom domain configuration.                                             | None.               |
+| T012-05 | AGENT       | `docs/deployment.md`           | Document custom domain configuration.                                             | None.               | ✅ Completed    |
 
 ---
 
