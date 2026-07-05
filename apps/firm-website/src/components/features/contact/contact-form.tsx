@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, useRef } from 'react';
 import { useFormStatus } from 'react-dom';
 import { Button } from '@repo/ui';
 import { Input } from '@repo/ui';
@@ -33,9 +33,15 @@ export function ContactForm() {
     submitContact,
     initialContactState
   );
+  const formRef = useRef<HTMLFormElement>(null);
+
+  // Reset form on successful submission
+  if (state.success && formRef.current) {
+    formRef.current.reset();
+  }
 
   return (
-    <form action={formAction} className="space-y-6">
+    <form ref={formRef} action={formAction} className="space-y-6">
       {/* Name Field */}
       <div className="space-y-2">
         <Label htmlFor="name">Name *</Label>
