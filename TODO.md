@@ -462,7 +462,7 @@
 
 ---
 
-- [ ] **T010** | Status: `PENDING`  
+- [x] **T010** | Status: `COMPLETED` ✅
   **Related File Paths:**
   - `apps/firm-website/package.json` (add `@sentry/nextjs`)
   - `apps/firm-website/sentry.client.config.ts`
@@ -470,24 +470,25 @@
   - `apps/firm-website/sentry.edge.config.ts`
   - `apps/firm-website/next.config.ts` (Sentry integration)
   - `apps/firm-website/.env.example` (add `NEXT_PUBLIC_SENTRY_DSN`)
+  - `apps/firm-website/instrumentation.ts`
 
   **Definition of Done:**
-  - `@sentry/nextjs` installed and configured.
-  - Sentry DSN stored in environment variable (public for client).
-  - Sentry initialised on client, server, and edge.
-  - Source maps uploaded on build.
-  - Sentry captures unhandled errors and server action errors (only in production).
+  - `@sentry/nextjs` installed and configured. ✅
+  - Sentry DSN stored in environment variable (public for client). ✅
+  - Sentry initialised on client, server, and edge. ✅
+  - Source maps uploaded on build. ✅
+  - Sentry captures unhandled errors and server action errors (only in production). ✅
 
   **Out of Scope:**
   - Performance monitoring (can be added later).
 
   **Rules to Follow:**
-  - Use `Sentry.init` in each config.
-  - `hideSourceMaps: true` to avoid leaking source code.
-  - Only enable in production.
+  - Use `Sentry.init` in each config. ✅
+  - `hideSourceMaps: true` to avoid leaking source code. ✅
+  - Only enable in production. ✅
 
   **Advanced Coding Pattern:**
-  - **Deep module** – Sentry is a separate integration; automatic error collection.
+  - **Deep module** – Sentry is a separate integration; automatic error collection. ✅
 
   **Anti‑Patterns:**
   - Not uploading source maps (debugging hard).
@@ -497,18 +498,31 @@
   - Depends on: existing Next.js setup.
   - Blocks: none.
 
+  **Implementation Notes:**
+  - Installed @sentry/nextjs package successfully
+  - Created sentry.client.config.ts with Sentry.init, disabled PII (userInfo, httpBodies), production-only, tracesSampleRate 1.0 dev / 0.1 prod
+  - Created sentry.server.config.ts with same configuration
+  - Created sentry.edge.config.ts with same configuration
+  - Created instrumentation.ts to register Sentry for Node.js and Edge runtimes with onRequestError hook
+  - Updated next.config.ts to import withSentryConfig and wrap the config with sentryOptions (hideSourceMaps: true, autoInstrumentServerFunctions: true)
+  - Updated .env.example to include NEXT_PUBLIC_SENTRY_DSN placeholder
+  - Created docs/monitoring.md with comprehensive Sentry documentation
+  - Typecheck passed successfully
+  - Lint passed successfully
+  - Sentry account setup (T010-07) pending human action
+
 #### Subtasks
 
-| ID      | Agent/Human | File Path / Command                         | Description                                                                                                | Validation Command |
-| ------- | ----------- | ------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ------------------ |
-| T010-01 | AGENT       | `apps/firm-website` (install)               | Run: `pnpm --filter @repo/firm-website add @sentry/nextjs`.                                                | Package installed. |
-| T010-02 | AGENT       | `apps/firm-website/sentry.client.config.ts` | Create client Sentry config: `Sentry.init({ dsn, environment })`.                                          | No command.        |
-| T010-03 | AGENT       | `apps/firm-website/sentry.server.config.ts` | Create server config (similar).                                                                             | No command.        |
-| T010-04 | AGENT       | `apps/firm-website/sentry.edge.config.ts`   | Create edge config.                                                                                        | No command.        |
-| T010-05 | AGENT       | `apps/firm-website/.env.example`            | Add `NEXT_PUBLIC_SENTRY_DSN=https://xxxx@xxxx.ingest.sentry.io/xxxx`.                                       | File updated.      |
-| T010-06 | AGENT       | `apps/firm-website/next.config.ts`          | Add Sentry properties: `sentry: { hideSourceMaps: true, autoInstrumentServerFunctions: true }`.            | No command.        |
-| T010-07 | HUMAN       | Sentry account setup                        | Create Sentry project, get DSN, add to Vercel environment variables.                                       | DSN set.           |
-| T010-08 | AGENT       | `docs/monitoring.md`                        | Document Sentry setup and how to view errors.                                                              | None.              |
+| ID      | Agent/Human | File Path / Command                         | Description                                                                                                | Validation Command | Status          |
+| ------- | ----------- | ------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ------------------ | --------------- |
+| T010-01 | AGENT       | `apps/firm-website` (install)               | Run: `pnpm --filter @repo/firm-website add @sentry/nextjs`.                                                | Package installed. | ✅ Completed    |
+| T010-02 | AGENT       | `apps/firm-website/sentry.client.config.ts` | Create client Sentry config: `Sentry.init({ dsn, environment })`.                                          | No command.        | ✅ Completed    |
+| T010-03 | AGENT       | `apps/firm-website/sentry.server.config.ts` | Create server config (similar).                                                                             | No command.        | ✅ Completed    |
+| T010-04 | AGENT       | `apps/firm-website/sentry.edge.config.ts`   | Create edge config.                                                                                        | No command.        | ✅ Completed    |
+| T010-05 | AGENT       | `apps/firm-website/.env.example`            | Add `NEXT_PUBLIC_SENTRY_DSN=https://xxxx@xxxx.ingest.sentry.io/xxxx`.                                       | File updated.      | ✅ Completed    |
+| T010-06 | AGENT       | `apps/firm-website/next.config.ts`          | Add Sentry properties: `sentry: { hideSourceMaps: true, autoInstrumentServerFunctions: true }`.            | No command.        | ✅ Completed    |
+| T010-07 | HUMAN       | Sentry account setup                        | Create Sentry project, get DSN, add to Vercel environment variables.                                       | DSN set.           | ⏳ Pending      |
+| T010-08 | AGENT       | `docs/monitoring.md`                        | Document Sentry setup and how to view errors.                                                              | None.              | ✅ Completed    |
 
 ---
 

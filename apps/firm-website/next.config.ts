@@ -1,5 +1,6 @@
 import type { NextConfig } from 'next';
 import createMDX from '@next/mdx';
+import { withSentryConfig } from '@sentry/nextjs';
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
@@ -65,4 +66,9 @@ const withMDX = createMDX({
   extension: /\.mdx?$/,
 });
 
-export default withMDX(nextConfig);
+const sentryOptions = {
+  hideSourceMaps: true,
+  autoInstrumentServerFunctions: true,
+};
+
+export default withSentryConfig(withMDX(nextConfig), sentryOptions);
