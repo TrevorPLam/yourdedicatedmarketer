@@ -291,7 +291,7 @@ This document defines all tasks required to set up the project foundation, inclu
 
 ### Parent Task P005: Configure Environment Variables and `.env.example`
 
-- [ ] **P005** | Status: `PENDING`  
+- [x] **P005** | Status: `COMPLETE`  
       **Related File Paths:**
   - `apps/firm-website/.env.example`
   - `apps/firm-website/.env.local` (gitignored)
@@ -335,6 +335,19 @@ This document defines all tasks required to set up the project foundation, inclu
 | P005-03 | AGENT       | `apps/firm-website/next.config.ts` | Add `env: { NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL }` or use `publicRuntimeConfig` if needed. Alternatively, you can just rely on `process.env` in the app. We'll leave it as is for now. | No command.                                      |
 | P005-04 | AGENT       | `apps/firm-website/src/lib/env.ts` | Create a Zod schema for environment variables: `z.object({ NEXT_PUBLIC_SITE_URL: z.string().url() })`. Parse `process.env` and export `const env = parsed`. Add a warning if missing.                     | No command.                                      |
 | P005-05 | AGENT       | Update `docs/environment.md`       | Document how to set up local environment and required variables.                                                                                                                                          | None.                                            |
+
+**Implementation Notes:**
+
+- All subtasks completed successfully
+- Installed Zod for environment variable validation
+- Created `src/lib/env.ts` with Zod schema validation for NEXT_PUBLIC_SITE_URL
+- Added default value for NEXT_PUBLIC_SITE_URL to prevent startup failures
+- Updated `.env.example` with additional placeholder variables (NEXT_PUBLIC_ANALYTICS_ID, FORM_API_KEY)
+- Configured `next.config.ts` to expose NEXT_PUBLIC_SITE_URL
+- Updated root `.gitignore` to include .env.development and .env.production
+- Created comprehensive documentation in `docs/environment.md`
+- Fixed pre-existing lint issue in `src/test/utils.test.ts` by adding eslint-disable for vitest globals
+- All QA checks passing: typecheck, lint, unit tests
 
 ---
 
