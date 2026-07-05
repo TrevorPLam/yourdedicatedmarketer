@@ -197,4 +197,65 @@ describe('Content Utilities', () => {
       expect(homeServices?.content.length).toBeGreaterThan(0);
     });
   });
+
+  describe('Demo Content', () => {
+    it('should return all demo slugs', async () => {
+      const slugs = await getAllSlugs('demos');
+      expect(Array.isArray(slugs)).toBe(true);
+      expect(slugs.length).toBe(6);
+      expect(slugs).toContain('plumbing');
+      expect(slugs).toContain('dental');
+      expect(slugs).toContain('salon');
+      expect(slugs).toContain('law-firm');
+      expect(slugs).toContain('restaurant');
+      expect(slugs).toContain('retail-shop');
+    });
+
+    it('should return content for each demo', async () => {
+      const demos = await getAllContent<{ title: string; slug: string; industry: string }>('demos');
+      
+      expect(demos.length).toBe(6);
+      
+      const plumbing = demos.find(item => item.data.slug === 'plumbing');
+      expect(plumbing).toBeDefined();
+      expect(plumbing?.data.title).toBe('Plumbing Business Website');
+      expect(plumbing?.data.industry).toBe('home-services');
+
+      const dental = demos.find(item => item.data.slug === 'dental');
+      expect(dental).toBeDefined();
+      expect(dental?.data.title).toBe('Dental Clinic Website');
+      expect(dental?.data.industry).toBe('medical');
+
+      const salon = demos.find(item => item.data.slug === 'salon');
+      expect(salon).toBeDefined();
+      expect(salon?.data.title).toBe('Salon & Spa Website');
+      expect(salon?.data.industry).toBe('personal-services');
+
+      const lawFirm = demos.find(item => item.data.slug === 'law-firm');
+      expect(lawFirm).toBeDefined();
+      expect(lawFirm?.data.title).toBe('Law Firm Website');
+      expect(lawFirm?.data.industry).toBe('professional-services');
+
+      const restaurant = demos.find(item => item.data.slug === 'restaurant');
+      expect(restaurant).toBeDefined();
+      expect(restaurant?.data.title).toBe('Restaurant Website');
+      expect(restaurant?.data.industry).toBe('restaurants');
+
+      const retailShop = demos.find(item => item.data.slug === 'retail-shop');
+      expect(retailShop).toBeDefined();
+      expect(retailShop?.data.title).toBe('Retail Shop Website');
+      expect(retailShop?.data.industry).toBe('retail');
+    });
+
+    it('should parse demo content with correct metadata', async () => {
+      const plumbing = await getContentBySlug<{ title: string; slug: string; industry: string }>('demos', 'plumbing');
+      
+      expect(plumbing).not.toBeNull();
+      expect(plumbing?.data.title).toBe('Plumbing Business Website');
+      expect(plumbing?.data.slug).toBe('plumbing');
+      expect(plumbing?.data.industry).toBe('home-services');
+      expect(plumbing?.content).toBeDefined();
+      expect(plumbing?.content.length).toBeGreaterThan(0);
+    });
+  });
 });

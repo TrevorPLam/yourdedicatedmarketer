@@ -120,6 +120,56 @@ To add a new industry:
 - **Cross-linking**: Link to relevant demo/proof-of-concept pages
 - **FAQ**: Include industry-specific questions in AEO format
 
+## Demo Content Structure
+
+Demo pages showcase portfolio items and proof-of-concept projects. Each demo is represented as an MDX file with frontmatter metadata and markdown body content.
+
+### Current Demos
+
+The following demo pages are currently available:
+
+1. **Plumbing Business Website** (`plumbing.mdx`) - Home service demo, industry "home-services"
+2. **Dental Clinic Website** (`dental.mdx`) - Medical demo, industry "medical"
+3. **Salon & Spa Website** (`salon.mdx`) - Personal services demo, industry "personal-services"
+4. **Law Firm Website** (`law-firm.mdx`) - Professional services demo, industry "professional-services"
+5. **Restaurant Website** (`restaurant.mdx`) - Restaurant demo, industry "restaurants"
+6. **Retail Shop Website** (`retail-shop.mdx`) - Retail demo, industry "retail"
+
+### Demo File Format
+
+Each demo MDX file includes:
+
+- **Frontmatter fields**:
+  - `title` - Display title of the demo
+  - `slug` - URL-friendly identifier
+  - `description` - Short description for SEO and previews
+  - `industry` - The industry this demo relates to (slug reference)
+
+- **Content sections**:
+  - The Situation - Context and background
+  - The Challenge - Problems and constraints
+  - The Approach - Solutions and design decisions
+  - The Outcome - Results and impact
+
+### Adding New Demos
+
+To add a new demo:
+
+1. Create a new `.mdx` file in `apps/firm-website/src/content/demos/`
+2. Add frontmatter with required fields (`title`, `slug`, `description`, `industry`)
+3. Write the content body following the established structure (Situation, Challenge, Approach, Outcome)
+4. Update the demo list in this documentation
+5. The content will be automatically available through `getAllDemos()` and `getDemo(slug)`
+
+### Demo Content Guidelines
+
+- **Word count**: 300-500 words per demo page
+- **Tone**: Professional, honest about proof-of-concept nature
+- **Structure**: Use clear section headings (Situation, Challenge, Approach, Outcome)
+- **Honesty**: Clearly state these are proof-of-concepts, not fabricated metrics
+- **Differentiation**: Each demo must be distinct with industry-specific challenges and solutions
+- **Industry linking**: Link back to the corresponding industry page
+
 ## Content File Format
 
 Each content file is an MDX file (`.mdx`) with YAML frontmatter. The frontmatter contains metadata, and the body contains the content in Markdown/MDX format.

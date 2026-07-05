@@ -274,7 +274,7 @@ Monorepo, Next.js app, packages/lib, MDX rendering infrastructure, and design to
 
 ### Parent Task P005: Create Demo/Proof-of-Concept Pages Content
 
-- [ ] **P005** | Status: `PENDING`  
+- [x] **P005** | Status: `COMPLETED`
   **Related File Paths:**
   - `apps/firm-website/src/content/demos/plumbing.mdx`
   - `apps/firm-website/src/content/demos/dental.mdx`
@@ -309,18 +309,28 @@ Monorepo, Next.js app, packages/lib, MDX rendering infrastructure, and design to
   - Depends on: MDX setup, content utilities (P002).
   - Blocks: later page development.
 
+  **Implementation Notes:**
+  - Created 6 demo MDX files with consistent structure (Situation, Challenge, Approach, Outcome)
+  - Each demo is distinct with industry-specific challenges and solutions
+  - All demos clearly state they are proof-of-concepts with no fabricated metrics
+  - Each demo links back to its corresponding industry page via the `industry` field
+  - Added demo content tests to content.test.ts (3 new test cases)
+  - Updated docs/content.md with demo content structure and guidelines
+  - All tests pass (23 total), lint passes
+  - No typecheck errors (typecheck script not configured in workspace)
+
 #### Subtasks
 
 | ID      | Agent/Human | File Path / Command                                    | Description                                                                                                     | Validation Command                            |
 | ------- | ----------- | ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
-| P005-01 | AGENT       | `apps/firm-website/src/content/demos/plumbing.mdx`     | MDX: Plumbing Business Demo, industry "home-services". Sections: Situation, Challenge, Approach, Outcome.        | No command.                                   |
-| P005-02 | AGENT       | `apps/firm-website/src/content/demos/dental.mdx`       | MDX: Dental Clinic Demo, industry "medical".                                                                    | No command.                                   |
-| P005-03 | AGENT       | `apps/firm-website/src/content/demos/salon.mdx`        | MDX: Salon Demo, industry "personal-services".                                                                  | No command.                                   |
-| P005-04 | AGENT       | `apps/firm-website/src/content/demos/law-firm.mdx`     | MDX: Law Firm Demo, industry "professional-services".                                                           | No command.                                   |
-| P005-05 | AGENT       | `apps/firm-website/src/content/demos/restaurant.mdx`   | MDX: Restaurant Demo, industry "restaurants".                                                                   | No command.                                   |
-| P005-06 | AGENT       | `apps/firm-website/src/content/demos/retail-shop.mdx`  | MDX: Retail Shop Demo, industry "retail".                                                                       | No command.                                   |
-| P005-07 | AGENT       | `apps/firm-website/src/lib/content.test.ts`            | Update tests: all demo files detected and parsed correctly.                                                     | `pnpm --filter @repo/firm-website test` runs. |
-| P005-08 | AGENT       | Update `docs/content.md`                               | Document demo content structure.                                                                                | None.                                         |
+| P005-01 | AGENT       | `apps/firm-website/src/content/demos/plumbing.mdx`     | MDX: Plumbing Business Demo, industry "home-services". Sections: Situation, Challenge, Approach, Outcome.        | ✅ Complete                                   |
+| P005-02 | AGENT       | `apps/firm-website/src/content/demos/dental.mdx`       | MDX: Dental Clinic Demo, industry "medical".                                                                    | ✅ Complete                                   |
+| P005-03 | AGENT       | `apps/firm-website/src/content/demos/salon.mdx`        | MDX: Salon Demo, industry "personal-services".                                                                  | ✅ Complete                                   |
+| P005-04 | AGENT       | `apps/firm-website/src/content/demos/law-firm.mdx`     | MDX: Law Firm Demo, industry "professional-services".                                                           | ✅ Complete                                   |
+| P005-05 | AGENT       | `apps/firm-website/src/content/demos/restaurant.mdx`   | MDX: Restaurant Demo, industry "restaurants".                                                                   | ✅ Complete                                   |
+| P005-06 | AGENT       | `apps/firm-website/src/content/demos/retail-shop.mdx`  | MDX: Retail Shop Demo, industry "retail".                                                                       | ✅ Complete                                   |
+| P005-07 | AGENT       | `apps/firm-website/src/lib/content.test.ts`            | Update tests: all demo files detected and parsed correctly.                                                     | ✅ Complete (23 tests passing)                |
+| P005-08 | AGENT       | Update `docs/content.md`                               | Document demo content structure.                                                                                | ✅ Complete                                   |
 
 ---
 
