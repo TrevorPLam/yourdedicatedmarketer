@@ -873,3 +873,46 @@ All test suites are integrated with Turborepo:
 - `pnpm test:e2e` runs all E2E tests across the monorepo
 - `pnpm storybook` runs Storybook for visual testing
 - Tests depend on build completion (configured in turbo.json)
+
+### GitHub Actions CI Pipeline
+
+The project uses GitHub Actions for continuous integration on pull requests to the main branch. The CI workflow is defined in `.github/workflows/ci.yml`.
+
+#### Workflow Triggers
+- Pull requests to the `main` branch
+- Pushes to the `main` branch
+
+#### Workflow Steps
+1. **Checkout** - Checks out the repository code
+2. **Setup pnpm** - Installs pnpm package manager (version 9.15.0)
+3. **Setup Node.js** - Sets up Node.js (version 22) with pnpm caching
+4. **Install dependencies** - Installs all dependencies with `pnpm install --frozen-lockfile`
+5. **Cache Turborepo** - Caches Turborepo's `.turbo` directory for faster builds
+6. **Run lint** - Runs `pnpm turbo lint` across all packages
+7. **Run type check** - Runs `pnpm turbo check-types` across all packages
+8. **Run tests** - Runs `pnpm turbo test` (unit and component tests) across all packages
+9. **Install Playwright browsers** - Installs Chromium browser for E2E testing
+10. **Run E2E tests** - Runs `pnpm turbo test:e2e` with Playwright
+
+#### Caching Strategy
+- **pnpm cache**: Enabled via `actions/setup-node@v4` with `cache: 'pnpm'`
+- **Turborepo cache**: Caches `.turbo` directory with GitHub Actions cache
+  - Key: `${{ runner.os }}-turbo-${{ github.sha }}`
+  - Restore keys: `${{ runner.os }}-turbo-` (fallback to previous runs)
+  - Cache duration: 7 days (configured in turbo.json)
+
+#### Parallel Execution
+Turborepo automatically parallelizes tasks across packages where possible based on dependency graphs defined in `turbo.json`. This includes:
+- Linting across all packages
+- Type checking across all packages
+- Unit testing across all packages
+
+E2E tests run after unit tests complete since they depend on the build.
+
+#### Playwright Configuration
+- E2E tests use Chromium browser (installed with `--with-deps` flag)
+- Browsers are installed in CI environment before running tests
+- Playwright config uses `webServer` to build and start the app automatically
+
+#### Test Results
+Test results are visible in the GitHub Actions summary for each PR run. Failed tests will cause the CI to fail, preventing merge to main.

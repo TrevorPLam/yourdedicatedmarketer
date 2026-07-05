@@ -206,27 +206,28 @@
 
 ---
 
-- [ ] **T005** | Status: `PENDING`  
+- [x] **T005** | Status: `COMPLETED` ✅
   **Related File Paths:**
   - `.github/workflows/ci.yml`
+  - `docs/testing.md`
 
   **Definition of Done:**
-  - GitHub Actions workflow triggered on PRs to main.
-  - Runs: `pnpm lint`, `pnpm typecheck`, `pnpm test` (unit + component), `pnpm test:e2e` (Playwright) in parallel where possible.
-  - Uses Turborepo caching for speed.
-  - Coverage thresholds enforced (see T006).
-  - Test results visible in PR.
+  - GitHub Actions workflow triggered on PRs to main. ✅
+  - Runs: `pnpm lint`, `pnpm typecheck`, `pnpm test` (unit + component), `pnpm test:e2e` (Playwright) in parallel where possible. ✅
+  - Uses Turborepo caching for speed. ✅
+  - Coverage thresholds enforced (see T006). ⚠️ (Not yet implemented - T006)
+  - Test results visible in PR. ✅
 
   **Out of Scope:**
   - Deployment (handled by Vercel).
 
   **Rules to Follow:**
-  - Use `actions/setup-node`, `pnpm/action-setup`.
-  - Cache `.turbo` and `node_modules`.
-  - Run Playwright with `playwright install --with-deps chromium`.
+  - Use `actions/setup-node`, `pnpm/action-setup`. ✅
+  - Cache `.turbo` and `node_modules`. ✅
+  - Run Playwright with `playwright install --with-deps chromium`. ✅
 
   **Advanced Coding Pattern:**
-  - **Deep module** – CI pipeline defined separately, isolated.
+  - **Deep module** – CI pipeline defined separately, isolated. ✅
 
   **Anti‑Patterns:**
   - Running tests in serial without cache.
@@ -235,14 +236,24 @@
   - Depends on: E2E form tests (T001).
   - Blocks: none.
 
+  **Implementation Notes:**
+  - CI workflow already existed but was missing Turborepo caching and E2E test steps
+  - Added Turborepo cache step with `.turbo` directory caching using GitHub Actions cache
+  - Added Playwright browser installation step with `--with-deps chromium` flag
+  - Added E2E test step running `pnpm turbo test:e2e`
+  - Updated docs/testing.md with comprehensive CI pipeline documentation including triggers, steps, caching strategy, parallel execution, and Playwright configuration
+  - Lint and typecheck passed successfully
+  - Pre-existing test failures in service-detail.test.tsx and industry-detail.test.tsx are unrelated to T005 and documented separately as T022
+  - CI will correctly fail when tests fail, which is expected behavior
+
 #### Subtasks
 
-| ID      | Agent/Human | File Path / Command        | Description                                                                                                                                       | Validation Command |
-| ------- | ----------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
-| T005-01 | AGENT       | `.github/workflows/ci.yml` | Create workflow: triggers on `pull_request` to `main`. Sets up Node.js, pnpm, installs deps, caches `.turbo`.                                      | Workflow exists.   |
-| T005-02 | AGENT       | `.github/workflows/ci.yml` | Add job steps: `pnpm lint`, `pnpm typecheck`, `pnpm test` (unit+component), `pnpm test:e2e` (with Playwright browser setup).                      | Workflow exists.   |
-| T005-03 | AGENT       | `.github/workflows/ci.yml` | Set `PLAYWRIGHT_BROWSERS_PATH=0` or use `npx playwright install --with-deps chromium` for E2E.                                                     | Workflow exists.   |
-| T005-04 | AGENT       | Update `docs/testing.md`   | Document CI pipeline.                                                                                                                              | None.              |
+| ID      | Agent/Human | File Path / Command        | Description                                                                                                                                       | Status          |
+| ------- | ----------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| T005-01 | AGENT       | `.github/workflows/ci.yml` | Create workflow: triggers on `pull_request` to `main`. Sets up Node.js, pnpm, installs deps, caches `.turbo`.                                      | ✅ Already exists |
+| T005-02 | AGENT       | `.github/workflows/ci.yml` | Add job steps: `pnpm lint`, `pnpm typecheck`, `pnpm test` (unit+component), `pnpm test:e2e` (with Playwright browser setup).                      | ✅ Completed    |
+| T005-03 | AGENT       | `.github/workflows/ci.yml` | Set `PLAYWRIGHT_BROWSERS_PATH=0` or use `npx playwright install --with-deps chromium` for E2E.                                                     | ✅ Completed    |
+| T005-04 | AGENT       | Update `docs/testing.md`   | Document CI pipeline.                                                                                                                              | ✅ Completed    |
 
 ---
 
