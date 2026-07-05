@@ -1,16 +1,16 @@
 import { ContactForm } from '@/components/features/contact/contact-form';
-import { generateMetadata as generateSEOMetadata } from '@/lib/seo';
+import type { Metadata } from 'next';
+
+// Make contact page dynamic to avoid Server Action issues during static generation
+export const dynamic = 'force-dynamic';
 
 /**
  * Generate metadata for the contact page.
  */
-export async function generateMetadata() {
-  return generateSEOMetadata({
-    title: 'Contact Us',
-    description: 'Get in touch with Your Dedicated Marketer. We\'d love to hear about your project and discuss how we can help your business grow.',
-    path: '/contact',
-  });
-}
+export const metadata: Metadata = {
+  title: 'Contact Us',
+  description: 'Get in touch with Your Dedicated Marketer. We\'d love to hear about your project and discuss how we can help your business grow.',
+};
 
 /**
  * Contact page with form for user inquiries.
