@@ -208,11 +208,61 @@ Dynamic pages are generated from content collections.
 - Default export: Fetches industry content, renders with `IndustryDetail`, calls `notFound()` if industry doesn't exist
 - Uses Next.js 15 async params pattern (params is a Promise)
 
-### Demo Pages (`/demos/[slug]`)
+### Demo Pages
 
-- Generated from `src/content/demos/*.mdx`
-- Dynamic route with slug parameter
-- Renders demo content with metadata
+#### Demos Hub (`/demos`)
+
+- **Path:** `app/(marketing)/demos/page.tsx`
+- **Component:** `components/features/demos/demos-hub.tsx`
+- **Content Source:** `src/content/demos/*.mdx` (all demo files)
+- **Features:**
+  - Lists all demos as cards using `getAllDemos()` utility
+  - Demos sorted alphabetically by title
+  - Each card shows title, description, industry, and links to detail page
+  - Responsive grid layout (1 column mobile, 2 columns tablet, 3 columns desktop)
+  - Hover effects on cards for better UX
+  - Metadata generated via `generateMetadata()` utility
+
+**DemosHub Component:**
+- Props: `title` (optional), `description` (optional)
+- Fetches demos using `getAllDemos()` from content utilities
+- Sorts demos alphabetically by title
+- Renders cards with `Card`, `CardHeader`, `CardTitle`, `CardContent` from `@repo/ui`
+- Displays industry from frontmatter with formatted text (kebab-case to title case)
+- Uses `next/link` with `Route` type for type-safe navigation
+- Follows deep module pattern with simple interface
+
+#### Demo Detail Pages (`/demos/[slug]`)
+
+- **Path:** `app/(marketing)/demos/[slug]/page.tsx`
+- **Component:** `components/features/demos/demo-detail.tsx`
+- **Content Source:** `src/content/demos/[slug].mdx` (individual demo file)
+- **Features:**
+  - Dynamic route with slug parameter
+  - `generateStaticParams()` pre-renders all demo pages at build time
+  - `generateMetadata()` sets dynamic metadata per demo (title, description from frontmatter)
+  - `dynamicParams = false` returns 404 for unknown slugs
+  - Breadcrumbs implemented with `getBreadcrumbs()` utility
+  - Renders MDX content via `ContentPage` pattern
+  - "Learn More About This Industry" section links to matching industry page when available
+  - "View Live Demo" placeholder button (disabled, "Coming Soon")
+  - Handles 404 case when demo not found
+
+**DemoDetail Component:**
+- Props: `content` (HTML string), `title` (string), `slug` (string), `industry` (string)
+- Generates breadcrumbs using `getBreadcrumbs()` utility
+- Renders breadcrumb navigation with semantic HTML
+- Uses `ContentPage` component for consistent content layout
+- Finds matching industry page using `getAllIndustries()` and industry slug
+- Displays "Learn More About This Industry" call-to-action with link to industry when available
+- Displays "View Live Demo" placeholder with disabled button (coming soon)
+- Follows deep module pattern by encapsulating demo detail rendering
+
+**Dynamic Page Implementation:**
+- `generateStaticParams()`: Fetches all demo slugs using `getAllSlugs('demos')`
+- `generateMetadata()`: Fetches demo by slug, generates metadata with title and description
+- Default export: Fetches demo content, renders with `DemoDetail`, calls `notFound()` if demo doesn't exist
+- Uses Next.js 15 async params pattern (params is a Promise)
 
 ### FAQ Pages (`/faq`)
 

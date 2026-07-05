@@ -62,7 +62,7 @@ Route group infrastructure not yet established, but all foundational pieces are 
 
 ### Parent Task P016: Build Demos Hub and Dynamic Demo Pages
 
-- [ ] **P016** | Status: `PENDING`  
+- [x] **P016** | Status: `COMPLETED`  
   **Related File Paths:**
   - `apps/firm-website/src/app/(marketing)/demos/page.tsx`
   - `apps/firm-website/src/app/(marketing)/demos/[slug]/page.tsx`
@@ -94,14 +94,22 @@ Route group infrastructure not yet established, but all foundational pieces are 
 
 #### Subtasks
 
-| ID      | Agent/Human | File Path / Command                                                | Description                                                                                                                               | Validation Command                            |
-| ------- | ----------- | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
-| P016-01 | AGENT       | `apps/firm-website/src/components/features/demos/demos-hub.tsx`    | Create DemosHub: fetch via `getAllDemos()`, render cards with title, description, link to `/demos/[slug]`.                                | No command.                                   |
-| P016-02 | AGENT       | `apps/firm-website/src/app/(marketing)/demos/page.tsx`             | Create Demos Hub page: render `DemosHub`, set metadata.                                                                                   | `pnpm dev` shows /demos.                      |
-| P016-03 | AGENT       | `apps/firm-website/src/components/features/demos/demo-detail.tsx`  | Create DemoDetail: accepts MDX, renders sections, links to industry page, adds "View Live Demo" placeholder button, breadcrumbs.          | No command.                                   |
-| P016-04 | AGENT       | `apps/firm-website/src/app/(marketing)/demos/[slug]/page.tsx`      | Dynamic page with `generateStaticParams`, `generateMetadata`, render `DemoDetail`.                                                        | `pnpm dev` shows /demos/plumbing-demo.        |
-| P016-05 | AGENT       | `apps/firm-website/src/app/(marketing)/demos/[slug]/page.test.tsx` | Write unit test: dynamic pages render content, metadata correct.                                                                          | `pnpm --filter @repo/firm-website test` runs. |
-| P016-06 | AGENT       | Update `docs/pages.md`                                             | Document demos pages.                                                                                                                     | None.                                         |
+| ID      | Agent/Human | File Path / Command                                                | Description                                                                                                                               | Validation Command                            | Status  |
+| ------- | ----------- | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- | ------- |
+| P016-01 | AGENT       | `apps/firm-website/src/components/features/demos/demos-hub.tsx`    | Create DemosHub: fetch via `getAllDemos()`, render cards with title, description, link to `/demos/[slug]`.                                | No command.                                   | ✅      |
+| P016-02 | AGENT       | `apps/firm-website/src/app/(marketing)/demos/page.tsx`             | Create Demos Hub page: render `DemosHub`, set metadata.                                                                                   | `pnpm dev` shows /demos.                      | ✅      |
+| P016-03 | AGENT       | `apps/firm-website/src/components/features/demos/demo-detail.tsx`  | Create DemoDetail: accepts MDX, renders sections, links to industry page, adds "View Live Demo" placeholder button, breadcrumbs.          | No command.                                   | ✅      |
+| P016-04 | AGENT       | `apps/firm-website/src/app/(marketing)/demos/[slug]/page.tsx`      | Dynamic page with `generateStaticParams`, `generateMetadata`, render `DemoDetail`.                                                        | `pnpm dev` shows /demos/plumbing-demo.        | ✅      |
+| P016-05 | AGENT       | `apps/firm-website/src/app/(marketing)/demos/[slug]/page.test.tsx` | Write unit test: dynamic pages render content, metadata correct.                                                                          | `pnpm --filter @repo/firm-website test` runs. | ✅      |
+| P016-06 | AGENT       | Update `docs/pages.md`                                             | Document demos pages.                                                                                                                     | None.                                         | ✅      |
+
+**Implementation Notes:**
+- Followed the established industries pattern for consistency
+- DemosHub component fetches demos using `getAllDemos()` and renders cards with title, description, and industry
+- DemoDetail component includes breadcrumbs, industry link, and "View Live Demo" placeholder button
+- Dynamic page uses Next.js 15 async params pattern with `generateStaticParams` and `generateMetadata`
+- All tests passing (88 total tests)
+- Lint warnings in `seo.test.ts` are pre-existing and unrelated to this task
 
 ---
 
