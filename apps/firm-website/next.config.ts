@@ -2,7 +2,7 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   typedRoutes: true,
-  transpilePackages: [],
+  transpilePackages: ['@repo/ui'],
   images: {
     domains: [],
   },

@@ -1,0 +1,22 @@
+import baseConfig from '@repo/eslint-config';
+
+export default [
+  ...baseConfig,
+  {
+    files: ['**/*.{js,jsx,ts,tsx}'],
+    languageOptions: {
+      globals: {
+        ...baseConfig[1]?.languageOptions?.globals,
+        window: 'readonly',
+        document: 'readonly',
+        navigator: 'readonly',
+        HTMLElement: 'readonly',
+        HTMLDivElement: 'readonly',
+        HTMLButtonElement: 'readonly',
+        HTMLInputElement: 'readonly',
+        HTMLParagraphElement: 'readonly',
+        HTMLHeadingElement: 'readonly',
+      },
+    },
+  },
+];
