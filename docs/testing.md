@@ -733,12 +733,20 @@ Chromatic runs on every pull request to detect visual regressions:
 - **Workflow**: `.github/workflows/chromatic.yml`
 - **Trigger**: Pull requests to main branch
 - **Secret**: `CHROMATIC_PROJECT_TOKEN` (must be configured in GitHub secrets)
+- **Exit behavior**: Uses `--exit-zero-on-changes` to avoid failing CI on visual diffs (team reviews changes in Chromatic UI)
 
 ### Setup Instructions
 1. Create a Chromatic account at https://www.chromatic.com
 2. Create a new project and get the project token
 3. Add the token as a GitHub secret named `CHROMATIC_PROJECT_TOKEN`
 4. The workflow will automatically build and publish Storybook on PRs
+5. Visual diffs are shown in PR comments for team review
+
+### Running Chromatic Locally
+```bash
+# Run Chromatic locally (requires CHROMATIC_PROJECT_TOKEN env var)
+pnpm --filter @repo/ui chromatic
+```
 
 ### Best Practices
 - Keep stories simple and focused on component variants
