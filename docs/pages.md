@@ -62,19 +62,43 @@ The homepage consists of the following sections (in order):
 
 ## Static Pages
 
-Static pages use the `ContentPage` component pattern for rendering MDX content.
+Static pages use the `ContentPage` component pattern for rendering HTML content from MDX files.
+
+### ContentPage Component
+
+The `ContentPage` component (`components/features/content-page.tsx`) is a reusable wrapper for rendering static page content. It follows the deep module pattern by encapsulating content rendering layout.
+
+**Props:**
+- `content`: HTML string from content utilities (parsed via gray-matter/remark)
+- `title`: Optional title for the page (rendered as H1)
+
+**Features:**
+- Wraps content in `Container` and `Section` from `@repo/ui`
+- Renders HTML content with `dangerouslySetInnerHTML`
+- Applies basic Tailwind spacing classes for content layout
+- Handles missing content gracefully
 
 ### About Page (`/about`)
 
-- Renders content from `src/content/pages/about.mdx`
-- Uses `ContentPage` component with Container and Section
-- Metadata generated from content frontmatter
+- **Path:** `app/(marketing)/about/page.tsx`
+- **Content Source:** `src/content/pages/about.mdx`
+- **Features:**
+  - Fetches content using `getPage('about')` utility
+  - Renders with `ContentPage` component
+  - Metadata generated via `generateMetadata()` utility
+  - Title extracted from frontmatter
+  - Handles 404 case when content not found
 
 ### Pricing Page (`/pricing`)
 
-- Renders content from `src/content/pages/pricing.mdx`
-- Uses `ContentPage` component with Container and Section
-- Metadata generated from content frontmatter
+- **Path:** `app/(marketing)/pricing/page.tsx`
+- **Content Source:** `src/content/pages/pricing.mdx`
+- **Features:**
+  - Fetches content using `getPage('pricing')` utility
+  - Renders with `ContentPage` component
+  - Metadata generated via `generateMetadata()` utility
+  - Title extracted from frontmatter
+  - Handles 404 case when content not found
 
 ## Dynamic Pages
 
