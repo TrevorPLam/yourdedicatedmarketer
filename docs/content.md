@@ -137,9 +137,51 @@ if (websiteDesign) {
 3. Write the content body in Markdown
 4. The content will be automatically available through the API
 
+## Zod Schema Validation
+
+The content types have corresponding Zod schemas for runtime validation. These schemas are defined in `packages/lib/src/schemas/content.ts` and can be used to validate content data at runtime.
+
+### Available Schemas
+
+- `ServiceSchema` - Validates service content
+- `IndustrySchema` - Validates industry content
+- `DemoSchema` - Validates demo content
+- `FAQSchema` - Validates FAQ content
+- `PageSchema` - Validates page content
+
+### Usage Example
+
+```typescript
+import { ServiceSchema } from '@repo/lib';
+
+// Validate service data
+const serviceData = {
+  title: 'Website Design',
+  slug: 'website-design',
+  description: 'Professional website design services',
+  body: 'We create beautiful, functional websites...',
+};
+
+const validatedService = ServiceSchema.parse(serviceData);
+// If validation fails, Zod will throw an error with detailed information
+```
+
+### Schema Features
+
+- **Strict validation**: All schemas use `.strict()` to reject unknown fields
+- **Optional fields**: Optional fields are marked with `.optional()`
+- **Type inference**: TypeScript types can be inferred from schemas using `z.infer<typeof SchemaName>`
+
+### Best Practices
+
+- Use schemas to validate content at the boundary (e.g., when parsing markdown files)
+- Use `safeParse()` instead of `parse()` when you need to handle validation errors gracefully
+- Keep schemas in sync with TypeScript interfaces in `apps/firm-website/src/types/content.ts`
+
 ## Notes
 
 - All content functions are server-side only (Node.js)
 - Markdown is automatically converted to HTML using `remark` and `remark-html`
 - Frontmatter is parsed using `gray-matter`
 - TypeScript types are defined in `src/types/content.ts`
+- Zod schemas are defined in `packages/lib/src/schemas/content.ts` for runtime validation
