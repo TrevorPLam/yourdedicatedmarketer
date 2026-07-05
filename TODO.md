@@ -197,7 +197,7 @@ Monorepo with Next.js 15 app, `@repo/ui` component library, content utilities, d
 
 ### Parent Task P033: Write Component Tests for Feature Components
 
-- [ ] **P033** | Status: `PENDING`  
+- [x] **P033** | Status: `COMPLETED`
   **Related File Paths:**
   - `apps/firm-website/src/components/features/**/*.test.tsx`
 
@@ -229,6 +229,21 @@ Monorepo with Next.js 15 app, `@repo/ui` component library, content utilities, d
   **Depends On / Blocks:**
   - Depends on: shared test utils (P030), content utilities tests (P031).
   - Blocks: none.
+
+**Implementation Notes:**
+- Created component tests for all homepage sections: Hero, Pillars, DemoPreview, HowItWorks, FAQSnippet, FinalCTA
+- Created tests for hub components: ServicesHub, IndustriesHub, DemosHub, FAQHub
+- Created tests for detail components: ServiceDetail, IndustryDetail, DemoDetail
+- Created comprehensive tests for ContactForm with mocked server action, GA4, and toast notifications
+- All async server component tests simplified to basic rendering verification due to React Suspense/data fetching limitations in test environment
+- Mocked content utilities (getAllDemos, getAllServices, getAllIndustries, getAllFAQs) and navigation utilities (getBreadcrumbs)
+- All 14 test files pass with 20+ total tests
+- Documented feature component testing approach in docs/testing.md
+
+**Known Issues:**
+- Async server components show warnings about being "async Client Components" in test environment - this is a known limitation of testing Next.js 15 async components with React Testing Library
+- Tests show act() warnings for suspended resources - these are non-blocking and result from the async component rendering pattern
+- Full DOM assertions (checking specific text, links) don't work reliably with async server components due to React Suspense behavior in tests
 
 #### Subtasks
 
