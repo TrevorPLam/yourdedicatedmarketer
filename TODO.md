@@ -115,7 +115,7 @@ Route group infrastructure not yet established, but all foundational pieces are 
 
 ### Parent Task P017: Build FAQ Hub
 
-- [ ] **P017** | Status: `PENDING`  
+- [x] **P017** | Status: `COMPLETED`
   **Related File Paths:**
   - `apps/firm-website/src/app/(marketing)/faq/page.tsx`
   - `apps/firm-website/src/components/features/faq/faq-hub.tsx`
@@ -145,13 +145,21 @@ Route group infrastructure not yet established, but all foundational pieces are 
 
 #### Subtasks
 
-| ID      | Agent/Human | File Path / Command                                               | Description                                                                                                                                  | Validation Command                            |
-| ------- | ----------- | ----------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
-| P017-01 | AGENT       | `apps/firm-website/src/components/features/faq/faq-accordion.tsx` | Create FAQAccordion component: accepts array of FAQs and renders them using `Accordion` from `@repo/ui`.                                     | No command.                                   |
-| P017-02 | AGENT       | `apps/firm-website/src/components/features/faq/faq-hub.tsx`       | Create FAQHub: fetch FAQs, group by category, render category headings with FAQAccordion, generate FAQPage JSON-LD via utility.             | No command.                                   |
-| P017-03 | AGENT       | `apps/firm-website/src/app/(marketing)/faq/page.tsx`              | Create FAQ Hub page: render `FAQHub`, set metadata with `generateMetadata`.                                                                  | `pnpm dev` shows /faq.                        |
-| P017-04 | AGENT       | `apps/firm-website/src/app/(marketing)/faq/page.test.tsx`         | Write unit test: FAQ hub renders all FAQs, correct categories, JSON-LD present.                                                              | `pnpm --filter @repo/firm-website test` runs. |
-| P017-05 | AGENT       | Update `docs/pages.md`                                            | Document FAQ hub and structured data.                                                                                                        | None.                                         |
+| ID      | Agent/Human | File Path / Command                                               | Description                                                                                                                                  | Validation Command                            | Status  |
+| ------- | ----------- | ----------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- | ------- |
+| P017-01 | AGENT       | `apps/firm-website/src/components/features/faq/faq-accordion.tsx` | Create FAQAccordion component: accepts array of FAQs and renders them using `Accordion` from `@repo/ui`.                                     | No command.                                   | ✅      |
+| P017-02 | AGENT       | `apps/firm-website/src/components/features/faq/faq-hub.tsx`       | Create FAQHub: fetch FAQs, group by category, render category headings with FAQAccordion, generate FAQPage JSON-LD via utility.             | No command.                                   | ✅      |
+| P017-03 | AGENT       | `apps/firm-website/src/app/(marketing)/faq/page.tsx`              | Create FAQ Hub page: render `FAQHub`, set metadata with `generateMetadata`.                                                                  | `pnpm dev` shows /faq.                        | ✅      |
+| P017-04 | AGENT       | `apps/firm-website/src/app/(marketing)/faq/page.test.tsx`         | Write unit test: FAQ hub renders all FAQs, correct categories, JSON-LD present.                                                              | `pnpm --filter @repo/firm-website test` runs. | ✅      |
+| P017-05 | AGENT       | Update `docs/pages.md`                                            | Document FAQ hub and structured data.                                                                                                        | None.                                         | ✅      |
+
+**Implementation Notes:**
+- FAQAccordion component uses Radix UI Accordion primitive with proper ARIA accessibility
+- FAQHub component groups FAQs by category (general, pricing, process) and sorts by order field
+- FAQPage JSON-LD schema generated using existing `generateFAQSchema()` utility for AI citations
+- Category display names mapped to user-friendly labels (e.g., "general" → "General Questions")
+- All tests passing (90 total tests, including 2 new FAQ tests)
+- Lint warnings in `seo.test.ts` are pre-existing and unrelated to this task
 
 ---
 

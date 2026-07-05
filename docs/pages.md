@@ -264,11 +264,45 @@ Dynamic pages are generated from content collections.
 - Default export: Fetches demo content, renders with `DemoDetail`, calls `notFound()` if demo doesn't exist
 - Uses Next.js 15 async params pattern (params is a Promise)
 
-### FAQ Pages (`/faq`)
+### FAQ Pages
 
-- Hub page listing all FAQs by category
-- Generated from `src/content/faq/*.mdx`
-- Uses accordion component for expandable answers
+#### FAQ Hub (`/faq`)
+
+- **Path:** `app/(marketing)/faq/page.tsx`
+- **Component:** `components/features/faq/faq-hub.tsx`
+- **Content Source:** `src/content/faq/*.mdx` (all FAQ files)
+- **Features:**
+  - Lists all FAQs grouped by category using `getAllFAQs()` utility
+  - Categories: `general`, `pricing`, `process`
+  - FAQs sorted by `order` field from frontmatter within each category
+  - Uses Accordion component from `@repo/ui` for expandable answers
+  - FAQPage JSON-LD schema injected for SEO and AI citations
+  - Category display names mapped to user-friendly labels
+  - Metadata generated via `generateMetadata()` utility
+
+**FAQHub Component:**
+- Props: `title` (optional), `description` (optional)
+- Fetches FAQs using `getAllFAQs()` from content utilities
+- Groups FAQs by category field from frontmatter
+- Sorts FAQs within each category by order field if available
+- Renders category headings with FAQAccordion component
+- Generates FAQPage JSON-LD schema using `generateFAQSchema()` utility
+- Injects JSON-LD via `<script type="application/ld+json">` tag
+- Follows deep module pattern by encapsulating FAQ listing, grouping, and schema generation
+
+**FAQAccordion Component:**
+- Props: `faqs` (array of FAQ items with question and answer)
+- Renders FAQs using Accordion, AccordionItem, AccordionTrigger, AccordionContent from `@repo/ui`
+- Uses Radix UI's Accordion primitive with proper ARIA accessibility
+- Answers rendered as HTML via `dangerouslySetInnerHTML` (from content utilities)
+- Single collapsible accordion type (only one item open at a time)
+- Follows deep module pattern with simple interface
+
+**FAQ Page Implementation:**
+- Default export: Renders `FAQHub` component
+- `generateMetadata()`: Generates metadata with title and description
+- Server component (async data fetching)
+- No dynamic routing (hub page only, no individual FAQ pages)
 
 ## Adding New Pages
 
