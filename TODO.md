@@ -603,7 +603,7 @@ Contact form with Server Action and `useActionState` exists (Phase 3, P018). No 
 
 ### Parent Task P025: Set Up Google Analytics 4 (GA4)
 
-- [ ] **P025** | Status: `PENDING`  
+- [x] **P025** | Status: `COMPLETED`  
   **Related File Paths:**
   - `apps/firm-website/.env.example` (add `NEXT_PUBLIC_GA_MEASUREMENT_ID`)
   - `apps/firm-website/src/lib/gtag.ts`
@@ -642,14 +642,25 @@ Contact form with Server Action and `useActionState` exists (Phase 3, P018). No 
 
 #### Subtasks
 
-| ID      | Agent/Human | File Path / Command                                         | Description                                                                                                                       | Validation Command    |
-| ------- | ----------- | ----------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
-| P025-01 | HUMAN       | GA4 account setup                                           | Create GA4 property, obtain Measurement ID (G-XXXXXXXXXX).                                                                        | Measurement ID saved. |
-| P025-02 | AGENT       | `apps/firm-website/.env.example`                            | Add: `NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX`.                                                                                 | File updated.         |
-| P025-03 | AGENT       | `apps/firm-website/src/lib/gtag.ts`                         | Create `gtag.ts`: export `GA_MEASUREMENT_ID`, `pageview(url)` calls `window.gtag`, `event(name, params)`, type declarations.      | No command.           |
-| P025-04 | AGENT       | `apps/firm-website/src/components/analytics/ga4-script.tsx` | Create `GA4Script` (client): loads gtag.js and init with measurement ID, only in production, `afterInteractive`.                  | No command.           |
-| P025-05 | AGENT       | `apps/firm-website/src/app/layout.tsx`                      | Import and render `GA4Script` in root layout.                                                                                      | No command.           |
-| P025-06 | AGENT       | Update `docs/analytics.md`                                  | Document GA4 setup and env variables.                                                                                              | None.                 |
+| ID      | Agent/Human | File Path / Command                                         | Description                                                                                                                       | Validation Command    | Status  |
+| ------- | ----------- | ----------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | --------------------- | ------- |
+| P025-01 | HUMAN       | GA4 account setup                                           | Create GA4 property, obtain Measurement ID (G-XXXXXXXXXX).                                                                        | Measurement ID saved. | ⏳ Pending |
+| P025-02 | AGENT       | `apps/firm-website/.env.example`                            | Add: `NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX`.                                                                                 | File updated.         | ✅      |
+| P025-03 | AGENT       | `apps/firm-website/src/lib/gtag.ts`                         | Create `gtag.ts`: export `GA_MEASUREMENT_ID`, `pageview(url)` calls `window.gtag`, `event(name, params)`, type declarations.      | No command.           | ✅      |
+| P025-04 | AGENT       | `apps/firm-website/src/components/analytics/ga4-script.tsx` | Create `GA4Script` (client): loads gtag.js and init with measurement ID, only in production, `afterInteractive`.                  | No command.           | ✅      |
+| P025-05 | AGENT       | `apps/firm-website/src/app/layout.tsx`                      | Import and render `GA4Script` in root layout.                                                                                      | No command.           | ✅      |
+| P025-06 | AGENT       | Update `docs/analytics.md`                                  | Document GA4 setup and env variables.                                                                                              | None.                 | ✅      |
+
+**Implementation Notes:**
+- Added `NEXT_PUBLIC_GA_MEASUREMENT_ID` to `.env.example` with placeholder value
+- Created `gtag.ts` with helper functions `pageview()` and `event()` for GA4 tracking
+- Added TypeScript type declarations for `window.gtag` and `window.dataLayer`
+- Created `GA4Script` component that loads gtag.js only in production
+- Used `next/script` with `afterInteractive` strategy for optimal performance
+- Integrated GA4Script into root layout for site-wide tracking
+- Created comprehensive `docs/analytics.md` documentation
+- Lint passed with pre-existing warnings in `seo.test.ts` (unrelated to this task)
+- GA4 account setup (P025-01) pending human action
 
 ---
 

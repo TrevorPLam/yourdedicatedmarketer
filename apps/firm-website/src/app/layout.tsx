@@ -4,6 +4,7 @@ import './globals.css';
 import React from 'react';
 import { ThemeProvider } from '@repo/ui';
 import { Toaster } from 'sonner';
+import { GA4Script } from '@/components/analytics/ga4-script';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -29,6 +30,7 @@ export default function RootLayout({
           {children}
           <Toaster />
         </ThemeProvider>
+        <GA4Script />
       </body>
     </html>
   );
