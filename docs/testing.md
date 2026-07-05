@@ -70,9 +70,57 @@ E2E tests use Playwright's test API with page objects and locators for reliable 
 - Keep tests independent and avoid coupling between tests
 - Use webServer configuration to start the dev server automatically
 
+## Visual Testing with Storybook and Chromatic
+
+Storybook is used for component development and visual testing. Chromatic provides automated visual regression testing for Storybook stories.
+
+### Configuration
+- **Config location**: `packages/ui/.storybook/`
+- **Framework**: @storybook/nextjs-vite (Storybook 10.4.6)
+- **Stories location**: `packages/ui/src/components/**/*.stories.tsx`
+- **Addons**: Chromatic, Vitest, A11y, Docs, MCP
+
+### Commands
+```bash
+# Start Storybook development server
+pnpm --filter @repo/ui storybook
+
+# Build Storybook for production
+pnpm --filter @repo/ui build-storybook
+
+# Run Storybook tests with Vitest
+npx vitest --project=storybook
+```
+
+### Component Stories
+Stories are written for core UI components:
+- **Button**: All variants (default, destructive, outline, secondary, ghost, link) and sizes
+- **Card**: Various layouts (with/without header/footer, long content)
+- **Header**: Navigation items, custom logo, minimal configurations
+- **Footer**: Navigation links, contact info, social links
+
+### Chromatic Integration
+Chromatic runs on every pull request to detect visual regressions:
+- **Workflow**: `.github/workflows/chromatic.yml`
+- **Trigger**: Pull requests to main branch
+- **Secret**: `CHROMATIC_PROJECT_TOKEN` (must be configured in GitHub secrets)
+
+### Setup Instructions
+1. Create a Chromatic account at https://www.chromatic.com
+2. Create a new project and get the project token
+3. Add the token as a GitHub secret named `CHROMATIC_PROJECT_TOKEN`
+4. The workflow will automatically build and publish Storybook on PRs
+
+### Best Practices
+- Keep stories simple and focused on component variants
+- Avoid including business logic in stories
+- Use autodocs tag for automatic documentation generation
+- Test key components first before expanding coverage
+
 ## CI/CD Integration
 
-Both test suites are integrated with Turborepo:
+All test suites are integrated with Turborepo:
 - `pnpm test` runs all unit tests across the monorepo
 - `pnpm test:e2e` runs all E2E tests across the monorepo
+- `pnpm storybook` runs Storybook for visual testing
 - Tests depend on build completion (configured in turbo.json)
