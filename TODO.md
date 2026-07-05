@@ -841,7 +841,7 @@
 
 ---
 
-- [ ] **T020** | Status: `PENDING`  
+- [x] **T020** | Status: `COMPLETED` ✅
   **Related File Paths:**
   - `apps/firm-website/src/types/content.ts`
   - `apps/firm-website/tsconfig.json`
@@ -851,18 +851,26 @@
   Typecheck fails with error: `src/types/content.ts(5,15): error TS2307: Cannot find module '@repo/lib' or its corresponding type declaration`. This prevents `pnpm -r run check-types` from passing.
 
   **Root Cause:**
-  The `@repo/lib` workspace package may not be properly configured in the monorepo, or TypeScript module resolution is not correctly configured to resolve workspace package aliases.
+  The `@repo/lib` workspace package was not properly linked in the monorepo. Running `pnpm install` resolved the workspace dependencies and ensured TypeScript could resolve the `@repo/lib` module through the workspace package configuration.
 
   **Impact:**
-  - Type checking fails across the monorepo
-  - Cannot verify type safety of code changes
-  - May affect IDE type hints and autocomplete
+  - Type checking now passes across the monorepo
+  - Can verify type safety of code changes
+  - IDE type hints and autocomplete work correctly
 
   **Priority:** `HIGH` - Blocks type checking workflow
 
   **Depends On / Blocks:**
   - Depends on: none.
   - Blocks: none.
+
+  **Implementation Notes:**
+  - The issue was resolved by running `pnpm install` to ensure workspace dependencies were properly linked
+  - The `@repo/lib` package was already correctly configured in `packages/lib/package.json` with proper exports
+  - The `apps/firm-website/package.json` already had `@repo/lib` as a workspace dependency
+  - TypeScript module resolution works through pnpm workspace symlinks once dependencies are installed
+  - No changes to tsconfig.json were needed - the base configuration with `moduleResolution: "bundler"` handles workspace packages correctly
+  - `pnpm check-types` now passes successfully across all packages
 
 ---
 
