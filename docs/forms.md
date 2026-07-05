@@ -34,6 +34,45 @@ The form uses React 19's `useActionState` hook:
 - Loading state: `useFormStatus` on submit button
 - Success/error messages displayed to user
 
+### Toast Notifications
+
+The contact form uses `sonner` for toast notifications to provide better user feedback.
+
+#### Implementation
+
+- **Package**: `sonner` installed in `apps/firm-website`
+- **Toaster Component**: Rendered in root layout (`apps/firm-website/src/app/layout.tsx`)
+- **Form Integration**: Toasts triggered via `useEffect` watching form state
+
+#### Toast Behavior
+
+- **Success Toast**: Shows "Message sent successfully!" on successful form submission
+- **Error Toast**: Shows error message when submission fails
+- **Auto-dismiss**: Toasts auto-dismiss after 4-5 seconds (sonner default)
+- **Initial Render**: Toasts do not show on initial render (state equals `initialContactState`)
+- **Validation Errors**: Field-level validation errors are shown next to inputs, not as toasts
+
+#### Code Example
+
+```tsx
+useEffect(() => {
+  // Skip initial render
+  if (state === initialContactState) {
+    return;
+  }
+
+  // Show success toast
+  if (state.success) {
+    toast.success('Message sent successfully!');
+  }
+
+  // Show error toast
+  if (!state.success && state.message) {
+    toast.error(state.message);
+  }
+}, [state]);
+```
+
 ### Email Sending (Resend)
 
 The contact form sends emails via Resend API after successful validation.
@@ -98,6 +137,5 @@ pnpm --filter @repo/firm-website test
 
 - HTML email templates (currently plain text)
 - Confirmation email to submitter
-- Toast notifications for better UX
 - Email attachment support
 - Rate limiting for form submissions

@@ -547,7 +547,7 @@ Contact form with Server Action and `useActionState` exists (Phase 3, P018). No 
 
 ### Parent Task P024: Add Toast Notifications for Form Feedback
 
-- [ ] **P024** | Status: `PENDING`  
+- [x] **P024** | Status: `COMPLETED`
   **Related File Paths:**
   - `apps/firm-website/package.json` (add `sonner`)
   - `apps/firm-website/src/components/features/contact/contact-form.tsx`
@@ -580,13 +580,24 @@ Contact form with Server Action and `useActionState` exists (Phase 3, P018). No 
 
 #### Subtasks
 
-| ID      | Agent/Human | File Path / Command                                                  | Description                                                                                                                           | Validation Command           |
-| ------- | ----------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
-| P024-01 | AGENT       | `apps/firm-website` (install)                                        | Run: `pnpm --filter @repo/firm-website add sonner`.                                                                                   | `pnpm list sonner` shows it. |
-| P024-02 | AGENT       | `apps/firm-website/src/app/layout.tsx`                               | Import `Toaster` from `sonner` and render it in root layout (or marketing layout).                                                     | No command.                  |
-| P024-03 | AGENT       | `apps/firm-website/src/components/features/contact/contact-form.tsx` | In a `useEffect` watching `state`, trigger `toast.success(...)` on success and `toast.error(state.error)` on error. Avoid initial null. | No command.                  |
-| P024-04 | AGENT       | `apps/firm-website/src/components/features/contact/contact-form.tsx` | Ensure toasts don’t show on initial render.                                                                                           | No command.                  |
-| P024-05 | AGENT       | Update `docs/forms.md`                                               | Document toast notification setup.                                                                                                     | None.                        |
+| ID      | Agent/Human | File Path / Command                                                  | Description                                                                                                                           | Validation Command           | Status  |
+| ------- | ----------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- | ------- |
+| P024-01 | AGENT       | `apps/firm-website` (install)                                        | Run: `pnpm --filter @repo/firm-website add sonner`.                                                                                   | `pnpm list sonner` shows it. | ✅      |
+| P024-02 | AGENT       | `apps/firm-website/src/app/layout.tsx`                               | Import `Toaster` from `sonner` and render it in root layout (or marketing layout).                                                     | No command.                  | ✅      |
+| P024-03 | AGENT       | `apps/firm-website/src/components/features/contact/contact-form.tsx` | In a `useEffect` watching `state`, trigger `toast.success(...)` on success and `toast.error(state.error)` on error. Avoid initial null. | No command.                  | ✅      |
+| P024-04 | AGENT       | `apps/firm-website/src/components/features/contact/contact-form.tsx` | Ensure toasts don't show on initial render.                                                                                           | No command.                  | ✅      |
+| P024-05 | AGENT       | Update `docs/forms.md`                                               | Document toast notification setup.                                                                                                     | None.                        | ✅      |
+
+**Implementation Notes:**
+- Sonner package installed successfully
+- Toaster component added to root layout within ThemeProvider
+- Toast notifications triggered via useEffect watching form state
+- Initial render check prevents toasts from showing on page load
+- Success toast shows "Message sent successfully!"
+- Error toast shows the error message from state.message
+- Validation errors remain as field-level errors (not toasts)
+- All tests passing (95 total tests)
+- Lint warnings in seo.test.ts are pre-existing and unrelated to this task
 
 ---
 

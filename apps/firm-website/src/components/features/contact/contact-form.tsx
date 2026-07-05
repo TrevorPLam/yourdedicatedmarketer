@@ -1,7 +1,8 @@
 'use client';
 
-import { useActionState, useRef } from 'react';
+import { useActionState, useRef, useEffect } from 'react';
 import { useFormStatus } from 'react-dom';
+import { toast } from 'sonner';
 import { Button } from '@repo/ui';
 import { Input } from '@repo/ui';
 import { Textarea } from '@repo/ui';
@@ -34,6 +35,24 @@ export function ContactForm() {
     initialContactState
   );
   const formRef = useRef<HTMLFormElement>(null);
+
+  // Show toast notifications on state changes (not on initial render)
+  useEffect(() => {
+    // Skip initial render - state equals initialContactState
+    if (state === initialContactState) {
+      return;
+    }
+
+    // Show success toast
+    if (state.success) {
+      toast.success('Message sent successfully!');
+    }
+
+    // Show error toast (when not successful and has a message)
+    if (!state.success && state.message) {
+      toast.error(state.message);
+    }
+  }, [state]);
 
   // Reset form on successful submission
   if (state.success && formRef.current) {
