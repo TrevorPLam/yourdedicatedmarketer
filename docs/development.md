@@ -316,6 +316,261 @@ pnpm --filter @repo/firm-website add @repo/ui
 
 ## Working with Content
 
+### Adding a New Page
+
+This guide explains how to add a new page following the patterns established in Phase 3.
+
+#### Types of Pages
+
+There are three main page types in the application:
+
+1. **Static Pages** - Simple pages with content from MDX files (e.g., About, Pricing)
+2. **Hub Pages** - List pages that display multiple content items (e.g., Services Hub, Industries Hub)
+3. **Dynamic Detail Pages** - Individual content pages with dynamic routing (e.g., `/services/[slug]`)
+
+#### Adding a New Static Page
+
+1. **Create the MDX content file** in `apps/firm-website/src/content/pages/`:
+   ```bash
+   touch apps/firm-website/src/content/pages/your-page.mdx
+   ```
+
+2. **Add frontmatter** to the MDX file:
+   ```mdx
+   ---
+   title: "Your Page Title"
+   slug: "your-page"
+   description: "Short description for SEO"
+   ---
+
+   # Your Page Title
+
+   Your content here...
+   ```
+
+3. **Create the page component** in `apps/firm-website/src/app/(marketing)/your-page/page.tsx`:
+   ```typescript
+   import { getPage } from '@/lib/content'
+   import { ContentPage } from '@/components/features/content-page'
+   import { generateMetadata } from '@/lib/seo'
+   import { notFound } from 'next/navigation'
+
+   export const metadata = generateMetadata({
+     title: 'Your Page Title',
+     description: 'Short description for SEO',
+   })
+
+   export default async function YourPage() {
+     const page = await getPage('your-page')
+
+     if (!page) {
+       notFound()
+     }
+
+     return (
+       <ContentPage
+         content={page.body}
+         title={page.title}
+       />
+     )
+   }
+   ```
+
+4. **Add navigation link** (optional) in `apps/firm-website/src/lib/navigation.ts`:
+   ```typescript
+   export function getNavItems(): NavItem[] {
+     return [
+       // ... existing items
+       { label: 'Your Page', href: '/your-page' as Route },
+     ]
+   }
+   ```
+
+5. **Write a test** in `apps/firm-website/src/app/(marketing)/your-page/page.test.tsx`:
+   ```typescript
+   import { describe, it, expect } from 'vitest'
+   import { render, screen } from '@testing-library/react'
+   import YourPage from './page'
+
+   describe('YourPage', () => {
+     it('renders page content', async () => {
+       const page = await YourPage()
+       render(page)
+       expect(screen.getByText('Your Page Title')).toBeInTheDocument()
+     })
+   })
+   ```
+
+#### Adding a New Hub Page
+
+1. **Create the hub component** in `apps/firm-website/src/components/features/your-type/your-type-hub.tsx`:
+   ```typescript
+   import { getAllYourType } from '@/lib/content'
+   import { Card, CardHeader, CardTitle, CardContent } from '@repo/ui'
+   import Link from 'next/link'
+   import type { Route } from '@/lib/routes'
+
+   interface YourTypeHubProps {
+     title?: string
+     description?: string
+   }
+
+   export async function YourTypeHub({ title, description }: YourTypeHubProps) {
+     const items = await getAllYourType()
+
+     return (
+       <div className="space-y-8">
+         {title && <h1 className="text-4xl font-bold">{title}</h1>}
+         {description && <p className="text-xl text-muted-foreground">{description}</p>}
+
+         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+           {items.map((item) => (
+             <Link key={item.slug} href={`/your-type/${item.slug}` as Route}>
+               <Card className="h-full hover:shadow-lg transition-shadow">
+                 <CardHeader>
+                   <CardTitle>{item.title}</CardTitle>
+                 </CardHeader>
+                 <CardContent>
+                   <p className="text-muted-foreground">{item.description}</p>
+                 </CardContent>
+               </Card>
+             </Link>
+           ))}
+         </div>
+       </div>
+     )
+   }
+   ```
+
+2. **Create the page component** in `apps/firm-website/src/app/(marketing)/your-type/page.tsx`:
+   ```typescript
+   import { YourTypeHub } from '@/components/features/your-type/your-type-hub'
+   import { generateMetadata } from '@/lib/seo'
+
+   export const metadata = generateMetadata({
+     title: 'Your Type',
+     description: 'Description for your type hub',
+   })
+
+   export default function YourTypePage() {
+     return (
+       <YourTypeHub
+         title="Your Type"
+         description="Description for your type hub"
+       />
+     )
+   }
+   ```
+
+3. **Add navigation link** in `apps/firm-website/src/lib/navigation.ts`
+
+4. **Write tests** for both the hub component and page
+
+#### Adding a New Dynamic Detail Page
+
+1. **Create the detail component** in `apps/firm-website/src/components/features/your-type/your-type-detail.tsx`:
+   ```typescript
+   import { ContentPage } from '@/components/features/content-page'
+   import { getBreadcrumbs } from '@/lib/navigation'
+
+   interface YourTypeDetailProps {
+     content: string
+     title: string
+     slug: string
+   }
+
+   export function YourTypeDetail({ content, title, slug }: YourTypeDetailProps) {
+     const breadcrumbs = getBreadcrumbs(slug)
+
+     return (
+       <div className="space-y-8">
+         {breadcrumbs && (
+           <nav aria-label="Breadcrumb">
+             <ol className="flex items-center space-x-2 text-sm">
+               {breadcrumbs.map((crumb, index) => (
+                 <li key={crumb.href}>
+                   {index > 0 && <span className="mx-2">/</span>}
+                   <a href={crumb.href} className="hover:underline">
+                     {crumb.label}
+                   </a>
+                 </li>
+               ))}
+             </ol>
+           </nav>
+         )}
+
+         <ContentPage content={content} title={title} />
+       </div>
+     )
+   }
+   ```
+
+2. **Create the dynamic page** in `apps/firm-website/src/app/(marketing)/your-type/[slug]/page.tsx`:
+   ```typescript
+   import { getYourTypeBySlug, getAllSlugs } from '@/lib/content'
+   import { YourTypeDetail } from '@/components/features/your-type/your-type-detail'
+   import { generateMetadata } from '@/lib/seo'
+   import { notFound } from 'next/navigation'
+
+   export async function generateStaticParams() {
+     const slugs = await getAllSlugs('your-type')
+     return slugs.map((slug) => ({ slug }))
+   }
+
+   export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+     const { slug } = await params
+     const item = await getYourTypeBySlug(slug)
+
+     if (!item) {
+       return {}
+     }
+
+     return generateMetadata({
+       title: item.title,
+       description: item.description,
+    })
+   }
+
+   export default async function YourTypePage({ params }: { params: Promise<{ slug: string }> }) {
+     const { slug } = await params
+     const item = await getYourTypeBySlug(slug)
+
+     if (!item) {
+       notFound()
+     }
+
+     return (
+       <YourTypeDetail
+         content={item.body}
+         title={item.title}
+         slug={slug}
+       />
+     )
+   }
+   ```
+
+3. **Write tests** for the dynamic page
+
+#### Best Practices
+
+- **Use Server Components by default** - Only use `"use client"` when you need interactivity
+- **Follow the deep module pattern** - Each component should have a single, clear responsibility
+- **Use type-safe navigation** - Import `Route` type and cast your hrefs
+- **Add metadata** - Use `generateMetadata()` for consistent SEO
+- **Handle 404s** - Use `notFound()` when content doesn't exist
+- **Write tests** - All pages should have unit tests
+- **Use ContentPage** - For consistent content layout across static pages
+- **Add breadcrumbs** - For dynamic detail pages to improve navigation
+- **Follow existing patterns** - Look at similar pages (services, industries, demos) for reference
+
+#### Common Patterns
+
+- **Static page**: Use `ContentPage` component with `getPage()` utility
+- **Hub page**: Create a hub component that fetches all items and renders cards
+- **Dynamic page**: Use `generateStaticParams()` and `generateMetadata()` with async params
+- **Breadcrumbs**: Use `getBreadcrumbs()` utility for hierarchical navigation
+- **Metadata**: Use `generateMetadata()` from `@/lib/seo` for consistent SEO
+
 ### Adding New Content
 
 Content is stored in `apps/firm-website/src/content/`. To add new content:
