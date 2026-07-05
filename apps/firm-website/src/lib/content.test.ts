@@ -130,4 +130,71 @@ describe('Content Utilities', () => {
       expect(websiteDesign?.content.length).toBeGreaterThan(0);
     });
   });
+
+  describe('Industry Content', () => {
+    it('should return all industry slugs', async () => {
+      const slugs = await getAllSlugs('industries');
+      expect(Array.isArray(slugs)).toBe(true);
+      expect(slugs.length).toBe(6);
+      expect(slugs).toContain('home-services');
+      expect(slugs).toContain('medical');
+      expect(slugs).toContain('personal-services');
+      expect(slugs).toContain('professional-services');
+      expect(slugs).toContain('restaurants');
+      expect(slugs).toContain('retail');
+    });
+
+    it('should return content for each industry', async () => {
+      const industries = await getAllContent<{ title: string; slug: string; order: number; icon: string }>('industries');
+      
+      expect(industries.length).toBe(6);
+      
+      const homeServices = industries.find(item => item.data.slug === 'home-services');
+      expect(homeServices).toBeDefined();
+      expect(homeServices?.data.title).toBe('Home Service & Trades');
+      expect(homeServices?.data.order).toBe(1);
+      expect(homeServices?.data.icon).toBe('🔧');
+
+      const medical = industries.find(item => item.data.slug === 'medical');
+      expect(medical).toBeDefined();
+      expect(medical?.data.title).toBe('Medical & Wellness Clinics');
+      expect(medical?.data.order).toBe(2);
+      expect(medical?.data.icon).toBe('🏥');
+
+      const personalServices = industries.find(item => item.data.slug === 'personal-services');
+      expect(personalServices).toBeDefined();
+      expect(personalServices?.data.title).toBe('Personal Services');
+      expect(personalServices?.data.order).toBe(3);
+      expect(personalServices?.data.icon).toBe('💇');
+
+      const professionalServices = industries.find(item => item.data.slug === 'professional-services');
+      expect(professionalServices).toBeDefined();
+      expect(professionalServices?.data.title).toBe('Professional Services');
+      expect(professionalServices?.data.order).toBe(4);
+      expect(professionalServices?.data.icon).toBe('⚖️');
+
+      const restaurants = industries.find(item => item.data.slug === 'restaurants');
+      expect(restaurants).toBeDefined();
+      expect(restaurants?.data.title).toBe('Restaurants & Food Service');
+      expect(restaurants?.data.order).toBe(5);
+      expect(restaurants?.data.icon).toBe('🍽️');
+
+      const retail = industries.find(item => item.data.slug === 'retail');
+      expect(retail).toBeDefined();
+      expect(retail?.data.title).toBe('Retail & Local Shops');
+      expect(retail?.data.order).toBe(6);
+      expect(retail?.data.icon).toBe('🛍️');
+    });
+
+    it('should parse industry content with correct metadata', async () => {
+      const homeServices = await getContentBySlug<{ title: string; slug: string; icon: string }>('industries', 'home-services');
+      
+      expect(homeServices).not.toBeNull();
+      expect(homeServices?.data.title).toBe('Home Service & Trades');
+      expect(homeServices?.data.slug).toBe('home-services');
+      expect(homeServices?.data.icon).toBe('🔧');
+      expect(homeServices?.content).toBeDefined();
+      expect(homeServices?.content.length).toBeGreaterThan(0);
+    });
+  });
 });

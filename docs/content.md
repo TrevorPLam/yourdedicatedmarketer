@@ -66,6 +66,60 @@ To add a new service:
 - **Pricing**: Include pricing context and market positioning when applicable
 - **CTA**: End with a clear call-to-action
 
+## Industry Content Structure
+
+Industry pages showcase the firm's expertise across different business sectors. Each industry is represented as an MDX file with frontmatter metadata and markdown body content.
+
+### Current Industries
+
+The following industry pages are currently available:
+
+1. **Home Service & Trades** (`home-services.mdx`) - Plumbers, electricians, HVAC, order 1, icon 🔧
+2. **Medical & Wellness Clinics** (`medical.mdx`) - Medical clinics, dental practices, order 2, icon 🏥
+3. **Personal Services** (`personal-services.mdx`) - Salons, spas, fitness studios, order 3, icon 💇
+4. **Professional Services** (`professional-services.mdx`) - Law firms, accountants, consultants, order 4, icon ⚖️
+5. **Restaurants & Food Service** (`restaurants.mdx`) - Restaurants, cafes, food trucks, order 5, icon 🍽️
+6. **Retail & Local Shops** (`retail.mdx`) - Retail stores, boutiques, local shops, order 6, icon 🛍️
+
+### Industry File Format
+
+Each industry MDX file includes:
+
+- **Frontmatter fields**:
+  - `title` - Display title of the industry
+  - `slug` - URL-friendly identifier
+  - `description` - Short description for SEO and previews
+  - `icon` - Icon for the industry (emoji or icon identifier)
+  - `order` - Display order for sorting (optional)
+
+- **Content sections**:
+  - Industry-specific pain points and challenges
+  - Why this industry needs specialized web design
+  - What's included for this industry (features, integrations)
+  - Link to relevant demo/proof-of-concept
+  - FAQ section with AEO format
+  - Call-to-action
+
+### Adding New Industries
+
+To add a new industry:
+
+1. Create a new `.mdx` file in `apps/firm-website/src/content/industries/`
+2. Add frontmatter with required fields (`title`, `slug`, `description`, `icon`)
+3. Include optional field (`order`) as needed
+4. Write the content body following the established structure
+5. Update the industry list in this documentation
+6. The content will be automatically available through `getAllIndustries()` and `getIndustry(slug)`
+
+### Industry Content Guidelines
+
+- **Word count**: 400-600 words per industry page
+- **Tone**: Industry-specific, addressing unique pain points and solutions
+- **Structure**: Use clear headings, bullet points, and sections for readability
+- **Differentiation**: Each industry must be distinct with specific pain points and solutions
+- **Cross-linking**: Link to relevant demo/proof-of-concept pages
+- **FAQ**: Include industry-specific questions in AEO format
+
 ## Content File Format
 
 Each content file is an MDX file (`.mdx`) with YAML frontmatter. The frontmatter contains metadata, and the body contains the content in Markdown/MDX format.
