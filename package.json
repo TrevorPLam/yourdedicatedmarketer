@@ -9,6 +9,7 @@
     "build": "turbo build",
     "lint": "turbo lint",
     "test": "turbo test",
+    "test:watch": "turbo test:watch",
     "check-types": "turbo check-types",
     "format": "prettier --write ."
   },
@@ -16,6 +17,12 @@
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@9.15.0",
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "9.15.0"
+    }
+  },
   "devDependencies": {
     "@types/node": "22",
     "prettier": "^3.4.2",

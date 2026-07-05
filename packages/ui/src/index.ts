@@ -8,6 +8,7 @@ export { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from './
 export { cn } from './lib/utils'
 export { ThemeProvider } from './theme-provider'
 export { ThemeToggle } from './theme-toggle'
-export { Header } from './components/layout/header'
+export { Header, type NavItem } from './components/layout/header'
+export { Footer, type ContactInfo, type SocialLink } from './components/layout/footer'
 export { MobileMenu } from './components/layout/mobile-menu'
 export { NavLink } from './components/navigation/nav-link'

@@ -52,11 +52,15 @@ export async function getAllContent<T>(dir: string): Promise<{
   content: string;
 }[]> {
   try {
+    // Waterfall elimination: Get slugs and fetch content in parallel
+    // Instead of awaiting slugs sequentially, we use Promise.all to fetch
+    // all content files concurrently. This prevents the waterfall pattern
+    // where each content fetch would wait for the previous one to complete.
     const slugs = await getAllSlugs(dir);
     const contents = await Promise.all(
       slugs.map((slug) => getContentBySlug<T>(dir, slug))
     );
-    
+
     return contents.filter(
       (item): item is { data: T; content: string } => item !== null
     );

@@ -1,9 +1,9 @@
+import 'server-only';
 import { z } from 'zod';
 
-const envSchema = z.object({
+const envSchema = z.strictObject({
   NEXT_PUBLIC_SITE_URL: z
-    .string()
-    .url('NEXT_PUBLIC_SITE_URL must be a valid URL')
+    .url({ message: 'NEXT_PUBLIC_SITE_URL must be a valid URL' })
     .default('http://localhost:3000'),
 });
 

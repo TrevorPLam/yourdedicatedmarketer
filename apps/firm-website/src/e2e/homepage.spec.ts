@@ -3,7 +3,8 @@ import { test, expect } from '@playwright/test'
 test('homepage loads and displays main heading', async ({ page }) => {
   await page.goto('/')
 
-  await expect(page.locator('h1')).toContainText('Your Dedicated Marketer')
+  const heading = page.getByRole('heading', { name: 'Your Dedicated Marketer' })
+  await expect(heading).toBeVisible()
 })
 
 test('homepage displays get started button', async ({ page }) => {

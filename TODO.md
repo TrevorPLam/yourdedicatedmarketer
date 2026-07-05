@@ -817,7 +817,7 @@ This document defines all tasks required to establish the design system foundati
 
 ### Parent Task P014: Build Footer Component
 
-- [ ] **P014** | Status: `PENDING`
+- [x] **P014** | Status: `COMPLETE`
       **Related File Paths:**
   - `packages/ui/src/components/layout/footer.tsx`
   - `packages/ui/src/index.ts` (exports)
@@ -856,14 +856,25 @@ This document defines all tasks required to establish the design system foundati
 
 #### Subtasks
 
-| ID      | Agent/Human | File Path / Command                                 | Description                                                                                                                                                                                       | Validation Command                  |
-| ------- | ----------- | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
-| P014-01 | AGENT       | `packages/ui/src/components/layout/footer.tsx`      | Create `Footer` with: <br> - `Container` with grid layout <br> - Logo area <br> - Nav links (map from props) <br> - Contact info <br> - Social icons (using lucide-react) <br> - Copyright notice | No command.                         |
-| P014-02 | AGENT       | `apps/firm-website` (install)                       | Run: `pnpm --filter @repo/firm-website add lucide-react` (if not already).                                                                                                                        | `pnpm list lucide-react` shows it.  |
-| P014-03 | AGENT       | `packages/ui/src/index.ts`                          | Add export for `Footer`.                                                                                                                                                                          | No command.                         |
-| P014-04 | AGENT       | `apps/firm-website/src/app/layout.tsx`              | Add `Footer` to the layout (below `{children}`). Pass props for nav links, contact info (placeholder).                                                                                            | `pnpm dev` shows footer.            |
-| P014-05 | AGENT       | `packages/ui/src/components/layout/footer.test.tsx` | Write unit test: renders footer, shows links and copyright.                                                                                                                                       | `pnpm --filter @repo/ui test` runs. |
-| P014-06 | AGENT       | Update `docs/components.md`                         | Document Footer usage.                                                                                                                                                                            | None.                               |
+| ID      | Agent/Human | File Path / Command                                 | Description                                                                                                                                                                                       | Status      |
+| ------- | ----------- | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| P014-01 | AGENT       | `packages/ui/src/components/layout/footer.tsx`      | Create `Footer` with: <br> - `Container` with grid layout <br> - Logo area <br> - Nav links (map from props) <br> - Contact info <br> - Social icons (using lucide-react) <br> - Copyright notice | ✅ Complete  |
+| P014-02 | AGENT       | `apps/firm-website` (install)                       | Run: `pnpm --filter @repo/firm-website add lucide-react` (if not already).                                                                                                                        | ✅ Complete  |
+| P014-03 | AGENT       | `packages/ui/src/index.ts`                          | Add export for `Footer`.                                                                                                                                                                          | ✅ Complete  |
+| P014-04 | AGENT       | `apps/firm-website/src/app/layout.tsx`              | Add `Footer` to the layout (below `{children}`). Pass props for nav links, contact info (placeholder).                                                                                            | ✅ Complete  |
+| P014-05 | AGENT       | `packages/ui/src/components/layout/footer.test.tsx` | Write unit test: renders footer, shows links and copyright.                                                                                                                                       | ✅ Complete  |
+| P014-06 | AGENT       | Update `docs/components.md`                         | Document Footer usage.                                                                                                                                                                            | ✅ Complete  |
+
+#### Implementation Notes
+
+- Footer component created with responsive grid layout (1 column mobile, 2 columns tablet, 4 columns desktop)
+- Uses semantic HTML: `<footer>`, `<nav>`, `<ul>`, `<li>` for accessibility
+- Social links include proper `aria-label`, `target="_blank"`, and `rel="noopener noreferrer"` attributes
+- Component exported from `@repo/ui` with types: `Footer`, `ContactInfo`, `SocialLink`
+- Added to root layout with placeholder data for nav links, contact info, and social links
+- Unit tests cover all major use cases including conditional rendering
+- Documentation added to `docs/components.md` with usage examples and type definitions
+- Fixed issue: Changed `packages/ui/package.json` test script from `vitest` to `vitest run` to prevent hanging in watch mode
 
 ---
 

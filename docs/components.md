@@ -212,6 +212,81 @@ import { MobileMenu } from '@repo/ui';
 - **Body scroll lock** - Prevents scrolling when open
 - **Accessibility** - ARIA dialog with proper labels
 
+## Footer
+
+A responsive footer component with navigation links, contact information, and social media links.
+
+### Usage
+
+```tsx
+import { Footer } from '@repo/ui';
+import { Twitter, Linkedin, Github } from 'lucide-react';
+
+const footerNavLinks = [
+  { href: '/about', label: 'About' },
+  { href: '/services', label: 'Services' },
+  { href: '/pricing', label: 'Pricing' },
+  { href: '/contact', label: 'Contact' },
+];
+
+const contactInfo = {
+  email: 'contact@example.com',
+  phone: '+1 (555) 123-4567',
+  address: '123 Marketing St, Business City, BC 12345',
+};
+
+const socialLinks = [
+  { href: 'https://twitter.com', icon: <Twitter className="h-5 w-5" />, label: 'Twitter' },
+  { href: 'https://linkedin.com', icon: <Linkedin className="h-5 w-5" />, label: 'LinkedIn' },
+  { href: 'https://github.com', icon: <Github className="h-5 w-5" />, label: 'GitHub' },
+];
+
+<Footer
+  navLinks={footerNavLinks}
+  contactInfo={contactInfo}
+  socialLinks={socialLinks}
+  copyright="© 2025 Your Company. All rights reserved."
+/>
+```
+
+### Props
+
+- `logo` - Optional custom logo component (defaults to text "Your Dedicated Marketer")
+- `navLinks` - Array of navigation items with `href` and `label` properties
+- `contactInfo` - Object with optional `email`, `phone`, and `address` properties
+- `socialLinks` - Array of social links with `href`, `icon`, and `label` properties
+- `copyright` - Copyright text (defaults to current year with placeholder text)
+- `className` - Additional CSS classes
+
+### Features
+
+- **Responsive layout** - Grid layout that stacks on mobile, multi-column on desktop
+- **Semantic HTML** - Uses `<footer>` and `<nav>` elements for accessibility
+- **Dark/light mode** - Automatically adapts to theme
+- **Accessibility** - Social links include `aria-label`, proper `target` and `rel` attributes
+- **Container** - Uses Container component for consistent max-width and padding
+
+### Types
+
+```tsx
+type NavItem = {
+  href: string;
+  label: string;
+};
+
+type ContactInfo = {
+  email?: string;
+  phone?: string;
+  address?: string;
+};
+
+type SocialLink = {
+  href: string;
+  icon: React.ReactNode;
+  label: string;
+};
+```
+
 ## Best Practices
 
 1. **Use Server Components by default** - All components are Server Components unless they need interactivity

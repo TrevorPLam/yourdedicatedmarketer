@@ -22,6 +22,8 @@ export default [
       '@next/next': nextPlugin,
     },
     rules: {
+      ...nextPlugin.configs.recommended.rules,
+      ...nextPlugin.configs['core-web-vitals'].rules,
       'react/jsx-uses-react': 'error',
       'react/jsx-uses-vars': 'error',
       'react/react-in-jsx-scope': 'off',

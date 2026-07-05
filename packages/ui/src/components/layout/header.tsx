@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Menu } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import type { Route } from 'next';
 
 import { Container } from '../ui/container';
 import { Button } from '../ui/button';
@@ -47,7 +48,7 @@ const Header = React.forwardRef<HTMLElement, HeaderProps>(
               <ul className="flex items-center gap-6">
                 {navItems.map((item) => (
                   <li key={item.href}>
-                    <Link href={item.href}>
+                    <Link href={item.href as Route}>
                       <NavLink
                         href={item.href}
                         isActive={pathname === item.href}
