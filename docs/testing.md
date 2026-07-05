@@ -206,11 +206,95 @@ describe('Navigation Utilities', () => {
 ### Running Utility Tests
 
 ```bash
-# Run content utility tests
+# Run content utility unit tests
 pnpm --filter @repo/firm-website test -- content.test
 
 # Run navigation utility tests
 pnpm --filter @repo/firm-website test -- navigation
+
+# Run content utility integration tests
+pnpm --filter @repo/firm-website test -- content.integration
+```
+
+## Integration Testing
+
+Integration tests verify that content utilities work correctly with the real file system and actual MDX files, testing the end-to-end content pipeline without mocking.
+
+### Test Location
+- **Content integration tests**: `apps/firm-website/src/lib/content.integration.test.ts`
+
+### Testing Approach
+
+#### Core Principles
+- **Use real file system**: Tests read actual MDX files from `src/content/` directories
+- **No mocking**: `fs` and `path` modules are not mocked to verify real-world behavior
+- **Focus on critical paths**: Test services, industries, and demos (most important content types)
+- **Verify metadata parsing**: Ensure frontmatter is correctly parsed and typed
+- **Test HTML conversion**: Verify remark converts markdown to HTML correctly
+
+#### Test Coverage
+
+**Content Utilities Integration Tests:**
+- `getAllContent('services')` - Returns all service files with correct metadata
+- `getAllContent('industries')` - Returns all industry files with correct metadata
+- `getAllContent('demos')` - Returns all demo files with correct metadata
+- `getContentBySlug('services', 'website-design')` - Returns correct data for specific slug
+- `getContentBySlug('industries', 'medical')` - Returns correct data with icon field
+- `getAllSlugs('industries')` - Returns all industry slugs
+- `getAllSlugs('services')` - Returns all service slugs
+- `getAllSlugs('demos')` - Returns all demo slugs
+- Metadata parsing - Verifies title, slug, description, featured, order, icon fields
+- MDX to HTML conversion - Verifies markdown is processed correctly
+- Caching behavior - Verifies consistent data across repeated calls
+- Error handling - Non-existent directories return empty arrays, missing files return null
+
+**Example:**
+```typescript
+import { describe, it, expect } from 'vitest';
+import { getAllContent, getAllSlugs, getContentBySlug } from './content';
+
+describe('Content Utilities - Integration Tests with Real File System', () => {
+  it('should return all service files', async () => {
+    const services = await getAllContent('services');
+
+    expect(Array.isArray(services)).toBe(true);
+    expect(services.length).toBeGreaterThan(0);
+    
+    services.forEach((service) => {
+      expect(service.data).toBeDefined();
+      expect(typeof (service.data as { title: string }).title).toBe('string');
+      expect(typeof (service.data as { slug: string }).slug).toBe('string');
+      expect(service.content).toBeDefined();
+    });
+  });
+
+  it('should return correct data for services/website-design', async () => {
+    const content = await getContentBySlug('services', 'website-design');
+
+    expect(content).not.toBeNull();
+    expect((content?.data as { title: string }).title).toBe('Website Design & Development');
+    expect((content?.data as { slug: string }).slug).toBe('website-design');
+    expect(content?.content).toContain('<h1>'); // HTML conversion
+  });
+});
+```
+
+### Type Assertions
+
+Since `getAllContent` and `getContentBySlug` use generic types, integration tests use type assertions to access specific metadata fields:
+
+```typescript
+expect(typeof (service.data as { title: string }).title).toBe('string');
+expect((content?.data as { featured: boolean }).featured).toBe(true);
+```
+
+This approach allows testing without defining strict TypeScript interfaces for each content type while maintaining type safety.
+
+### Running Integration Tests
+
+```bash
+# Run content integration tests
+pnpm --filter @repo/firm-website test -- content.integration
 ```
 
 ## UI Component Testing

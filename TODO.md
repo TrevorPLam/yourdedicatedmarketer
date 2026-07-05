@@ -309,7 +309,7 @@ Monorepo with Next.js 15 app, `@repo/ui` component library, content utilities, d
 
 ### Parent Task P035: Write Content Utility Integration Tests
 
-- [ ] **P035** | Status: `PENDING`  
+- [x] **P035** | Status: `COMPLETED`
   **Related File Paths:**
   - `apps/firm-website/src/lib/content.integration.test.ts`
 
@@ -334,6 +334,15 @@ Monorepo with Next.js 15 app, `@repo/ui` component library, content utilities, d
   **Depends On / Blocks:**
   - Depends on: existing content utilities and MDX files (Phase 1).
   - Blocks: none.
+
+**Implementation Notes:**
+- Created comprehensive integration tests for content utilities using real file system
+- Tests cover all critical paths: services, industries, and demos
+- Verified metadata parsing (title, slug, description, featured, order, icon)
+- Verified MDX to HTML conversion via remark processor
+- Used type assertions for generic data types to avoid strict interface requirements
+- All 17 tests pass successfully
+- Documented integration testing approach in docs/testing.md with examples
 
 #### Subtasks
 
