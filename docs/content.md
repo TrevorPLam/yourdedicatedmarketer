@@ -14,11 +14,11 @@ All content is stored in `apps/firm-website/src/content/` with the following dir
 
 ## Content File Format
 
-Each content file is a Markdown file (`.md`) with YAML frontmatter. The frontmatter contains metadata, and the body contains the content in Markdown format.
+Each content file is an MDX file (`.mdx`) with YAML frontmatter. The frontmatter contains metadata, and the body contains the content in Markdown/MDX format.
 
 ### Example: Service File
 
-```markdown
+```mdx
 ---
 title: "Website Design"
 slug: "website-design"
@@ -112,6 +112,12 @@ The content utilities are located in `apps/firm-website/src/lib/content.ts`.
 - `getContentBySlug<T>(dir: string, slug: string)` - Returns parsed content for a specific slug
 - `getAllContent<T>(dir: string)` - Returns all content items from a directory
 
+### Caching
+
+The content utilities use an in-memory cache (Map) to avoid repeated file reads. When `getContentBySlug` is called, it first checks the cache before reading from the file system. This improves performance for repeated requests to the same content.
+
+The cache key is formatted as `{dir}:{slug}`, ensuring that content from different directories is cached separately.
+
 ### Type-Specific Helpers
 
 Services:
@@ -154,9 +160,9 @@ if (websiteDesign) {
 
 ## Adding New Content
 
-1. Create a new `.md` file in the appropriate directory
+1. Create a new `.mdx` file in the appropriate directory
 2. Add frontmatter with required fields
-3. Write the content body in Markdown
+3. Write the content body in Markdown/MDX format
 4. The content will be automatically available through the API
 
 ## Zod Schema Validation

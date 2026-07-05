@@ -15,7 +15,6 @@ export default defineConfig({
     pool: 'threads',
     isolate: true,
     fileParallelism: true,
-    dir: './src',
     experimental: {
       fsModuleCache: true,
     },

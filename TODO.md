@@ -1531,3 +1531,617 @@ Phase 4 consists of 8 parent tasks (P022–P029). The focus is completing the co
 4. Success toast appears
 5. Form resets
 6. GA4 conversion event fires
+
+## Phase 5: Testing & Quality Assurance – Task List
+
+This document defines tasks required to implement comprehensive testing across the monorepo, including unit tests, component tests, E2E tests, visual regression testing, CI pipeline, and coverage thresholds. All tasks are designed to be **SMALL**, actionable, and built with **SDD, DDD, TDD, BDD**, and **Deep Modules** in mind.
+
+**Prerequisites:**  
+Monorepo with Next.js 15 app, `@repo/ui` component library, content utilities, dynamic pages, contact form, and analytics are already built. Vitest is configured in `apps/firm-website` and `packages/ui`. Playwright exists with sample tests. Storybook is not yet set up. No shared test utilities package exists. No CI test pipeline.
+
+---
+
+### Parent Task P030: Set Up Shared Test Utilities Package
+
+- [ ] **P030** | Status: `PENDING`  
+  **Related File Paths:**
+  - `packages/test-utils/package.json`
+  - `packages/test-utils/src/index.ts`
+  - `packages/test-utils/src/test-utils.tsx`
+  - `packages/test-utils/src/mocks.ts`
+
+  **Definition of Done:**
+  - `@repo/test-utils` package created.
+  - Exports `renderWithProviders` (wraps `ThemeProvider`, etc.).
+  - Exports common mocks: `mockNextNavigation()`, `mockResend()`, `mockUseActionState()`.
+  - All apps can import from `@repo/test-utils`.
+
+  **Out of Scope:**
+  - Writing actual tests (subsequent tasks).
+
+  **Rules to Follow:**
+  - Package name: `@repo/test-utils`, private, `main` and `types` point to `src/index.ts`.
+  - Use `vitest` compatible mocks; framework-agnostic where possible.
+  - Provide a single entry point.
+
+  **Advanced Coding Pattern:**
+  - **Deep module** – test utilities abstract common setup; consuming tests don't repeat boilerplate.
+
+  **Anti‑Patterns:**
+  - Duplicating test helpers across workspaces.
+  - Adding framework-specific logic that prevents reuse.
+
+  **Imports/Exports:**
+  - `packages/test-utils/src/index.ts` re‑exports everything.
+
+  **Depends On / Blocks:**
+  - Depends on: existing monorepo structure, `@repo/ui` (for providers).
+  - Blocks: all subsequent testing tasks (P031–P039).
+
+#### Subtasks
+
+| ID      | Agent/Human | File Path / Command                       | Description                                                                                                                                                                        | Validation Command |
+| ------- | ----------- | ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
+| P030-01 | AGENT       | `packages/test-utils/package.json`        | Create `package.json` with `name: "@repo/test-utils"`, `private: true`, `main: "src/index.ts"`, `types: "src/index.ts"`, and add `vitest` as a peer dependency.                    | File exists.       |
+| P030-02 | AGENT       | `packages/test-utils/src/index.ts`        | Create entry point exporting all utilities.                                                                                                                                        | No command.        |
+| P030-03 | AGENT       | `packages/test-utils/src/test-utils.tsx`  | Create `renderWithProviders` that wraps children with `ThemeProvider` (from `@repo/ui`) and any other global providers.                                                             | No command.        |
+| P030-04 | AGENT       | `packages/test-utils/src/mocks.ts`        | Create mocks: `mockNextNavigation()` (mocks `usePathname`, `useRouter`), `mockResend()` (mocks `emails.send`), `mockUseActionState()` (mocks return state).                        | No command.        |
+| P030-05 | AGENT       | `packages/test-utils/tsconfig.json`       | Create `tsconfig.json` extending `@repo/typescript-config/base.json`.                                                                                                              | No command.        |
+| P030-06 | AGENT       | `apps/firm-website/package.json`          | Add `"@repo/test-utils": "workspace:*"` as dev dependency.                                                                                                                          | `pnpm list` shows. |
+| P030-07 | AGENT       | Update `docs/testing.md`                  | Document shared test utilities.                                                                                                                                                    | None.              |
+
+---
+
+### Parent Task P031: Write Unit Tests for Utility Functions
+
+- [ ] **P031** | Status: `PENDING`  
+  **Related File Paths:**
+  - `apps/firm-website/src/lib/content.test.ts`
+  - `apps/firm-website/src/lib/navigation.test.ts`
+  - `packages/lib/src/**/*.test.ts` (if applicable)
+
+  **Definition of Done:**
+  - Unit tests cover all exported functions from `content.ts` and `navigation.ts`:
+    - `getAllContent`, `getContentBySlug`, `getAllSlugs`
+    - `getNavItems`, `getBreadcrumbs`, `getRelatedContent`
+  - Success and error cases tested (file not found, invalid data).
+  - Tests run with Vitest; tests colocated with source.
+
+  **Out of Scope:**
+  - Integration tests (covered later by P035).
+
+  **Rules to Follow:**
+  - Use `vi.mock` for `fs`/`path` in content tests; navigation tests use mocks from `@repo/test-utils`.
+  - `describe`/`it` blocks, clear naming.
+
+  **Advanced Coding Pattern:**
+  - **Deep module** – tests verify public API, not internal implementation.
+
+  **Anti‑Patterns:**
+  - Testing implementation details.
+  - Not mocking dependencies leading to side effects.
+
+  **Depends On / Blocks:**
+  - Depends on: shared test utils (P030), content/navigation utilities (Phase 1).
+  - Blocks: none.
+
+#### Subtasks
+
+| ID      | Agent/Human | File Path / Command                            | Description                                                                                                                        | Validation Command                                      |
+| ------- | ----------- | ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| P031-01 | AGENT       | `apps/firm-website/src/lib/content.test.ts`    | Write tests for `getAllContent`: returns array, empty dir returns `[]`, handles invalid format gracefully.                         | `pnpm --filter @repo/firm-website test -- content.test` |
+| P031-02 | AGENT       | `apps/firm-website/src/lib/content.test.ts`    | Write tests for `getContentBySlug`: returns entry for valid slug, `null` for invalid, handles missing file.                        | Same as above.                                          |
+| P031-03 | AGENT       | `apps/firm-website/src/lib/content.test.ts`    | Write tests for `getAllSlugs`: returns slugs array, empty dir returns `[]`.                                                         | Same as above.                                          |
+| P031-04 | AGENT       | `apps/firm-website/src/lib/navigation.test.ts` | Write tests for `getNavItems`: returns array of `{ label, href }` with expected items.                                              | `pnpm --filter @repo/firm-website test -- navigation`   |
+| P031-05 | AGENT       | `apps/firm-website/src/lib/navigation.test.ts` | Write tests for `getBreadcrumbs`: returns trail for valid slug, empty array for invalid.                                            | Same as above.                                          |
+| P031-06 | AGENT       | `apps/firm-website/src/lib/navigation.test.ts` | Write tests for `getRelatedContent`: returns related items based on type/slug.                                                     | Same as above.                                          |
+| P031-07 | AGENT       | Update `docs/testing.md`                       | Document utility testing approach.                                                                                                  | None.                                                   |
+
+---
+
+### Parent Task P032: Write Component Tests for UI Components (`@repo/ui`)
+
+- [ ] **P032** | Status: `PENDING`  
+  **Related File Paths:**
+  - `packages/ui/src/components/**/*.test.tsx`
+
+  **Definition of Done:**
+  - All UI components have component tests:
+    - Button, Card, Container, Section
+    - Header, Footer, NavLink, MobileMenu
+    - Input, Textarea, Label, Form components
+    - Accordion
+    - ThemeToggle
+  - Tests cover rendering, props, variants, user interactions.
+  - Tests use `render` from `@testing-library/react` and `@repo/test-utils`.
+
+  **Out of Scope:**
+  - Feature components (app‑specific) – covered by P033.
+
+  **Rules to Follow:**
+  - Test files colocated with component.
+  - Use `screen` queries, `userEvent` for interactions.
+  - Use `renderWithProviders` for components needing ThemeProvider.
+
+  **Advanced Coding Pattern:**
+  - **Deep module** – tests verify component behavior from user perspective.
+
+  **Anti‑Patterns:**
+  - Testing internal state or CSS classes.
+  - Not testing interactive elements.
+
+  **Depends On / Blocks:**
+  - Depends on: Vitest config in `packages/ui`, shared test utils (P030).
+  - Blocks: none.
+
+#### Subtasks
+
+| ID      | Agent/Human | File Path / Command                                 | Description                                                                                                       | Validation Command                              |
+| ------- | ----------- | --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| P032-01 | AGENT       | `packages/ui/src/components/ui/button.test.tsx`     | Tests: renders text, variant classes, click events, `asChild`.                                                     | `pnpm --filter @repo/ui test -- button.test`    |
+| P032-02 | AGENT       | `packages/ui/src/components/ui/card.test.tsx`       | Tests: renders children, className, sub‑components render.                                                        | `pnpm --filter @repo/ui test -- card.test`      |
+| P032-03 | AGENT       | `packages/ui/src/components/ui/container.test.tsx`  | Tests: renders children, maxWidth variants, className.                                                            | `pnpm --filter @repo/ui test -- container.test` |
+| P032-04 | AGENT       | `packages/ui/src/components/layout/header.test.tsx` | Tests: renders nav items, mobile menu toggles, uses `renderWithProviders`.                                        | `pnpm --filter @repo/ui test -- header.test`    |
+| P032-05 | AGENT       | `packages/ui/src/components/layout/footer.test.tsx` | Tests: renders nav links, contact info, social links, copyright.                                                  | `pnpm --filter @repo/ui test -- footer.test`    |
+| P032-06 | AGENT       | `packages/ui/src/components/ui/input.test.tsx`      | Tests: renders with label, onChange, error state.                                                                 | `pnpm --filter @repo/ui test -- input.test`     |
+| P032-07 | AGENT       | `packages/ui/src/components/ui/accordion.test.tsx`  | Tests: renders items, expand/collapse, single/multiple modes.                                                     | `pnpm --filter @repo/ui test -- accordion.test` |
+| P032-08 | AGENT       | `packages/ui/src/components/theme-toggle.test.tsx`  | Tests: renders sun/moon icon, toggles theme.                                                                       | `pnpm --filter @repo/ui test -- theme-toggle`   |
+| P032-09 | AGENT       | Update `docs/testing.md`                            | Document UI component testing.                                                                                     | None.                                            |
+
+---
+
+### Parent Task P033: Write Component Tests for Feature Components
+
+- [ ] **P033** | Status: `PENDING`  
+  **Related File Paths:**
+  - `apps/firm-website/src/components/features/**/*.test.tsx`
+
+  **Definition of Done:**
+  - Feature components tested:
+    - Homepage sections: Hero, Pillars, DemoPreview, HowItWorks, FAQSnippet, FinalCTA
+    - ServicesHub, ServiceDetail
+    - IndustriesHub, IndustryDetail
+    - DemosHub, DemoDetail
+    - FAQHub, FAQAccordion
+    - ContactForm
+  - Tests use `renderWithProviders` and mock content/navigation utilities.
+  - Loading and error states covered where applicable.
+
+  **Out of Scope:**
+  - E2E tests (P036–P037).
+
+  **Rules to Follow:**
+  - Mock `@/lib/content` and `@/lib/navigation` using `vi.mock`.
+  - Test that components render with mock data, links work, key elements present.
+
+  **Advanced Coding Pattern:**
+  - **Deep module** – tests focus on component behavior and integration, not internals.
+
+  **Anti‑Patterns:**
+  - Not mocking dependencies (causes slow tests).
+  - Testing too much in a single test.
+
+  **Depends On / Blocks:**
+  - Depends on: shared test utils (P030), content utilities tests (P031).
+  - Blocks: none.
+
+#### Subtasks
+
+| ID      | Agent/Human | File Path / Command                                                        | Description                                                                                                                        | Validation Command                                      |
+| ------- | ----------- | -------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| P033-01 | AGENT       | `apps/firm-website/src/components/features/home/hero.test.tsx`             | Tests: renders headline, CTAs link to /contact, /demos.                                                                            | `pnpm --filter @repo/firm-website test -- hero`         |
+| P033-02 | AGENT       | `apps/firm-website/src/components/features/home/pillars.test.tsx`          | Tests: renders three pillars with links.                                                                                           | `pnpm --filter @repo/firm-website test -- pillars`      |
+| P033-03 | AGENT       | `apps/firm-website/src/components/features/home/demo-preview.test.tsx`     | Tests: fetches demos (mock), renders cards, empty state handled.                                                                   | `pnpm --filter @repo/firm-website test -- demo-preview` |
+| P033-04 | AGENT       | `apps/firm-website/src/components/features/services/services-hub.test.tsx` | Tests: fetches services (mock), renders service cards.                                                                             | `pnpm --filter @repo/firm-website test -- services-hub` |
+| P033-05 | AGENT       | `apps/firm-website/src/components/features/industries/industries-hub.test.tsx` | Tests: fetches industries (mock), renders cards with icons.                                                                      | `pnpm --filter @repo/firm-website test -- industries-hub` |
+| P033-06 | AGENT       | `apps/firm-website/src/components/features/faq/faq-hub.test.tsx`           | Tests: fetches FAQs (mock), groups by category, renders accordion.                                                                 | `pnpm --filter @repo/firm-website test -- faq-hub`      |
+| P033-07 | AGENT       | `apps/firm-website/src/components/features/contact/contact-form.test.tsx`  | Tests: renders fields, submits (mock action), loading state, success/error states (mock toast).                                    | `pnpm --filter @repo/firm-website test -- contact-form` |
+| P033-08 | AGENT       | Update `docs/testing.md`                                                   | Document feature component testing.                                                                                                 | None.                                                   |
+
+---
+
+### Parent Task P034: Write Server Action Tests
+
+- [ ] **P034** | Status: `PENDING`  
+  **Related File Paths:**
+  - `apps/firm-website/src/app/actions/contact.test.ts`
+
+  **Definition of Done:**
+  - Tests for `submitContact` Server Action:
+    - Valid submission returns success.
+    - Invalid email / missing fields returns validation error.
+    - Resend failure returns error (mocked).
+  - Tests do not send real emails.
+
+  **Out of Scope:**
+  - E2E tests (P037).
+
+  **Rules to Follow:**
+  - Use `vi.mock` for Resend.
+  - Use Zod's `safeParse` for validation tests.
+
+  **Advanced Coding Pattern:**
+  - **Deep module** – Server Action tested in isolation, no client needed.
+
+  **Depends On / Blocks:**
+  - Depends on: shared test utils (P030), Resend integration (Phase 4).
+  - Blocks: none.
+
+#### Subtasks
+
+| ID      | Agent/Human | File Path / Command                                 | Description                                                                 | Validation Command                                      |
+| ------- | ----------- | --------------------------------------------------- | --------------------------------------------------------------------------- | ------------------------------------------------------- |
+| P034-01 | AGENT       | `apps/firm-website/src/app/actions/contact.test.ts` | Test: valid form data returns `{ success: true }` and calls Resend.         | `pnpm --filter @repo/firm-website test -- contact.test` |
+| P034-02 | AGENT       | `apps/firm-website/src/app/actions/contact.test.ts` | Test: invalid email returns validation error with field info.               | Same as above.                                          |
+| P034-03 | AGENT       | `apps/firm-website/src/app/actions/contact.test.ts` | Test: missing required field returns validation error.                      | Same as above.                                          |
+| P034-04 | AGENT       | `apps/firm-website/src/app/actions/contact.test.ts` | Test: Resend rejects (mock) returns error state.                            | Same as above.                                          |
+| P034-05 | AGENT       | Update `docs/testing.md`                            | Document Server Action testing.                                             | None.                                                   |
+
+---
+
+### Parent Task P035: Write Content Utility Integration Tests
+
+- [ ] **P035** | Status: `PENDING`  
+  **Related File Paths:**
+  - `apps/firm-website/src/lib/content.integration.test.ts`
+
+  **Definition of Done:**
+  - Integration tests that use real MDX files (no mocking of `fs`):
+    - `getAllContent('services')` returns all service files.
+    - `getContentBySlug('services', 'website-design')` returns correct metadata/content.
+    - `getAllSlugs('industries')` returns all industry slugs.
+    - Metadata parsed correctly from MDX frontmatter.
+
+  **Out of Scope:**
+  - Testing React components.
+
+  **Rules to Follow:**
+  - Use real `fs` and `path`.
+  - Resolve `src/content/` via `path.resolve`.
+  - Focus on critical paths only (services, industries, demos).
+
+  **Advanced Coding Pattern:**
+  - **Deep module** – integration tests verify end‑to‑end content pipeline.
+
+  **Depends On / Blocks:**
+  - Depends on: existing content utilities and MDX files (Phase 1).
+  - Blocks: none.
+
+#### Subtasks
+
+| ID      | Agent/Human | File Path / Command                                     | Description                                                                                        | Validation Command                                             |
+| ------- | ----------- | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| P035-01 | AGENT       | `apps/firm-website/src/lib/content.integration.test.ts` | Test: `getAllContent('services')` returns all service files.                                       | `pnpm --filter @repo/firm-website test -- content.integration` |
+| P035-02 | AGENT       | `apps/firm-website/src/lib/content.integration.test.ts` | Test: `getContentBySlug('services', 'website-design')` returns correct data.                       | Same as above.                                                 |
+| P035-03 | AGENT       | `apps/firm-website/src/lib/content.integration.test.ts` | Test: `getAllSlugs('industries')` returns all slugs.                                               | Same as above.                                                 |
+| P035-04 | AGENT       | `apps/firm-website/src/lib/content.integration.test.ts` | Test: metadata parsing (title, slug, description) correct.                                         | Same as above.                                                 |
+| P035-05 | AGENT       | Update `docs/testing.md`                                | Document integration testing.                                                                       | None.                                                          |
+
+---
+
+### Parent Task P036: Write E2E Tests for Critical User Journeys
+
+- [ ] **P036** | Status: `PENDING`  
+  **Related File Paths:**
+  - `apps/firm-website/src/e2e/navigation.spec.ts`
+  - `apps/firm-website/src/e2e/homepage.spec.ts`
+  - `apps/firm-website/src/e2e/services.spec.ts`
+  - `apps/firm-website/src/e2e/industries.spec.ts`
+  - `apps/firm-website/src/e2e/demos.spec.ts`
+  - `apps/firm-website/src/e2e/faq.spec.ts`
+
+  **Definition of Done:**
+  - Playwright tests for:
+    - Homepage loads, hero and CTAs visible.
+    - Navigation: all top‑level pages (About, Pricing, Services, Industries, Demos, FAQ, Contact) load.
+    - Services hub lists services; service detail page loads correctly.
+    - Industries hub lists industries; detail page loads with content.
+    - Demos hub and detail pages.
+    - FAQ hub loads, accordions expand/collapse.
+  - Tests run headless against production build.
+
+  **Out of Scope:**
+  - Form submission E2E (P037).
+
+  **Rules to Follow:**
+  - Use `page.goto()`, `page.locator()`, `expect` from `@playwright/test`.
+  - Use `webServer` in Playwright config to start the app.
+  - Test actual page content, not just status codes.
+
+  **Advanced Coding Pattern:**
+  - **Deep module** – E2E tests verify system from user perspective.
+
+  **Anti‑Patterns:**
+  - Tests that are brittle or slow.
+  - Not testing visible content.
+
+  **Depends On / Blocks:**
+  - Depends on: all pages built (Phase 3).
+  - Blocks: none.
+
+#### Subtasks
+
+| ID      | Agent/Human | File Path / Command                            | Description                                                                     | Validation Command                                        |
+| ------- | ----------- | ---------------------------------------------- | ------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| P036-01 | AGENT       | `apps/firm-website/src/e2e/homepage.spec.ts`   | Test: homepage loads, hero present, CTA links.                                  | `pnpm --filter @repo/firm-website test:e2e -- homepage`   |
+| P036-02 | AGENT       | `apps/firm-website/src/e2e/navigation.spec.ts` | Test: /about page loads.                                                        | `pnpm --filter @repo/firm-website test:e2e -- navigation` |
+| P036-03 | AGENT       | `apps/firm-website/src/e2e/navigation.spec.ts` | Test: /pricing, /contact, /faq load.                                            | Same as above.                                            |
+| P036-04 | AGENT       | `apps/firm-website/src/e2e/services.spec.ts`   | Test: services hub shows service cards.                                         | `pnpm --filter @repo/firm-website test:e2e -- services`   |
+| P036-05 | AGENT       | `apps/firm-website/src/e2e/services.spec.ts`   | Test: service detail page loads with correct content.                           | Same as above.                                            |
+| P036-06 | AGENT       | `apps/firm-website/src/e2e/industries.spec.ts` | Test: industries hub shows cards.                                               | `pnpm --filter @repo/firm-website test:e2e -- industries` |
+| P036-07 | AGENT       | `apps/firm-website/src/e2e/industries.spec.ts` | Test: industry detail page loads.                                               | Same as above.                                            |
+| P036-08 | AGENT       | `apps/firm-website/src/e2e/demos.spec.ts`      | Test: demos hub and detail page.                                                | `pnpm --filter @repo/firm-website test:e2e -- demos`      |
+| P036-09 | AGENT       | `apps/firm-website/src/e2e/faq.spec.ts`        | Test: FAQ hub loads, accordion expands.                                         | `pnpm --filter @repo/firm-website test:e2e -- faq`        |
+| P036-10 | AGENT       | Update `docs/testing.md`                       | Document E2E testing approach.                                                  | None.                                                     |
+
+---
+
+### Parent Task P037: Write E2E Tests for Contact Form Submission
+
+- [ ] **P037** | Status: `PENDING`  
+  **Related File Paths:**
+  - `apps/firm-website/src/e2e/contact-form.spec.ts`
+
+  **Definition of Done:**
+  - Playwright tests for contact form:
+    - Page loads with form fields.
+    - Validation errors shown for invalid email / missing fields.
+    - Successful submission shows success toast (mock Resend or use test env).
+    - Server error shows error toast.
+  - Resend is mocked via environment variable or route intercept to avoid real emails.
+
+  **Out of Scope:**
+  - Testing actual email delivery.
+
+  **Rules to Follow:**
+  - Use `page.fill`, `page.click`, `page.waitForSelector`.
+  - Mock Resend API or set `RESEND_API_KEY` to empty to trigger error branch.
+
+  **Advanced Coding Pattern:**
+  - **Deep module** – E2E test covers full submission flow end‑to‑end.
+
+  **Depends On / Blocks:**
+  - Depends on: contact page (Phase 3), Resend integration (Phase 4).
+  - Blocks: none.
+
+#### Subtasks
+
+| ID      | Agent/Human | File Path / Command                              | Description                                                   | Validation Command                                          |
+| ------- | ----------- | ------------------------------------------------ | ------------------------------------------------------------- | ----------------------------------------------------------- |
+| P037-01 | AGENT       | `apps/firm-website/src/e2e/contact-form.spec.ts` | Test: form loads with fields.                                 | `pnpm --filter @repo/firm-website test:e2e -- contact-form` |
+| P037-02 | AGENT       | `apps/firm-website/src/e2e/contact-form.spec.ts` | Test: invalid email shows validation error.                   | Same as above.                                              |
+| P037-03 | AGENT       | `apps/firm-website/src/e2e/contact-form.spec.ts` | Test: missing required fields show errors.                    | Same as above.                                              |
+| P037-04 | AGENT       | `apps/firm-website/src/e2e/contact-form.spec.ts` | Test: valid submission shows success toast (mocked Resend).    | Same as above.                                              |
+| P037-05 | AGENT       | `apps/firm-website/src/e2e/contact-form.spec.ts` | Test: server error shows error toast.                         | Same as above.                                              |
+| P037-06 | AGENT       | Update `docs/testing.md`                         | Document E2E form testing.                                     | None.                                                       |
+
+---
+
+### Parent Task P038: Configure Storybook for UI Components
+
+- [ ] **P038** | Status: `PENDING`  
+  **Related File Paths:**
+  - `packages/ui/.storybook/main.ts`
+  - `packages/ui/.storybook/preview.ts`
+  - `packages/ui/src/**/*.stories.tsx`
+
+  **Definition of Done:**
+  - Storybook 8+ installed and configured in `packages/ui` (via `@storybook/nextjs` framework).
+  - Stories written for all UI components covering variants and states.
+  - Preview includes `ThemeProvider` for dark/light mode toggle.
+  - `storybook` and `storybook:build` scripts added to `packages/ui/package.json`.
+
+  **Out of Scope:**
+  - Chromatic integration (P039).
+  - Feature component stories.
+
+  **Rules to Follow:**
+  - Stories colocated with components (`button.stories.tsx`).
+  - Use Storybook 8+ with `@storybook/nextjs` framework (supports Next.js).
+
+  **Advanced Coding Pattern:**
+  - **Deep module** – Storybook provides a visual playground for the component library.
+
+  **Anti‑Patterns:**
+  - Stories that are overly complex or contain business logic.
+
+  **Depends On / Blocks:**
+  - Depends on: `@repo/ui` components, design tokens.
+  - Blocks: Chromatic (P039).
+
+#### Subtasks
+
+| ID      | Agent/Human | File Path / Command                                    | Description                                                                                           | Validation Command                 |
+| ------- | ----------- | ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------- | ---------------------------------- |
+| P038-01 | AGENT       | `packages/ui` (install)                                | Run: `pnpm --filter @repo/ui add -D @storybook/react @storybook/nextjs @storybook/addon-essentials`.   | Packages installed.                |
+| P038-02 | AGENT       | `packages/ui` (init)                                   | Initialize Storybook with `npx storybook@latest init --type nextjs` (or manual config).               | `.storybook/` directory created.   |
+| P038-03 | AGENT       | `packages/ui/.storybook/preview.ts`                    | Add `ThemeProvider` wrapper to preview for dark/light mode.                                           | No command.                        |
+| P038-04 | AGENT       | `packages/ui/src/components/ui/button.stories.tsx`     | Stories: default, primary, secondary, outline, ghost, destructive, loading, disabled.                 | `pnpm --filter @repo/ui storybook` |
+| P038-05 | AGENT       | `packages/ui/src/components/ui/card.stories.tsx`       | Stories: default, with header, footer, image.                                                         | Same as above.                     |
+| P038-06 | AGENT       | `packages/ui/src/components/ui/container.stories.tsx`  | Stories: sm, md, lg, xl, full.                                                                        | Same as above.                     |
+| P038-07 | AGENT       | `packages/ui/src/components/layout/header.stories.tsx` | Stories: with nav items, mobile view.                                                                 | Same as above.                     |
+| P038-08 | AGENT       | `packages/ui/src/components/layout/footer.stories.tsx` | Stories: default, with social links.                                                                   | Same as above.                     |
+| P038-09 | AGENT       | `packages/ui/src/components/ui/input.stories.tsx`      | Stories: default, error, disabled, with label.                                                        | Same as above.                     |
+| P038-10 | AGENT       | `packages/ui/src/components/ui/accordion.stories.tsx`  | Stories: default, multiple items, custom content.                                                     | Same as above.                     |
+| P038-11 | AGENT       | `packages/ui/package.json` scripts                     | Add `"storybook": "storybook dev -p 6006"`, `"storybook:build": "storybook build"`.                   | No command.                        |
+| P038-12 | AGENT       | Update `docs/testing.md`                               | Document Storybook setup.                                                                              | None.                              |
+
+---
+
+### Parent Task P039: Set Up Chromatic Visual Regression Testing
+
+- [ ] **P039** | Status: `PENDING`  
+  **Related File Paths:**
+  - `.github/workflows/chromatic.yml`
+  - `packages/ui/package.json` (chromatic script)
+
+  **Definition of Done:**
+  - Chromatic configured for visual regression testing.
+  - GitHub Actions workflow runs Chromatic on PRs to main.
+  - Project token stored as `CHROMATIC_PROJECT_TOKEN` secret.
+  - Chromatic snapshots are compared; diffs shown in PR comments.
+  - `--exit-zero-on-changes` used to avoid failing CI on visual diffs.
+
+  **Out of Scope:**
+  - None.
+
+  **Rules to Follow:**
+  - Use Chromatic CLI, run after `storybook:build`.
+  - Only trigger on PRs to main.
+
+  **Advanced Coding Pattern:**
+  - **Deep module** – visual testing is a separate CI step.
+
+  **Depends On / Blocks:**
+  - Depends on: Storybook (P038).
+  - Blocks: none.
+
+#### Subtasks
+
+| ID      | Agent/Human | File Path / Command               | Description                                                                                                            | Validation Command |
+| ------- | ----------- | --------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ------------------ |
+| P039-01 | HUMAN       | Chromatic account setup           | Create Chromatic account, add project, obtain project token.                                                           | Token obtained.    |
+| P039-02 | HUMAN       | GitHub secret setup               | Add `CHROMATIC_PROJECT_TOKEN` to repository secrets.                                                                    | Secret exists.     |
+| P039-03 | AGENT       | `packages/ui/package.json`        | Add script: `"chromatic": "npx chromatic --project-token=$CHROMATIC_PROJECT_TOKEN"`.                                   | No command.        |
+| P039-04 | AGENT       | `.github/workflows/chromatic.yml` | Create workflow: on PR to main, setup pnpm, install deps, build storybook, run Chromatic with `--exit-zero-on-changes`. | Workflow exists.   |
+| P039-05 | AGENT       | Update `docs/testing.md`          | Document Chromatic visual regression.                                                                                  | None.              |
+
+---
+
+### Parent Task P040: Configure CI Test Pipeline with GitHub Actions
+
+- [ ] **P040** | Status: `PENDING`  
+  **Related File Paths:**
+  - `.github/workflows/ci.yml`
+
+  **Definition of Done:**
+  - GitHub Actions workflow triggered on PRs to main.
+  - Runs: `pnpm lint`, `pnpm typecheck`, `pnpm test` (unit + component), `pnpm test:e2e` (Playwright) in parallel where possible.
+  - Uses Turborepo caching for speed.
+  - Coverage thresholds enforced (see P041).
+  - Test results visible in PR.
+
+  **Out of Scope:**
+  - Deployment (handled by Vercel).
+
+  **Rules to Follow:**
+  - Use `actions/setup-node`, `pnpm/action-setup`.
+  - Cache `.turbo` and `node_modules`.
+  - Run Playwright with `playwright install --with-deps chromium`.
+
+  **Advanced Coding Pattern:**
+  - **Deep module** – CI pipeline defined separately, isolated.
+
+  **Anti‑Patterns:**
+  - Running tests in serial without cache.
+
+  **Depends On / Blocks:**
+  - Depends on: all tests (P031–P037).
+  - Blocks: none.
+
+#### Subtasks
+
+| ID      | Agent/Human | File Path / Command        | Description                                                                                                                                       | Validation Command |
+| ------- | ----------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
+| P040-01 | AGENT       | `.github/workflows/ci.yml` | Create workflow: triggers on `pull_request` to `main`. Sets up Node.js, pnpm, installs deps, caches `.turbo`.                                      | Workflow exists.   |
+| P040-02 | AGENT       | `.github/workflows/ci.yml` | Add job steps: `pnpm lint`, `pnpm typecheck`, `pnpm test` (unit+component), `pnpm test:e2e` (with Playwright browser setup).                      | Workflow exists.   |
+| P040-03 | AGENT       | `.github/workflows/ci.yml` | Set `PLAYWRIGHT_BROWSERS_PATH=0` or use `npx playwright install --with-deps chromium` for E2E.                                                     | Workflow exists.   |
+| P040-04 | AGENT       | Update `docs/testing.md`   | Document CI pipeline.                                                                                                                              | None.              |
+
+---
+
+### Parent Task P041: Set Coverage Thresholds and Reporting
+
+- [ ] **P041** | Status: `PENDING`  
+  **Related File Paths:**
+  - `apps/firm-website/vitest.config.ts`
+  - `packages/ui/vitest.config.ts`
+  - `packages/lib/vitest.config.ts` (if needed)
+
+  **Definition of Done:**
+  - Coverage thresholds set to 80% for statements, branches, functions, lines in all test configs.
+  - Coverage reports generated (`coverage/` directory).
+  - CI fails if coverage drops below threshold.
+  - `test:coverage` scripts added.
+
+  **Out of Scope:**
+  - Codecov integration (not needed).
+
+  **Rules to Follow:**
+  - Install `@vitest/coverage-v8` in each workspace with tests.
+  - Use `reporter: ['text', 'html']`, `thresholds` object.
+
+  **Advanced Coding Pattern:**
+  - **Deep module** – coverage configuration local to each package.
+
+  **Anti‑Patterns:**
+  - Setting thresholds too low or too high.
+  - Not excluding test files and node_modules.
+
+  **Depends On / Blocks:**
+  - Depends on: existing tests (P031–P037), Vitest configs.
+  - Blocks: CI pipeline (integrate thresholds).
+
+#### Subtasks
+
+| ID      | Agent/Human | File Path / Command                      | Description                                                                                      | Validation Command |
+| ------- | ----------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------ | ------------------ |
+| P041-01 | AGENT       | `apps/firm-website` (install)            | Run: `pnpm --filter @repo/firm-website add -D @vitest/coverage-v8`.                               | Package installed. |
+| P041-02 | AGENT       | `apps/firm-website/vitest.config.ts`     | Add coverage config: `provider: 'v8'`, `reporter: ['text','html']`, `thresholds: { statements: 80, branches: 80, functions: 80, lines: 80 }`, `reportsDirectory: './coverage'`, exclude patterns. | No command.        |
+| P041-03 | AGENT       | `apps/firm-website/package.json`         | Add script: `"test:coverage": "vitest run --coverage"`.                                           | No command.        |
+| P041-04 | AGENT       | `packages/ui` (install & config)         | Repeat for UI package: install coverage, configure vitest.config.ts, add script.                  | No command.        |
+| P041-05 | AGENT       | `packages/lib` (if needed)               | If `packages/lib` has tests, add coverage config similarly.                                      | No command.        |
+| P041-06 | AGENT       | Update `docs/testing.md`                 | Document coverage thresholds and reporting.                                                       | None.              |
+
+---
+
+### Parent Task P042: Update Documentation for Testing Phase
+
+- [ ] **P042** | Status: `PENDING`  
+  **Related File Paths:**
+  - `README.md` (root)
+  - `docs/testing.md`
+  - `docs/architecture.md`
+  - `docs/development.md`
+
+  **Definition of Done:**
+  - `docs/testing.md` comprehensive with testing stack, unit tests, component tests, E2E, visual regression, CI, coverage.
+  - `README.md` updated with Phase 5 status and links.
+  - `docs/architecture.md` includes testing architecture.
+  - `docs/development.md` includes guide on writing tests.
+
+  **Out of Scope:**
+  - None.
+
+  **Rules to Follow:**
+  - Docs must be accurate and match current implementation.
+
+  **Depends On / Blocks:**
+  - Depends on: all previous tasks.
+  - Blocks: none.
+
+#### Subtasks
+
+| ID      | Agent/Human | File Path / Command    | Description                                                                          | Validation Command |
+| ------- | ----------- | ---------------------- | ------------------------------------------------------------------------------------ | ------------------ |
+| P042-01 | AGENT       | `README.md`            | Update with Phase 5 status, testing badges (if CI enabled).                          | Manual check.      |
+| P042-02 | AGENT       | `docs/testing.md`      | Complete document: stack, unit/component/E2E/visual testing, CI, coverage.          | Manual check.      |
+| P042-03 | AGENT       | `docs/development.md`  | Add "How to write tests" guide covering different test types.                        | Manual check.      |
+| P042-04 | AGENT       | `docs/architecture.md` | Update with testing architecture overview.                                           | Manual check.      |
+
+---
+
+## Summary of Phase 5
+
+Phase 5 consists of 13 parent tasks (P030–P042). It establishes comprehensive testing across the monorepo: shared test utilities, unit and component tests for all critical code, E2E tests for user journeys, Storybook + Chromatic for visual regression, a CI pipeline running tests on PRs, and coverage thresholds at 80%.
+
+**Key Deliverables:**
+- `@repo/test-utils` shared package
+- Unit tests for utilities, UI components, feature components, server actions
+- Integration tests for content pipeline
+- Playwright E2E tests for navigation, pages, and form submission
+- Storybook stories for all UI components
+- Chromatic visual regression in CI
+- GitHub Actions CI pipeline (lint, typecheck, unit tests, E2E)
+- Coverage thresholds (80%) enforced
+- Comprehensive testing documentation
