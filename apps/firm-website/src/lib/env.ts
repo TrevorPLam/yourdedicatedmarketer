@@ -12,7 +12,6 @@ type Env = z.infer<typeof envSchema>;
 let parsedEnv: Env;
 
 try {
-  // eslint-disable-next-line no-undef
   parsedEnv = envSchema.parse(process.env);
 } catch (error) {
   if (error instanceof z.ZodError) {

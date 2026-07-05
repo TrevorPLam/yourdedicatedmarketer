@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import { describe, it, expect } from 'vitest';
 import { getAllContent, getAllSlugs, getContentBySlug } from './content';
 import type { Service } from '../types/content';
