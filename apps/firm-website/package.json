@@ -26,6 +26,7 @@
     "@repo/lib": "workspace:*",
     "@repo/ui": "workspace:*",
     "@types/mdx": "^2.0.14",
+    "@vercel/analytics": "^2.0.1",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.468.0",
     "next": "15",

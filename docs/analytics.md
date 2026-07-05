@@ -1,6 +1,57 @@
 # Analytics Documentation
 
-This document describes the analytics implementation for the marketing website, including Google Analytics 4 (GA4) setup, page view tracking, and conversion event tracking.
+This document describes the analytics implementation for the marketing website, including Google Analytics 4 (GA4) setup, Vercel Analytics, page view tracking, and conversion event tracking.
+
+## Vercel Analytics
+
+Vercel Analytics provides automatic web vitals tracking and performance monitoring for applications deployed on Vercel. It requires no additional configuration beyond installation and integration.
+
+### Installation
+
+Vercel Analytics is installed as a dependency in the firm-website app:
+
+```bash
+pnpm --filter @repo/firm-website add @vercel/analytics
+```
+
+### Implementation
+
+The Analytics component is imported from `@vercel/analytics/next` and rendered in the root layout:
+
+```tsx
+import { Analytics } from '@vercel/analytics/next';
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body>
+        {children}
+        <Analytics />
+      </body>
+    </html>
+  );
+}
+```
+
+### Features
+
+- **Automatic Web Vitals**: Tracks Core Web Vitals (LCP, CLS, FID, INP) automatically
+- **Route Tracking**: Automatically tracks page views across all routes
+- **Production Only**: Only loads in production to avoid skewing development data
+- **No Configuration Required**: Works out of the box with Vercel deployment
+- **Dashboard**: View analytics in the Vercel dashboard (Pro plan required for full features)
+
+### Requirements
+
+- Application must be deployed on Vercel
+- Vercel Analytics must be enabled in the project settings
+- Pro plan required for advanced features and historical data
+
+### Viewing Analytics
+
+1. Go to your Vercel project dashboard
+2. Navigate to the Analytics tab
+3. View Web Vitals, page views, and performance metrics
 
 ## Google Analytics 4 (GA4) Setup
 

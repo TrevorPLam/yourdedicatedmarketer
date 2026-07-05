@@ -5,6 +5,7 @@ import React from 'react';
 import { ThemeProvider } from '@repo/ui';
 import { Toaster } from 'sonner';
 import { GA4Script } from '@/components/analytics/ga4-script';
+import { Analytics } from '@vercel/analytics/next';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -31,6 +32,7 @@ export default function RootLayout({
           <Toaster />
         </ThemeProvider>
         <GA4Script />
+        <Analytics />
       </body>
     </html>
   );
