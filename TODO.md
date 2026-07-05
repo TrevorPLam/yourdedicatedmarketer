@@ -226,11 +226,11 @@ Route group infrastructure not yet established, but all foundational pieces are 
 
 ### Parent Task P019: Add Loading States and Error Boundaries
 
-- [ ] **P019** | Status: `PENDING`  
+- [x] **P019** | Status: `COMPLETED`
   **Related File Paths:**
   - `apps/firm-website/src/app/(marketing)/loading.tsx`
   - `apps/firm-website/src/app/(marketing)/error.tsx`
-  - `apps/firm-website/src/components/ui/skeleton.tsx` (in `@repo/ui` or local)
+  - `packages/ui/src/components/ui/skeleton.tsx` (in `@repo/ui`)
 
   **Definition of Done:**
   - Marketing route group has `loading.tsx` showing skeleton/spinner.
@@ -257,12 +257,21 @@ Route group infrastructure not yet established, but all foundational pieces are 
 
 #### Subtasks
 
-| ID      | Agent/Human | File Path / Command                                 | Description                                                                                                                | Validation Command                                  |
-| ------- | ----------- | --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
-| P019-01 | AGENT       | `apps/firm-website/src/components/ui/skeleton.tsx`  | Create Skeleton component (accepts `className`) rendering a shimmer/placeholder. Can be in `@repo/ui` or locally.          | No command.                                         |
-| P019-02 | AGENT       | `apps/firm-website/src/app/(marketing)/loading.tsx` | Create `loading.tsx` that uses Skeleton to mimic page layout (header, sections, cards).                                    | `pnpm dev` shows loading state (throttle network).  |
-| P019-03 | AGENT       | `apps/firm-website/src/app/(marketing)/error.tsx`   | Create `error.tsx` (client) displaying error message, "Try again" button calling `reset()`, logging error.                 | Simulate error; page shows error boundary.          |
-| P019-04 | AGENT       | Update `docs/pages.md`                              | Document loading and error handling.                                                                                       | None.                                               |
+| ID      | Agent/Human | File Path / Command                                 | Description                                                                                                                | Validation Command                                  | Status  |
+| ------- | ----------- | --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- | ------- |
+| P019-01 | AGENT       | `packages/ui/src/components/ui/skeleton.tsx`       | Create Skeleton component (accepts `className`) rendering a shimmer/placeholder. Can be in `@repo/ui` or locally.          | No command.                                         | ✅      |
+| P019-02 | AGENT       | `apps/firm-website/src/app/(marketing)/loading.tsx` | Create `loading.tsx` that uses Skeleton to mimic page layout (header, sections, cards).                                    | `pnpm dev` shows loading state (throttle network).  | ✅      |
+| P019-03 | AGENT       | `apps/firm-website/src/app/(marketing)/error.tsx`   | Create `error.tsx` (client) displaying error message, "Try again" button calling `reset()`, logging error.                 | Simulate error; page shows error boundary.          | ✅      |
+| P019-04 | AGENT       | Update `docs/pages.md`                              | Document loading and error handling.                                                                                       | None.                                               | ✅      |
+
+**Implementation Notes:**
+- Skeleton component created in `@repo/ui` with `animate-pulse` and `bg-muted` for shimmer effect
+- Exported from `@repo/ui` index.ts for reuse across the application
+- Loading state mimics page structure: hero section, section with cards, card grid, CTA section
+- Error boundary is client component with user-friendly error message and retry functionality
+- Error details shown in development mode only for security
+- All tests passing (94 total tests)
+- Lint warnings in `seo.test.ts` are pre-existing and unrelated to this task
 
 ---
 

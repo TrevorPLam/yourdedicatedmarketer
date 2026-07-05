@@ -364,6 +364,53 @@ Dynamic pages are generated from content collections.
 3. Import and add to `app/(marketing)/page.tsx`
 4. Follow existing patterns for consistency
 
+## Loading States and Error Handling
+
+The marketing route group (`app/(marketing)/`) includes loading states and error boundaries to improve user experience.
+
+### Loading State (`loading.tsx`)
+
+- **Path:** `app/(marketing)/loading.tsx`
+- **Component:** Server component (no `"use client"` directive)
+- **Features:**
+  - Automatically shown by Next.js when a page is loading
+  - Uses Skeleton component from `@repo/ui` for placeholder UI
+  - Mimics page structure: hero section, section with cards, card grid, CTA section
+  - Animated pulse effect via Tailwind's `animate-pulse` utility
+  - Prevents layout shifts by matching actual page dimensions
+
+**Skeleton Component:**
+- Exported from `@repo/ui` as `Skeleton`
+- Accepts `className` prop for customization
+- Uses `animate-pulse` and `bg-muted` for shimmer effect
+- Rounded corners match actual UI elements
+- Reusable across the application
+
+### Error Boundary (`error.tsx`)
+
+- **Path:** `app/(marketing)/error.tsx`
+- **Component:** Client component (uses `"use client"` directive)
+- **Features:**
+  - Catches rendering errors in the marketing route group
+  - Displays user-friendly error message
+  - "Try again" button calls `reset()` to retry rendering
+  - "Go to homepage" button for navigation fallback
+  - Logs errors to console for debugging
+  - Shows error details in development mode only (via `details` element)
+  - Production mode hides technical details for security
+
+**Error Boundary Props:**
+- `error`: Error object with optional `digest` field
+- `reset`: Function to reset error boundary and retry rendering
+
+**Best Practices:**
+- Error boundary is client component (required by React)
+- Loading state is server component (can be server-side)
+- Skeleton mimics actual page structure to prevent CLS
+- Error messages are user-friendly, not technical
+- Development mode shows error details for debugging
+- Production mode hides error details for security
+
 ## Page Metadata
 
 All pages should include:
