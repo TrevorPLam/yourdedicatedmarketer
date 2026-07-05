@@ -6,6 +6,27 @@ import { describe, it, expect } from 'vitest';
 import { generateMetadata, getOpenGraphTags } from './seo';
 import { generateFAQSchema, generateOrganizationSchema, generateBreadcrumbSchema } from './json-ld';
 
+// Type definitions for test assertions
+interface TwitterMetadata {
+  card: string;
+  title: string;
+  description?: string;
+  images?: string[];
+}
+
+interface OpenGraphMetadata {
+  type: 'website' | 'article';
+  title: string;
+  description: string;
+  url: string;
+  images?: Array<{ url: string; width: number; height: number; alt: string }>;
+  publishedTime?: string;
+  modifiedTime?: string;
+  authors?: string[];
+  section?: string;
+  tags?: string[];
+}
+
 describe('SEO Utilities', () => {
   describe('generateMetadata', () => {
     it('should generate basic metadata with title and description', () => {
@@ -41,8 +62,8 @@ describe('SEO Utilities', () => {
       });
 
       expect(metadata.twitter).toBeDefined();
-      expect((metadata.twitter as any)?.card).toBe('summary_large_image');
-      expect((metadata.twitter as any)?.title).toBe('Test Page');
+      expect((metadata.twitter as TwitterMetadata)?.card).toBe('summary_large_image');
+      expect((metadata.twitter as TwitterMetadata)?.title).toBe('Test Page');
     });
 
     it('should use custom image when provided', () => {
@@ -54,8 +75,8 @@ describe('SEO Utilities', () => {
         image: customImage,
       });
 
-      expect((metadata.openGraph as any)?.images?.[0]?.url).toBe(customImage);
-      expect((metadata.twitter as any)?.images?.[0]).toBe(customImage);
+      expect((metadata.openGraph as OpenGraphMetadata)?.images?.[0]?.url).toBe(customImage);
+      expect((metadata.twitter as TwitterMetadata)?.images?.[0]).toBe(customImage);
     });
 
     it('should include article-specific properties when provided', () => {
@@ -70,12 +91,12 @@ describe('SEO Utilities', () => {
         tags: ['SEO', 'Marketing'],
       });
 
-      expect((metadata.openGraph as any)?.type).toBe('article');
-      expect((metadata.openGraph as any)?.publishedTime).toBe('2024-01-01T00:00:00Z');
-      expect((metadata.openGraph as any)?.modifiedTime).toBe('2024-01-02T00:00:00Z');
-      expect((metadata.openGraph as any)?.authors).toEqual(['John Doe']);
-      expect((metadata.openGraph as any)?.section).toBe('Marketing');
-      expect((metadata.openGraph as any)?.tags).toEqual(['SEO', 'Marketing']);
+      expect((metadata.openGraph as OpenGraphMetadata)?.type).toBe('article');
+      expect((metadata.openGraph as OpenGraphMetadata)?.publishedTime).toBe('2024-01-01T00:00:00Z');
+      expect((metadata.openGraph as OpenGraphMetadata)?.modifiedTime).toBe('2024-01-02T00:00:00Z');
+      expect((metadata.openGraph as OpenGraphMetadata)?.authors).toEqual(['John Doe']);
+      expect((metadata.openGraph as OpenGraphMetadata)?.section).toBe('Marketing');
+      expect((metadata.openGraph as OpenGraphMetadata)?.tags).toEqual(['SEO', 'Marketing']);
     });
 
     it('should default to website type when no article properties provided', () => {
@@ -85,7 +106,7 @@ describe('SEO Utilities', () => {
         path: '/test',
       });
 
-      expect((metadata.openGraph as any)?.type).toBe('website');
+      expect((metadata.openGraph as OpenGraphMetadata)?.type).toBe('website');
     });
   });
 

@@ -141,7 +141,7 @@ describe('ContactForm', () => {
 
   it('shows loading state during submission', async () => {
     const { submitContact } = await import('@/app/actions/contact');
-    let resolveSubmit: (value: any) => void;
+    let resolveSubmit: (value: { success: boolean; message: string; errors: Record<string, string[]> }) => void;
     vi.mocked(submitContact).mockImplementation(
       () =>
         new Promise((resolve) => {
@@ -165,7 +165,7 @@ describe('ContactForm', () => {
 
   it('disables submit button during loading', async () => {
     const { submitContact } = await import('@/app/actions/contact');
-    let resolveSubmit: (value: any) => void;
+    let resolveSubmit: (value: { success: boolean; message: string; errors: Record<string, string[]> }) => void;
     vi.mocked(submitContact).mockImplementation(
       () =>
         new Promise((resolve) => {
