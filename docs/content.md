@@ -32,53 +32,75 @@ We create beautiful, functional websites...
 
 ## Content Types
 
+Content types are defined in `packages/lib/src/types/content.ts` and exported from `@repo/lib`. They use TypeScript interfaces with branded types for type safety.
+
 ### Service
+
+Interface: `Service`
 
 Fields:
 - `title` (string, required) - Display title
-- `slug` (string, required) - URL-friendly identifier
+- `slug` (Slug, required) - URL-friendly identifier (branded type)
 - `description` (string, required) - Short description
+- `body` (string, required) - Full body content
 - `featured` (boolean, optional) - Whether to feature prominently
 - `order` (number, optional) - Display order
 
 ### Industry
 
+Interface: `Industry`
+
 Fields:
 - `title` (string, required) - Display title
-- `slug` (string, required) - URL-friendly identifier
+- `slug` (Slug, required) - URL-friendly identifier (branded type)
 - `description` (string, required) - Short description
+- `body` (string, required) - Full body content
 - `featured` (boolean, optional) - Whether to feature prominently
 - `order` (number, optional) - Display order
+- `icon` (string, optional) - Icon for the industry (emoji or icon identifier)
 
 ### Demo
 
+Interface: `Demo`
+
 Fields:
 - `title` (string, required) - Display title
-- `slug` (string, required) - URL-friendly identifier
+- `slug` (Slug, required) - URL-friendly identifier (branded type)
 - `description` (string, required) - Short description
-- `liveUrl` (string, optional) - URL to live demo
-- `repoUrl` (string, optional) - URL to repository
-- `thumbnail` (string, optional) - Path to thumbnail image
-- `featured` (boolean, optional) - Whether to feature prominently
-- `order` (number, optional) - Display order
+- `challenge` (string, required) - The challenge this demo addresses
+- `approach` (string, required) - The approach taken to solve the challenge
+- `outcome` (string, required) - The outcome or results achieved
+- `industry` (Slug, required) - The industry this demo relates to
 
 ### FAQ
 
+Interface: `FAQ`
+
 Fields:
 - `question` (string, required) - The question
-- `slug` (string, required) - URL-friendly identifier
-- `answer` (string, required) - The answer
-- `category` (string, optional) - Category for grouping
+- `answer` (string, required) - Short answer (40-60 words)
+- `category` (FAQCategory, required) - Category for grouping ('general' | 'pricing' | 'process')
 - `order` (number, optional) - Display order
 
 ### Page
 
+Interface: `Page`
+
 Fields:
 - `title` (string, required) - Display title
-- `slug` (string, required) - URL-friendly identifier
-- `description` (string, optional) - Short description
-- `metaTitle` (string, optional) - SEO meta title
-- `metaDescription` (string, optional) - SEO meta description
+- `slug` (Slug, required) - URL-friendly identifier (branded type)
+- `description` (string, required) - Short description
+- `body` (string, required) - Full body content
+
+### Branded Types
+
+The `Slug` type is a branded type that prevents accidental substitution of regular strings where slugs are expected:
+
+```typescript
+export type Slug = string & { __brand: 'slug' };
+```
+
+This provides compile-time type safety to ensure that only validated slugs are used in content-related operations.
 
 ## Content API
 
