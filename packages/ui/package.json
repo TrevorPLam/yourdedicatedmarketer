@@ -10,16 +10,22 @@
   },
   "scripts": {
     "lint": "eslint src",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "test": "vitest"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@tailwindcss/postcss": "^4.3.2",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.1.0",
+    "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.5.2",
+    "jsdom": "^25.0.1",
     "postcss": "^8.5.16",
     "tailwindcss": "4",
-    "typescript": "6"
+    "typescript": "6",
+    "vitest": "^2.1.8"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.3",

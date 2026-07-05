@@ -1,5 +1,7 @@
 export { Button, buttonVariants } from './components/ui/button'
 export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent } from './components/ui/card'
+export { Container } from './components/ui/container'
+export { Section } from './components/ui/section'
 export { Input } from './components/ui/input'
 export { Label } from './components/ui/label'
 export { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from './components/ui/accordion'
