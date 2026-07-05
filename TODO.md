@@ -336,7 +336,7 @@ Monorepo, Next.js app, packages/lib, MDX rendering infrastructure, and design to
 
 ### Parent Task P006: Create FAQ Entries Content
 
-- [ ] **P006** | Status: `PENDING`  
+- [x] **P006** | Status: `COMPLETED`
   **Related File Paths:**
   - `apps/firm-website/src/content/faq/cost.mdx`
   - `apps/firm-website/src/content/faq/timeline.mdx`
@@ -374,22 +374,31 @@ Monorepo, Next.js app, packages/lib, MDX rendering infrastructure, and design to
   - Depends on: MDX setup, content utilities (P002).
   - Blocks: later page development.
 
+  **Implementation Notes:**
+  - Created 10 FAQ MDX files with AEO format (direct 40-60 word answer first, then expansion)
+  - All FAQs follow the three categories: pricing (4), process (2), general (4)
+  - Content addresses tough questions directly (hidden fees, contracts, ownership, SEO expectations)
+  - Added FAQ content tests to content.test.ts (3 new test cases for 26 total tests)
+  - Updated docs/content.md with FAQ structure, guidelines, and AEO format documentation
+  - All tests pass (26 total), lint passes
+  - No typecheck errors (typecheck script not configured in workspace)
+
 #### Subtasks
 
 | ID      | Agent/Human | File Path / Command                                 | Description                                                                                              | Validation Command                            |
 | ------- | ----------- | --------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
-| P006-01 | AGENT       | `apps/firm-website/src/content/faq/cost.mdx`        | MDX: "How much does a website cost…", category `pricing`, order 1.                                       | No command.                                   |
-| P006-02 | AGENT       | `apps/firm-website/src/content/faq/timeline.mdx`    | MDX: "How long does it take…", category `process`, order 2.                                              | No command.                                   |
-| P006-03 | AGENT       | `apps/firm-website/src/content/faq/ownership.mdx`   | MDX: "Do I own my website…", category `general`, order 3.                                                | No command.                                   |
-| P006-04 | AGENT       | `apps/firm-website/src/content/faq/revisions.mdx`   | MDX: "What if I need changes…", category `pricing`, order 4.                                             | No command.                                   |
-| P006-05 | AGENT       | `apps/firm-website/src/content/faq/seo.mdx`         | MDX: "Will my website rank on Google?", category `general`, order 5.                                     | No command.                                   |
-| P006-06 | AGENT       | `apps/firm-website/src/content/faq/care-plan.mdx`   | MDX: "What's included in the Hosting & Care Plan?", category `pricing`, order 6.                         | No command.                                   |
-| P006-07 | AGENT       | `apps/firm-website/src/content/faq/hidden-fees.mdx` | MDX: "Are there any hidden fees?", category `pricing`, order 7.                                          | No command.                                   |
-| P006-08 | AGENT       | `apps/firm-website/src/content/faq/contract.mdx`    | MDX: "Do I have to sign a long-term contract?", category `general`, order 8.                             | No command.                                   |
-| P006-09 | AGENT       | `apps/firm-website/src/content/faq/industries.mdx`  | MDX: "What industries do you serve?", category `general`, order 9.                                       | No command.                                   |
-| P006-10 | AGENT       | `apps/firm-website/src/content/faq/process.mdx`     | MDX: "What's the process for building a website?", category `process`, order 10.                         | No command.                                   |
-| P006-11 | AGENT       | `apps/firm-website/src/lib/content.test.ts`         | Update tests: all FAQ files detected and parsed correctly.                                               | `pnpm --filter @repo/firm-website test` runs. |
-| P006-12 | AGENT       | Update `docs/content.md`                            | Document FAQ content structure and AEO format.                                                           | None.                                         |
+| P006-01 | AGENT       | `apps/firm-website/src/content/faq/cost.mdx`        | MDX: "How much does a website cost…", category `pricing`, order 1.                                       | ✅ Complete                                   |
+| P006-02 | AGENT       | `apps/firm-website/src/content/faq/timeline.mdx`    | MDX: "How long does it take…", category `process`, order 2.                                              | ✅ Complete                                   |
+| P006-03 | AGENT       | `apps/firm-website/src/content/faq/ownership.mdx`   | MDX: "Do I own my website…", category `general`, order 3.                                                | ✅ Complete                                   |
+| P006-04 | AGENT       | `apps/firm-website/src/content/faq/revisions.mdx`   | MDX: "What if I need changes…", category `pricing`, order 4.                                             | ✅ Complete                                   |
+| P006-05 | AGENT       | `apps/firm-website/src/content/faq/seo.mdx`         | MDX: "Will my website rank on Google?", category `general`, order 5.                                     | ✅ Complete                                   |
+| P006-06 | AGENT       | `apps/firm-website/src/content/faq/care-plan.mdx`   | MDX: "What's included in the Hosting & Care Plan?", category `pricing`, order 6.                         | ✅ Complete                                   |
+| P006-07 | AGENT       | `apps/firm-website/src/content/faq/hidden-fees.mdx` | MDX: "Are there any hidden fees?", category `pricing`, order 7.                                          | ✅ Complete                                   |
+| P006-08 | AGENT       | `apps/firm-website/src/content/faq/contract.mdx`    | MDX: "Do I have to sign a long-term contract?", category `general`, order 8.                             | ✅ Complete                                   |
+| P006-09 | AGENT       | `apps/firm-website/src/content/faq/industries.mdx`  | MDX: "What industries do you serve?", category `general`, order 9.                                       | ✅ Complete                                   |
+| P006-10 | AGENT       | `apps/firm-website/src/content/faq/process.mdx`     | MDX: "What's the process for building a website?", category `process`, order 10.                         | ✅ Complete                                   |
+| P006-11 | AGENT       | `apps/firm-website/src/lib/content.test.ts`         | Update tests: all FAQ files detected and parsed correctly.                                               | ✅ Complete (26 tests passing)                |
+| P006-12 | AGENT       | Update `docs/content.md`                            | Document FAQ content structure and AEO format.                                                           | ✅ Complete                                   |
 
 ---
 

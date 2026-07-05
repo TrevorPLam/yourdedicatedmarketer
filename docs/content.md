@@ -135,6 +135,61 @@ The following demo pages are currently available:
 5. **Restaurant Website** (`restaurant.mdx`) - Restaurant demo, industry "restaurants"
 6. **Retail Shop Website** (`retail-shop.mdx`) - Retail demo, industry "retail"
 
+## FAQ Content Structure
+
+FAQ pages provide answers to common questions about pricing, process, and general inquiries. Each FAQ is represented as an MDX file with frontmatter metadata and markdown body content following AEO (Answer Engine Optimization) format.
+
+### Current FAQs
+
+The following FAQ pages are currently available:
+
+1. **How much does a website cost for a small business in DFW?** (`cost.mdx`) - Pricing category, order 1
+2. **How long does it take to build a website?** (`timeline.mdx`) - Process category, order 2
+3. **Do I own my website once it's built?** (`ownership.mdx`) - General category, order 3
+4. **What if I need changes after launch?** (`revisions.mdx`) - Pricing category, order 4
+5. **Will my website rank on Google?** (`seo.mdx`) - General category, order 5
+6. **What's included in the Hosting & Care Plan?** (`care-plan.mdx`) - Pricing category, order 6
+7. **Are there any hidden fees?** (`hidden-fees.mdx`) - Pricing category, order 7
+8. **Do I have to sign a long-term contract?** (`contract.mdx`) - General category, order 8
+9. **What industries do you serve?** (`industries.mdx`) - General category, order 9
+10. **What's the process for building a website?** (`process.mdx`) - Process category, order 10
+
+### FAQ File Format
+
+Each FAQ MDX file includes:
+
+- **Frontmatter fields**:
+  - `title` - Display title (the question)
+  - `slug` - URL-friendly identifier
+  - `description` - Short description for SEO and previews
+  - `category` - Category for grouping ('general' | 'pricing' | 'process')
+  - `order` - Display order for sorting
+
+- **Content sections**:
+  - Direct answer (40-60 words) - AEO format for answer engine extraction
+  - Expanded details and context
+  - Supporting information and examples
+  - Clear, actionable information
+
+### Adding New FAQs
+
+To add a new FAQ:
+
+1. Create a new `.mdx` file in `apps/firm-website/src/content/faq/`
+2. Add frontmatter with required fields (`title`, `slug`, `description`, `category`, `order`)
+3. Write the content body following AEO format (direct answer first, then expansion)
+4. Update the FAQ list in this documentation
+5. The content will be automatically available through `getAllFAQs()` and `getFAQ(slug)`
+
+### FAQ Content Guidelines
+
+- **AEO Format**: Start with a direct 40-60 word answer before any context or preamble
+- **Categories**: Use 'general', 'pricing', or 'process' for consistent grouping
+- **Tone**: Direct, honest, and transparent - avoid evasive answers
+- **Structure**: Use clear headings, bullet points, and sections for readability
+- **Honesty**: Address tough questions directly; don't avoid difficult topics
+- **Actionability**: Provide clear, actionable information in each answer
+
 ### Demo File Format
 
 Each demo MDX file includes:

@@ -258,4 +258,99 @@ describe('Content Utilities', () => {
       expect(plumbing?.content.length).toBeGreaterThan(0);
     });
   });
+
+  describe('FAQ Content', () => {
+    it('should return all FAQ slugs', async () => {
+      const slugs = await getAllSlugs('faq');
+      expect(Array.isArray(slugs)).toBe(true);
+      expect(slugs.length).toBe(10);
+      expect(slugs).toContain('cost');
+      expect(slugs).toContain('timeline');
+      expect(slugs).toContain('ownership');
+      expect(slugs).toContain('revisions');
+      expect(slugs).toContain('seo');
+      expect(slugs).toContain('care-plan');
+      expect(slugs).toContain('hidden-fees');
+      expect(slugs).toContain('contract');
+      expect(slugs).toContain('industries');
+      expect(slugs).toContain('process');
+    });
+
+    it('should return content for each FAQ', async () => {
+      const faqs = await getAllContent<{ title: string; slug: string; category: string; order: number }>('faq');
+      
+      expect(faqs.length).toBe(10);
+      
+      const cost = faqs.find(item => item.data.slug === 'cost');
+      expect(cost).toBeDefined();
+      expect(cost?.data.title).toBe('How much does a website cost for a small business in DFW?');
+      expect(cost?.data.category).toBe('pricing');
+      expect(cost?.data.order).toBe(1);
+
+      const timeline = faqs.find(item => item.data.slug === 'timeline');
+      expect(timeline).toBeDefined();
+      expect(timeline?.data.title).toBe('How long does it take to build a website?');
+      expect(timeline?.data.category).toBe('process');
+      expect(timeline?.data.order).toBe(2);
+
+      const ownership = faqs.find(item => item.data.slug === 'ownership');
+      expect(ownership).toBeDefined();
+      expect(ownership?.data.title).toBe('Do I own my website once it\'s built?');
+      expect(ownership?.data.category).toBe('general');
+      expect(ownership?.data.order).toBe(3);
+
+      const revisions = faqs.find(item => item.data.slug === 'revisions');
+      expect(revisions).toBeDefined();
+      expect(revisions?.data.title).toBe('What if I need changes after launch?');
+      expect(revisions?.data.category).toBe('pricing');
+      expect(revisions?.data.order).toBe(4);
+
+      const seo = faqs.find(item => item.data.slug === 'seo');
+      expect(seo).toBeDefined();
+      expect(seo?.data.title).toBe('Will my website rank on Google?');
+      expect(seo?.data.category).toBe('general');
+      expect(seo?.data.order).toBe(5);
+
+      const carePlan = faqs.find(item => item.data.slug === 'care-plan');
+      expect(carePlan).toBeDefined();
+      expect(carePlan?.data.title).toBe('What\'s included in the Hosting & Care Plan?');
+      expect(carePlan?.data.category).toBe('pricing');
+      expect(carePlan?.data.order).toBe(6);
+
+      const hiddenFees = faqs.find(item => item.data.slug === 'hidden-fees');
+      expect(hiddenFees).toBeDefined();
+      expect(hiddenFees?.data.title).toBe('Are there any hidden fees?');
+      expect(hiddenFees?.data.category).toBe('pricing');
+      expect(hiddenFees?.data.order).toBe(7);
+
+      const contract = faqs.find(item => item.data.slug === 'contract');
+      expect(contract).toBeDefined();
+      expect(contract?.data.title).toBe('Do I have to sign a long-term contract?');
+      expect(contract?.data.category).toBe('general');
+      expect(contract?.data.order).toBe(8);
+
+      const industries = faqs.find(item => item.data.slug === 'industries');
+      expect(industries).toBeDefined();
+      expect(industries?.data.title).toBe('What industries do you serve?');
+      expect(industries?.data.category).toBe('general');
+      expect(industries?.data.order).toBe(9);
+
+      const process = faqs.find(item => item.data.slug === 'process');
+      expect(process).toBeDefined();
+      expect(process?.data.title).toBe('What\'s the process for building a website?');
+      expect(process?.data.category).toBe('process');
+      expect(process?.data.order).toBe(10);
+    });
+
+    it('should parse FAQ content with correct metadata', async () => {
+      const cost = await getContentBySlug<{ title: string; slug: string; category: string }>('faq', 'cost');
+      
+      expect(cost).not.toBeNull();
+      expect(cost?.data.title).toBe('How much does a website cost for a small business in DFW?');
+      expect(cost?.data.slug).toBe('cost');
+      expect(cost?.data.category).toBe('pricing');
+      expect(cost?.content).toBeDefined();
+      expect(cost?.content.length).toBeGreaterThan(0);
+    });
+  });
 });
