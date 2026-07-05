@@ -995,11 +995,11 @@ This document defines all tasks required to establish the design system foundati
 
 ### Parent Task P017: Build MDX Content Rendering Infrastructure
 
-- [ ] **P017** | Status: `PENDING`
+- [x] **P017** | Status: `COMPLETE`
       **Related File Paths:**
-  - `apps/firm-website/next.config.mjs` (MDX configuration)
+  - `apps/firm-website/next.config.ts` (MDX configuration - note: .ts not .mjs)
   - `apps/firm-website/mdx-components.tsx` (MDX components mapping)
-  - `packages/ui/src/components/mdx/` (MDX‑specific components)
+  - `apps/firm-website/src/global.d.ts` (TypeScript declarations for .mdx)
   - `apps/firm-website/src/content/` (existing content structure)
 
   **Definition of Done:**
@@ -1013,7 +1013,7 @@ This document defines all tasks required to establish the design system foundati
   - MDX frontmatter parsing – will be handled by `gray-matter` integration.
 
   **Rules to Follow:**
-  - Use `next.config.mjs` with `withMDX`.
+  - Use `next.config.ts` with `withMDX`.
   - Create `mdx-components.tsx` at root of `apps/firm-website`.
   - MDX components should be pure and reusable.
 
@@ -1031,16 +1031,22 @@ This document defines all tasks required to establish the design system foundati
   - Depends on: P012 (UI components).
   - Blocks: Phase 4 (content‑driven pages).
 
+  **Implementation Notes:**
+  - Config file is `next.config.ts` (not `.mjs` as originally specified)
+  - Added TypeScript declarations for `.mdx` files in `src/global.d.ts`
+  - Sample MDX page at `/test-mdx` compiled successfully (200 status)
+  - All subtasks completed ✅
+
 #### Subtasks
 
-| ID      | Agent/Human | File Path / Command                              | Description                                                                                                                                      | Validation Command             |
-| ------- | ----------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------ |
-| P017-01 | AGENT       | `apps/firm-website` (install)                    | Run: `pnpm --filter @repo/firm-website add @next/mdx @mdx-js/loader @mdx-js/react @types/mdx`.                                                   | `pnpm list` shows packages.    |
-| P017-02 | AGENT       | `apps/firm-website/next.config.mjs`              | Configure MDX: <br> - Import `createMDX` <br> - Set `pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx']` <br> - Wrap export with `withMDX`. | No command.                    |
-| P017-03 | AGENT       | `apps/firm-website/mdx-components.tsx`           | Create `mdx-components.tsx` in root of app (not `src/`). Map `Button`, `Card`, `Container`, `Section`, `Accordion` components from `@repo/ui`.   | No command.                    |
-| P017-04 | AGENT       | `apps/firm-website/src/content/pages/sample.mdx` | Create a sample MDX file with frontmatter (`title`, `slug`) and body content using mapped components.                                            | No command.                    |
-| P017-05 | AGENT       | `apps/firm-website/src/app/test-mdx/page.tsx`    | Create a test page that imports and renders `sample.mdx`.                                                                                        | `pnpm dev` shows rendered MDX. |
-| P017-06 | AGENT       | Update `docs/content.md`                         | Document MDX setup and how to create content files.                                                                                              | None.                          |
+| ID      | Agent/Human | File Path / Command                              | Description                                                                                                                                      | Status |
+| ------- | ----------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ | ------ |
+| P017-01 | AGENT       | `apps/firm-website` (install)                    | Run: `pnpm --filter @repo/firm-website add @next/mdx @mdx-js/loader @mdx-js/react @types/mdx`.                                                   | ✅     |
+| P017-02 | AGENT       | `apps/firm-website/next.config.ts`              | Configure MDX: <br> - Import `createMDX` <br> - Set `pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx']` <br> - Wrap export with `withMDX`. | ✅     |
+| P017-03 | AGENT       | `apps/firm-website/mdx-components.tsx`           | Create `mdx-components.tsx` in root of app (not `src/`). Map `Button`, `Card`, `Container`, `Section`, `Accordion` components from `@repo/ui`.   | ✅     |
+| P017-04 | AGENT       | `apps/firm-website/src/content/pages/sample.mdx` | Create a sample MDX file with frontmatter (`title`, `slug`) and body content using mapped components.                                            | ✅     |
+| P017-05 | AGENT       | `apps/firm-website/src/app/test-mdx/page.tsx`    | Create a test page that imports and renders `sample.mdx`.                                                                                        | ✅     |
+| P017-06 | AGENT       | Update `docs/content.md`                         | Document MDX setup and how to create content files.                                                                                              | ✅     |
 
 ---
 

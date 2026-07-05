@@ -178,10 +178,79 @@ const validatedService = ServiceSchema.parse(serviceData);
 - Use `safeParse()` instead of `parse()` when you need to handle validation errors gracefully
 - Keep schemas in sync with TypeScript interfaces in `apps/firm-website/src/types/content.ts`
 
+## MDX Configuration
+
+The firm website supports MDX (Markdown + JSX) for creating rich, interactive content. MDX allows you to use React components directly in your markdown files.
+
+### Setup
+
+MDX is configured using `@next/mdx` in the Next.js app. The configuration includes:
+
+1. **Dependencies**: `@next/mdx`, `@mdx-js/loader`, `@mdx-js/react`, `@types/mdx`
+2. **Next.js Config**: `apps/firm-website/next.config.ts` is configured with `createMDX` and `pageExtensions` includes `.md` and `.mdx`
+3. **MDX Components**: `apps/firm-website/mdx-components.tsx` maps UI components for use in MDX files
+
+### Available MDX Components
+
+The following UI components from `@repo/ui` are available in MDX files:
+
+- `Button` - Button component with variants (default, outline, ghost, etc.)
+- `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `CardFooter` - Card components
+- `Container` - Container with maxWidth options
+- `Section` - Section component with padding
+- `Accordion`, `AccordionItem`, `AccordionTrigger`, `AccordionContent` - Accordion components
+
+### Creating MDX Content
+
+MDX files should be placed in `src/content/` directories (e.g., `src/content/pages/`). Use the `.mdx` extension.
+
+Example MDX file:
+
+```mdx
+---
+title: Sample Page
+slug: sample-page
+---
+
+# Sample MDX Content
+
+<Button variant="default">Click Me</Button>
+
+<Card>
+  <CardHeader>
+    <CardTitle>Card Title</CardTitle>
+  </CardHeader>
+  <CardContent>
+    <p>Card content here</p>
+  </CardContent>
+</Card>
+```
+
+### Using MDX in Pages
+
+Import and render MDX files directly in your page components:
+
+```typescript
+import SampleMDX from '@/content/pages/sample.mdx';
+
+export default function Page() {
+  return (
+    <div className="prose prose-slate dark:prose-invert max-w-none">
+      <SampleMDX />
+    </div>
+  );
+}
+```
+
+### Type Declarations
+
+TypeScript declarations for `.mdx` files are included in `src/global.d.ts` to ensure proper type checking.
+
 ## Notes
 
 - All content functions are server-side only (Node.js)
 - Markdown is automatically converted to HTML using `remark` and `remark-html`
 - Frontmatter is parsed using `gray-matter`
+- MDX files can use React components directly in markdown
 - TypeScript types are defined in `src/types/content.ts`
 - Zod schemas are defined in `packages/lib/src/schemas/content.ts` for runtime validation
