@@ -1,6 +1,7 @@
 import { Header, Footer } from '@repo/ui';
 import { Twitter, Linkedin, Github } from 'lucide-react';
 import { getNavItems } from '@/lib/navigation';
+import PageViewTracker from '@/components/analytics/page-view-tracker';
 
 export default async function MarketingLayout({
   children,
@@ -30,6 +31,7 @@ export default async function MarketingLayout({
 
   return (
     <>
+      <PageViewTracker />
       <Header navItems={navItems} />
       {children}
       <Footer
