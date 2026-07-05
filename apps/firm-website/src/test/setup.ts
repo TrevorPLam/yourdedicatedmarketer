@@ -27,7 +27,6 @@ vi.mock('next/navigation', () => ({
 // Mock Next.js Image component
 vi.mock('next/image', () => ({
   default: (props: Record<string, unknown>) => {
-    // eslint-disable-next-line @next/next/no-img-element
     return `<img ${Object.entries(props).map(([k, v]) => k + '="' + v + '"').join(' ')} />`
   },
 }))

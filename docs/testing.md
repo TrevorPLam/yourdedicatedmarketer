@@ -6,13 +6,15 @@ This document outlines the testing infrastructure and strategy for the firm webs
 
 Vitest is used for unit testing utility functions and components. It provides a fast, modern testing experience with native ESM support.
 
-### Configuration
+### App-Level Testing
+
+#### Configuration
 - **Config file**: `apps/firm-website/vitest.config.ts`
 - **Environment**: jsdom for DOM testing
 - **Setup file**: `apps/firm-website/src/test/setup.ts` (imports @testing-library/jest-dom)
 - **Test location**: `apps/firm-website/src/test/`
 
-### Commands
+#### Commands
 ```bash
 # Run unit tests once
 pnpm --filter @repo/firm-website test
@@ -24,12 +26,35 @@ pnpm --filter @repo/firm-website test:watch
 pnpm test
 ```
 
-### Testing Libraries
+### UI Package Testing
+
+#### Configuration
+- **Config file**: `packages/ui/vitest.config.ts`
+- **Environment**: jsdom for DOM testing
+- **Setup file**: `packages/ui/src/test/setup.ts` (imports @testing-library/jest-dom)
+- **Test location**: `packages/ui/src/components/ui/*.test.tsx`
+- **Additional**: Storybook integration with @storybook/addon-vitest for visual testing
+
+#### Commands
+```bash
+# Run UI package unit tests once
+pnpm --filter @repo/ui test
+
+# Run UI package unit tests in watch mode (for development)
+pnpm --filter @repo/ui test:watch
+
+# Run Storybook tests with Vitest
+pnpm --filter @repo/ui test --project=storybook
+```
+
+#### Testing Libraries
 - `vitest` - Test runner
 - `@vitejs/plugin-react` - React support for Vite/Vitest
 - `@testing-library/react` - Component testing utilities
 - `@testing-library/jest-dom` - Custom Jest matchers
 - `@testing-library/user-event` - User interaction simulation
+- `@storybook/addon-vitest` - Storybook integration for visual testing
+- `@vitest/browser-playwright` - Browser-based testing for Storybook stories
 
 ## End-to-End Testing with Playwright
 

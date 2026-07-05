@@ -176,6 +176,113 @@ To add a new shared package:
 6. **Add to turbo.json**:
    Add the new package to the pipeline configuration.
 
+### Adding a New Component to @repo/ui
+
+To add a new component to the UI package:
+
+1. **Navigate to the UI package**:
+   ```bash
+   cd packages/ui
+   ```
+
+2. **Create the component file**:
+   ```bash
+   touch src/components/ui/your-component.tsx
+   ```
+
+3. **Implement the component**:
+   ```tsx
+   import * as React from "react"
+   import { cn } from "@/lib/utils"
+
+   interface YourComponentProps extends React.HTMLAttributes<HTMLDivElement> {
+   // Add your custom props here
+   }
+
+   const YourComponent = React.forwardRef<HTMLDivElement, YourComponentProps>(
+     ({ className, ...props }, ref) => {
+       return (
+         <div
+           ref={ref}
+           className={cn("your-base-classes", className)}
+           {...props}
+         >
+           {/* Component content */}
+         </div>
+       )
+     }
+   )
+   YourComponent.displayName = "YourComponent"
+
+   export { YourComponent }
+   ```
+
+4. **Export from the UI package**:
+   Add the export to `src/index.ts`:
+   ```typescript
+   export { YourComponent } from './components/ui/your-component'
+   ```
+
+5. **Write a Storybook story**:
+   Create `src/components/ui/your-component.stories.tsx`:
+   ```tsx
+   import type { Meta, StoryObj } from '@storybook/react'
+   import { YourComponent } from './your-component'
+
+   const meta: Meta<typeof YourComponent> = {
+     title: 'UI/YourComponent',
+     component: YourComponent,
+     tags: ['autodocs'],
+   }
+
+   export default meta
+   type Story = StoryObj<typeof YourComponent>
+
+   export const Default: Story = {
+     args: {
+       // Default props
+     },
+   }
+   ```
+
+6. **Write unit tests**:
+   Create `src/components/ui/your-component.test.tsx`:
+   ```tsx
+   import { describe, it, expect } from 'vitest'
+   import { render, screen } from '@testing-library/react'
+   import { YourComponent } from './your-component'
+
+   describe('YourComponent', () => {
+     it('renders correctly', () => {
+       render(<YourComponent>Test</YourComponent>)
+       expect(screen.getByText('Test')).toBeInTheDocument()
+     })
+   })
+   ```
+
+7. **Update documentation**:
+   Add component documentation to `docs/components.md` with usage examples, props, and best practices.
+
+8. **Run tests and Storybook**:
+   ```bash
+   # Run unit tests
+   pnpm --filter @repo/ui test
+
+   # Start Storybook to view your component
+   pnpm --filter @repo/ui storybook
+   ```
+
+#### Component Guidelines
+
+- **Use Server Components by default** - Only use `"use client"` when you need interactivity
+- **Use forwardRef** - Components should forward refs for composition
+- **Use cn utility** - Use the `cn` utility for conditional class merging
+- **Follow shadcn/ui patterns** - Use class-variance-authority for variants when needed
+- **Add TypeScript types** - Properly type all props with interfaces
+- **Write tests** - All components should have unit tests
+- **Create stories** - All components should have Storybook stories
+- **Document usage** - Update docs/components.md with usage examples
+
 ### Adding Dependencies
 
 #### Adding to a Specific Package

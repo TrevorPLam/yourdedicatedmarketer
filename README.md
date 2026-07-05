@@ -13,7 +13,7 @@ The production site is deployed on Vercel: [https://yourdedicatedmarketer.vercel
 ## Structure
 
 - `apps/firm-website` - Next.js 15 marketing website
-- `packages/ui` - Shared UI components
+- `packages/ui` - Shared UI components with shadcn/ui, Storybook, and Vitest testing
 - `packages/lib` - Shared utility libraries
 - `packages/eslint-config` - Shared ESLint configuration
 - `packages/typescript-config` - Shared TypeScript configuration
@@ -100,8 +100,28 @@ pnpm --filter @repo/firm-website check-types
 - **Framework**: Next.js 15
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS v4
-- **Testing**: Vitest (unit), Playwright (E2E)
+- **UI Components**: shadcn/ui with Radix UI primitives
+- **Testing**: Vitest (unit), Playwright (E2E), Storybook (visual)
 - **Deployment**: Vercel
+
+## Project Status
+
+### Phase 1: Foundation ✅ COMPLETE
+- Monorepo structure with Turborepo and pnpm workspaces
+- Next.js 15 app with TypeScript and Tailwind CSS v4
+- ESLint 9 flat config and TypeScript 6 strict mode
+- Vitest and Playwright testing infrastructure
+- Basic documentation
+
+### Phase 2: Design System ✅ COMPLETE
+- shadcn/ui component library setup with brand theming
+- Dark mode with theme switching
+- Core components: Button, Card, Container, Section, Header, NavLink, MobileMenu, Footer, Input, Textarea, Label, Form, Accordion
+- MDX content rendering infrastructure
+- Storybook for component development and visual testing
+- Chromatic integration for visual regression testing
+- Vitest testing for UI package components
+- Comprehensive component documentation
 
 ## Documentation
 
