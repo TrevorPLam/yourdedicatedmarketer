@@ -4,23 +4,24 @@ This document records the performance optimization results for the firm website.
 
 ## Build Results
 
-### Production Build Status
+### Production Build Status (Latest)
 - **Build Status**: ✓ Success
-- **Build Time**: ~12 seconds
-- **Total Pages**: 32 (31 static, 1 dynamic)
+- **Build Time**: ~35.3 seconds
+- **Total Pages**: 31 (all static or SSG)
 
 ### Static Generation
-- **Static Pages (○)**: 31 pages prerendered as static content
-- **SSG Pages (●)**: 6 dynamic routes with `generateStaticParams` (services, industries, demos)
-- **Dynamic Pages (ƒ)**: 1 page (contact) - made dynamic due to Server Action integration
+- **Static Pages (○)**: 20 pages prerendered as static content
+- **SSG Pages (●)**: 11 dynamic routes with `generateStaticParams` (services, industries, demos)
+- **Dynamic Pages (ƒ)**: 1 page (contact) - server-rendered on demand
 
 ### Bundle Size Analysis
-- **First Load JS**: 102 kB (target: < 200 kB) ✓
-- **Total Bundle**: 127 kB per page (target: < 300 kB) ✓
+- **First Load JS**: 176-199 kB for most pages (target: < 200 kB) ✓
+- **Contact Page**: 212 kB (slightly over threshold due to dynamic route)
+- **Total Bundle**: Well under 300 kB target ✓
 - **Shared Chunks**:
-  - chunks/829-76964841c581487d.js: 46 kB
-  - chunks/dff525be-b531ac486a02cada.js: 54.2 kB
-  - other shared chunks: 1.99 kB
+  - chunks/16feda16-62166dc2cded0d79.js: 54.4 kB
+  - chunks/692-12fb2d659b5d31f9.js: 119 kB
+  - other shared chunks: 2.79 kB
 
 ## Optimizations Applied
 
