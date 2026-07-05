@@ -268,6 +268,137 @@ Components are mapped in `apps/firm-website/mdx-components.tsx` for use in MDX f
 - **Scalable**: Easy to add new content files
 - **Cacheable**: In-memory cache improves performance
 
+## Form Architecture
+
+The contact form follows React 19 Server Actions pattern with deep module principles for validation, submission, and user feedback.
+
+### Form Components
+
+- **Contact Page** (`app/(marketing)/contact/page.tsx`): Server component that renders the ContactForm
+- **ContactForm** (`components/features/contact/contact-form.tsx`): Client component using `useActionState` for state management
+- **Server Action** (`app/actions/contact.ts`): Server-side validation and email sending
+
+### State Management
+
+The form uses React 19's `useActionState` hook:
+- **Initial state**: `initialContactState` with `success: false`, `message: null`, `fieldErrors: {}`
+- **Loading state**: `useFormStatus` on submit button for `pending` state
+- **Success state**: `success: true` with success message
+- **Error state**: `success: false` with error message and field-level errors
+
+### Validation Flow
+
+1. User submits form → Server Action receives form data
+2. Zod v4 schema validates all fields (name, email, phone, company, message)
+3. Validation errors returned as field-level errors using `z.treeifyError()`
+4. If valid, proceed to email sending
+5. If invalid, return field errors to display next to inputs
+
+### Email Sending
+
+Email is sent via Resend API after successful validation:
+- **Environment variables**: `RESEND_API_KEY`, `CONTACT_EMAIL`, `FROM_EMAIL`
+- **Email content**: Plain text with all form fields
+- **Reply-to**: Set to submitter's email for easy replies
+- **Error handling**: Resend errors caught and returned as user-friendly messages
+
+### Toast Notifications
+
+The form uses `sonner` for toast notifications:
+- **Toaster component**: Rendered in root layout
+- **Success toast**: Shows "Message sent successfully!" on successful submission
+- **Error toast**: Shows error message when submission fails
+- **Initial render check**: Prevents toasts from showing on page load
+- **Validation errors**: Field-level errors shown next to inputs, not as toasts
+
+### Form Submission Flow
+
+```
+User fills form → Submit
+  ↓
+Server Action validates with Zod
+  ↓
+If invalid → Return field errors → Display next to inputs
+  ↓
+If valid → Send email via Resend
+  ↓
+If email fails → Return error message → Show error toast
+  ↓
+If email succeeds → Return success → Show success toast, reset form, fire GA4 event
+```
+
+### Deep Module Pattern
+
+The form architecture follows deep module principles:
+- **ContactForm**: Encapsulates all form UI, state management, and user feedback
+- **Server Action**: Encapsulates validation, email sending, and error handling
+- **Simple interface**: Form uses Server Action via `action` prop
+- **Information hiding**: Validation logic and email sending details hidden from UI
+
+## Analytics Architecture
+
+The analytics implementation uses a multi-layered approach with GA4 for custom tracking and Vercel Analytics for Web Vitals.
+
+### GA4 Implementation
+
+GA4 is implemented using a custom approach with `next/script`:
+
+1. **GA4 Script Component** (`components/analytics/ga4-script.tsx`):
+   - Loads gtag.js from Google Tag Manager
+   - Only loads in production (`NODE_ENV === 'production'`)
+   - Uses `afterInteractive` strategy for optimal performance
+   - Initializes GA4 with measurement ID
+
+2. **Helper Functions** (`lib/gtag.ts`):
+   - `pageview(url)`: Tracks page views in GA4
+   - `event(name, params)`: Tracks custom events with parameters
+   - TypeScript type declarations for `window.gtag` and `window.dataLayer`
+
+3. **Page View Tracker** (`components/analytics/page-view-tracker.tsx`):
+   - Uses `usePathname` and `useSearchParams` from Next.js
+   - Tracks route changes automatically
+   - Only tracks in production
+   - Includes search parameters in page path
+   - Added to marketing layout for site-wide tracking
+
+4. **Conversion Event Tracking**:
+   - Contact form tracks `form_submission` event with `form_type: 'contact'`
+   - Event fires only once per submission (ref guard prevents double-firing)
+   - No PII sent to GA4
+   - Triggered in ContactForm component on successful state
+
+### Vercel Analytics
+
+Vercel Analytics provides automatic Web Vitals tracking:
+- **Component**: `Analytics` from `@vercel/analytics/next`
+- **Location**: Rendered in root layout
+- **Features**: Automatic tracking of LCP, CLS, FID, INP
+- **Production only**: Only loads in production
+- **No configuration**: Works out of the box with Vercel deployment
+
+### Analytics Integration Points
+
+- **Root layout**: GA4Script and Analytics components
+- **Marketing layout**: PageViewTracker component
+- **Contact form**: Conversion event tracking
+- **Future**: Additional custom events can be added using `event()` helper
+
+### Privacy and Compliance
+
+- **Production-only tracking**: GA4 and Vercel Analytics only load in production
+- **No PII in GA4**: Form submission events only include `form_type` parameter
+- **Cookie consent**: Not yet implemented (deferred for future enhancement)
+- **Data layer**: All GA4 events go through `window.dataLayer`
+
+### Deep Module Pattern
+
+The analytics architecture follows deep module principles:
+- **GA4Script**: Isolated component for GA4 initialization
+- **PageViewTracker**: Separate component for page view tracking
+- **gtag.ts**: Helper functions with simple interface
+- **No side effects**: Analytics components don't interfere with other functionality
+- **Simple interfaces**: `pageview()` and `event()` functions for tracking
+
 ## Design Principles
 
 ### Domain-Driven Design (DDD)

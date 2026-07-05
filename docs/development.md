@@ -571,6 +571,459 @@ There are three main page types in the application:
 - **Breadcrumbs**: Use `getBreadcrumbs()` utility for hierarchical navigation
 - **Metadata**: Use `generateMetadata()` from `@/lib/seo` for consistent SEO
 
+### Adding a New Form
+
+This guide explains how to add a new form following the patterns established in Phase 4.
+
+#### Form Pattern Overview
+
+The contact form uses React 19 Server Actions with `useActionState` for state management. This pattern provides:
+- Server-side validation with Zod
+- Type-safe form state management
+- Loading states with `useFormStatus`
+- Toast notifications for user feedback
+- Email sending via Resend (or other providers)
+
+#### Step 1: Create the Server Action
+
+Create a Server Action in `apps/firm-website/src/app/actions/your-form.ts`:
+
+```typescript
+'use server'
+
+import { z } from 'zod'
+
+// Define Zod schema for validation
+const YourFormSchema = z.object({
+  name: z.string().min(2, 'Name must be at least 2 characters'),
+  email: z.email('Invalid email address'),
+  message: z.string().min(10, 'Message must be at least 10 characters'),
+})
+
+// Define form state type
+interface YourFormState {
+  success: boolean
+  message: string | null
+  fieldErrors: Record<string, string[]>
+}
+
+// Initial state
+const initialYourFormState: YourFormState = {
+  success: false,
+  message: null,
+  fieldErrors: {},
+}
+
+// Server Action
+export async function submitYourForm(
+  prevState: YourFormState,
+  formData: FormData
+): Promise<YourFormState> {
+  // Validate form data
+  const validatedFields = YourFormSchema.safeParse({
+    name: formData.get('name'),
+    email: formData.get('email'),
+    message: formData.get('message'),
+  })
+
+  // Return validation errors if invalid
+  if (!validatedFields.success) {
+    const fieldErrors: Record<string, string[]> = {}
+    validatedFields.error.errors.forEach((error) => {
+      if (error.path[0]) {
+        const fieldName = error.path[0] as string
+        fieldErrors[fieldName] = fieldErrors[fieldName] || []
+        fieldErrors[fieldName].push(error.message)
+      }
+    })
+
+    return {
+      success: false,
+      message: 'Please fix the errors above',
+      fieldErrors,
+    }
+  }
+
+  // Process form data (send email, save to database, etc.)
+  try {
+    // Your business logic here
+    // e.g., await sendEmail(validatedFields.data)
+
+    return {
+      success: true,
+      message: 'Form submitted successfully',
+      fieldErrors: {},
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: 'Something went wrong. Please try again.',
+      fieldErrors: {},
+    }
+  }
+}
+```
+
+#### Step 2: Create the Form Component
+
+Create a client component in `apps/firm-website/src/components/features/your-form/your-form.tsx`:
+
+```typescript
+'use client'
+
+import { useActionState, useFormStatus } from 'react'
+import { useEffect } from 'react'
+import { toast } from 'sonner'
+import { submitYourForm, initialYourFormState } from '@/app/actions/your-form'
+import { Input, Textarea, Label } from '@repo/ui'
+import { useRef } from 'react'
+
+export function YourForm() {
+  const [state, formAction, isPending] = useActionState(
+    submitYourForm,
+    initialYourFormState
+  )
+  const formRef = useRef<HTMLFormElement>(null)
+  const { pending } = useFormStatus()
+
+  // Show toast notifications on state change
+  useEffect(() => {
+    // Skip initial render
+    if (state === initialYourFormState) {
+      return
+    }
+
+    // Show success toast
+    if (state.success) {
+      toast.success('Form submitted successfully!')
+      formRef.current?.reset()
+    }
+
+    // Show error toast
+    if (!state.success && state.message) {
+      toast.error(state.message)
+    }
+  }, [state])
+
+  return (
+    <form ref={formRef} action={formAction} className="space-y-4">
+      <div>
+        <Label htmlFor="name">Name</Label>
+        <Input
+          id="name"
+          name="name"
+          type="text"
+          required
+          aria-invalid={!!state.fieldErrors.name}
+          aria-describedby={state.fieldErrors.name ? 'name-error' : undefined}
+        />
+        {state.fieldErrors.name && (
+          <p id="name-error" className="text-sm text-red-500">
+            {state.fieldErrors.name[0]}
+          </p>
+        )}
+      </div>
+
+      <div>
+        <Label htmlFor="email">Email</Label>
+        <Input
+          id="email"
+          name="email"
+          type="email"
+          required
+          aria-invalid={!!state.fieldErrors.email}
+          aria-describedby={state.fieldErrors.email ? 'email-error' : undefined}
+        />
+        {state.fieldErrors.email && (
+          <p id="email-error" className="text-sm text-red-500">
+            {state.fieldErrors.email[0]}
+          </p>
+        )}
+      </div>
+
+      <div>
+        <Label htmlFor="message">Message</Label>
+        <Textarea
+          id="message"
+          name="message"
+          required
+          aria-invalid={!!state.fieldErrors.message}
+          aria-describedby={state.fieldErrors.message ? 'message-error' : undefined}
+        />
+        {state.fieldErrors.message && (
+          <p id="message-error" className="text-sm text-red-500">
+            {state.fieldErrors.message[0]}
+          </p>
+        )}
+      </div>
+
+      <SubmitButton />
+    </form>
+  )
+}
+
+function SubmitButton() {
+  const { pending } = useFormStatus()
+
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+    >
+      {pending ? 'Sending...' : 'Submit'}
+    </button>
+  )
+}
+```
+
+#### Step 3: Create the Page
+
+Create the page in `apps/firm-website/src/app/(marketing)/your-form/page.tsx`:
+
+```typescript
+import { YourForm } from '@/components/features/your-form/your-form'
+import { generateMetadata } from '@/lib/seo'
+
+export const metadata = generateMetadata({
+  title: 'Your Form',
+  description: 'Submit your information',
+})
+
+export default function YourFormPage() {
+  return (
+    <div className="container mx-auto py-12">
+      <h1 className="text-4xl font-bold mb-8">Your Form</h1>
+      <YourForm />
+    </div>
+  )
+}
+```
+
+#### Step 4: Add Environment Variables
+
+Add required environment variables to `apps/firm-website/.env.example`:
+
+```bash
+# Your form configuration
+YOUR_FORM_API_KEY=your_api_key_here
+YOUR_FORM_EMAIL=hello@yourdedicatedmarketer.com
+```
+
+#### Step 5: Write Tests
+
+Create tests in `apps/firm-website/src/app/actions/your-form.test.ts`:
+
+```typescript
+import { describe, it, expect } from 'vitest'
+import { submitYourForm } from './your-form'
+
+describe('submitYourForm', () => {
+  it('validates form data and returns errors for invalid input', async () => {
+    const formData = new FormData()
+    formData.append('name', 'A') // Too short
+    formData.append('email', 'invalid-email')
+    formData.append('message', 'Short') // Too short
+
+    const result = await submitYourForm(initialYourFormState, formData)
+
+    expect(result.success).toBe(false)
+    expect(result.fieldErrors.name).toBeDefined()
+    expect(result.fieldErrors.email).toBeDefined()
+    expect(result.fieldErrors.message).toBeDefined()
+  })
+
+  it('processes valid form data successfully', async () => {
+    const formData = new FormData()
+    formData.append('name', 'John Doe')
+    formData.append('email', 'john@example.com')
+    formData.append('message', 'This is a valid message')
+
+    const result = await submitYourForm(initialYourFormState, formData)
+
+    expect(result.success).toBe(true)
+    expect(result.message).toBe('Form submitted successfully')
+  })
+})
+```
+
+#### Best Practices
+
+- **Use Server Actions**: Server Actions provide server-side validation and processing
+- **Validate with Zod**: Use Zod schemas for type-safe validation
+- **Show field errors**: Display validation errors next to inputs
+- **Use toast notifications**: Show success/error toasts for final state
+- **Handle loading state**: Use `useFormStatus` for submit button
+- **Reset form on success**: Clear form fields after successful submission
+- **Accessibility**: Use ARIA attributes for error messages
+- **Production-only**: Only send emails in production
+- **Error handling**: Catch and return user-friendly error messages
+
+### Adding Analytics Events
+
+This guide explains how to add custom analytics events following the patterns established in Phase 4.
+
+#### GA4 Event Tracking
+
+The project uses GA4 for custom event tracking. Events are tracked using the `event()` helper function from `lib/gtag.ts`.
+
+#### Step 1: Import the Event Helper
+
+```typescript
+import { event } from '@/lib/gtag'
+```
+
+#### Step 2: Track an Event
+
+Track an event with a name and optional parameters:
+
+```typescript
+// Track a button click
+event('click', {
+  button_name: 'cta_button',
+  button_location: 'hero_section',
+})
+
+// Track a form submission
+event('form_submission', {
+  form_type: 'contact',
+})
+
+// Track a custom event
+event('custom_event', {
+  category: 'engagement',
+  action: 'video_play',
+  label: 'intro_video',
+})
+```
+
+#### Step 3: Track Events in Components
+
+Add event tracking to user interactions:
+
+```typescript
+'use client'
+
+import { event } from '@/lib/gtag'
+import { useState } from 'react'
+
+export function VideoPlayer() {
+  const [isPlaying, setIsPlaying] = useState(false)
+
+  const handlePlay = () => {
+    setIsPlaying(true)
+    event('video_play', {
+      video_id: 'intro_video',
+      video_location: 'hero_section',
+    })
+  }
+
+  return (
+    <button onClick={handlePlay}>
+      {isPlaying ? 'Playing' : 'Play Video'}
+    </button>
+  )
+}
+```
+
+#### Step 4: Track Form Conversions
+
+Track form submissions as conversion events:
+
+```typescript
+'use client'
+
+import { useActionState, useEffect } from 'react'
+import { event } from '@/lib/gtag'
+import { submitForm, initialFormState } from '@/app/actions/form'
+import { useRef } from 'react'
+
+export function ContactForm() {
+  const [state, formAction] = useActionState(submitForm, initialFormState)
+  const conversionEventFired = useRef(false)
+
+  useEffect(() => {
+    // Track conversion on success
+    if (state.success && !conversionEventFired.current) {
+      event('form_submission', {
+        form_type: 'contact',
+      })
+      conversionEventFired.current = true
+    }
+  }, [state.success])
+
+  return (
+    <form action={formAction}>
+      {/* Form fields */}
+    </form>
+  )
+}
+```
+
+#### Recommended Events
+
+Based on Google's recommended events, consider tracking:
+
+- `generate_lead`: When a contact form is submitted
+- `login`: When a user logs in (if applicable)
+- `sign_up`: When a user creates an account (if applicable)
+- `purchase`: When a purchase is made (if applicable)
+- `view_item`: When a product/service is viewed
+- `search`: When a search is performed (if applicable)
+- `click`: When a button or link is clicked
+- `video_play`: When a video starts playing
+- `scroll`: When a user scrolls to a specific section
+
+#### Event Parameters
+
+Use descriptive parameters for better analytics:
+
+```typescript
+event('click', {
+  button_name: 'cta_button',        // What was clicked
+  button_location: 'hero_section',  // Where it was located
+  button_variant: 'primary',        // Button variant
+})
+
+event('form_submission', {
+  form_type: 'contact',             // Type of form
+  form_location: 'footer',           // Where the form was
+})
+
+event('video_play', {
+  video_id: 'intro_video',          // Video identifier
+  video_location: 'hero_section',   // Where the video was
+  video_duration: 120,              // Video duration in seconds
+})
+```
+
+#### Best Practices
+
+- **Production only**: Events only fire in production
+- **No PII**: Don't send personally identifiable information
+- **Descriptive names**: Use clear, descriptive event names
+- **Consistent parameters**: Use consistent parameter names across events
+- **Prevent double-firing**: Use refs to prevent events from firing multiple times
+- **Test in production**: Verify events appear in GA4 Real-Time report
+- **Use recommended events**: Follow Google's recommended event names when applicable
+
+#### Verifying Events
+
+To verify events are tracked correctly:
+
+1. Open your site in production
+2. Open browser DevTools > Console
+3. Type `window.dataLayer` to see tracked events
+4. Check GA4 Real-Time report to verify events appear
+
+#### Common Patterns
+
+- **Button clicks**: Track CTA button clicks with location and variant
+- **Form submissions**: Track form submissions with form type and location
+- **Video interactions**: Track video play, pause, and complete events
+- **Scroll depth**: Track when users scroll to specific sections
+- **External links**: Track clicks on external links
+
 ### Adding New Content
 
 Content is stored in `apps/firm-website/src/content/`. To add new content:
