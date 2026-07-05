@@ -1,6 +1,7 @@
 'use server';
 
 import { z } from 'zod';
+import { Resend } from 'resend';
 
 /**
  * Zod schema for contact form validation.
@@ -48,8 +49,8 @@ export async function submitContact(
   const rawData = {
     name: formData.get('name'),
     email: formData.get('email'),
-    phone: formData.get('phone'),
-    company: formData.get('company'),
+    phone: formData.get('phone') === null ? undefined : formData.get('phone'),
+    company: formData.get('company') === null ? undefined : formData.get('company'),
     message: formData.get('message'),
   };
 
@@ -75,26 +76,58 @@ export async function submitContact(
     };
   }
 
-  // Validation passed - in a real implementation, this would:
-  // - Send email via Resend (Phase 4, P022)
-  // - Store in database
-  // - Trigger notifications
-
+  // Validation passed - send email via Resend
   const { name, email, phone, company, message } = result.data;
 
-  // Log submission (placeholder for actual email sending)
-  console.log('Contact form submission:', {
-    name,
-    email,
-    phone: phone || 'Not provided',
-    company: company || 'Not provided',
-    message,
-  });
+  // Validate environment variables
+  const resendApiKey = process.env.RESEND_API_KEY;
+  const contactEmail = process.env.CONTACT_EMAIL;
+  const fromEmail = process.env.FROM_EMAIL;
 
-  // Return success state
-  return {
-    success: true,
-    message: 'Thank you for your message! We\'ll get back to you soon.',
-    errors: {},
-  };
+  if (!resendApiKey || !contactEmail || !fromEmail) {
+    console.error('Missing required environment variables for Resend');
+    return {
+      success: false,
+      message: 'Server configuration error. Please try again later.',
+      errors: {},
+    };
+  }
+
+  try {
+    const resend = new Resend(resendApiKey);
+
+    // Build email text content
+    const emailText = `
+Name: ${name}
+Email: ${email}
+Phone: ${phone || 'Not provided'}
+Company: ${company || 'Not provided'}
+
+Message:
+${message}
+    `.trim();
+
+    // Send email via Resend
+    await resend.emails.send({
+      from: fromEmail,
+      to: contactEmail,
+      subject: `New Contact Form Submission from ${name}`,
+      text: emailText,
+      replyTo: email,
+    });
+
+    // Return success state
+    return {
+      success: true,
+      message: 'Thank you for your message! We\'ll get back to you soon.',
+      errors: {},
+    };
+  } catch (error) {
+    console.error('Error sending email via Resend:', error);
+    return {
+      success: false,
+      message: 'Failed to send message. Please try again later.',
+      errors: {},
+    };
+  }
 }
