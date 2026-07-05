@@ -134,7 +134,7 @@ Monorepo with Next.js 15 app, `@repo/ui` component library, content utilities, d
 
 ### Parent Task P032: Write Component Tests for UI Components (`@repo/ui`)
 
-- [ ] **P032** | Status: `PENDING`  
+- [x] **P032** | Status: `COMPLETED`
   **Related File Paths:**
   - `packages/ui/src/components/**/*.test.tsx`
 
@@ -167,6 +167,15 @@ Monorepo with Next.js 15 app, `@repo/ui` component library, content utilities, d
   - Depends on: Vitest config in `packages/ui`, shared test utils (P030).
   - Blocks: none.
 
+**Implementation Notes:**
+- Created comprehensive component tests for Card, Container, Section, NavLink, MobileMenu, and ThemeToggle
+- Button, Header, Footer, Accordion, and Form components already had tests
+- All tests follow React Testing Library best practices: accessible queries, user-centric interactions
+- Mocked Next.js navigation and theme providers where needed
+- All 125 tests pass across 18 test files
+- Documented UI component testing approach in docs/testing.md with examples
+- Linting passes with only pre-existing warnings in seo.test.ts
+
 #### Subtasks
 
 | ID      | Agent/Human | File Path / Command                                 | Description                                                                                                       | Validation Command                              |
@@ -180,6 +189,9 @@ Monorepo with Next.js 15 app, `@repo/ui` component library, content utilities, d
 | P032-07 | AGENT       | `packages/ui/src/components/ui/accordion.test.tsx`  | Tests: renders items, expand/collapse, single/multiple modes.                                                     | `pnpm --filter @repo/ui test -- accordion.test` |
 | P032-08 | AGENT       | `packages/ui/src/components/theme-toggle.test.tsx`  | Tests: renders sun/moon icon, toggles theme.                                                                       | `pnpm --filter @repo/ui test -- theme-toggle`   |
 | P032-09 | AGENT       | Update `docs/testing.md`                            | Document UI component testing.                                                                                     | None.                                            |
+| P032-10 | AGENT       | `packages/ui/src/components/ui/section.test.tsx`    | Tests: renders as section/div, padding classes, custom className.                                                   | `pnpm --filter @repo/ui test -- section.test`   |
+| P032-11 | AGENT       | `packages/ui/src/components/navigation/nav-link.test.tsx` | Tests: active state, custom className, aria-current attribute.                                                | `pnpm --filter @repo/ui test -- nav-link.test`   |
+| P032-12 | AGENT       | `packages/ui/src/components/layout/mobile-menu.test.tsx` | Tests: open/close state, overlay click, escape key, body scroll lock.                                            | `pnpm --filter @repo/ui test -- mobile-menu.test` |
 
 ---
 

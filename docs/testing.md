@@ -213,6 +213,170 @@ pnpm --filter @repo/firm-website test -- content.test
 pnpm --filter @repo/firm-website test -- navigation
 ```
 
+## UI Component Testing
+
+Component tests for `@repo/ui` verify rendering, props, variants, and user interactions using React Testing Library and Vitest.
+
+### Test Location
+- **UI components**: `packages/ui/src/components/ui/*.test.tsx`
+- **Layout components**: `packages/ui/src/components/layout/*.test.tsx`
+- **Navigation components**: `packages/ui/src/components/navigation/*.test.tsx`
+- **Theme components**: `packages/ui/src/*.test.tsx`
+
+### Testing Approach
+
+#### Core Principles
+- **Test behavior, not implementation**: Focus on what users see and interact with
+- **Use accessible queries**: Prioritize `getByRole`, `getByText` over CSS selectors
+- **User-centric interactions**: Use `userEvent` for realistic user behavior
+- **Mock external dependencies**: Isolate components from Next.js routing, theme providers, etc.
+
+#### Component Coverage
+
+**UI Components:**
+- `Button` - Variants, sizes, click events, `asChild` prop
+- `Card` - Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter
+- `Container` - maxWidth variants (sm, md, lg, xl, full)
+- `Section` - Rendering as section/div, padding classes
+- `Input` - Placeholder, onChange, error state, different types
+- `Textarea` - Placeholder, minimum height, custom className
+- `Label` - Text rendering, htmlFor association with inputs
+- `Accordion` - Expand/collapse, single/multiple modes, accessibility
+- `Form` - Integration of Input, Textarea, Label components
+
+**Layout Components:**
+- `Header` - Navigation items, logo, mobile menu toggle, theme toggle
+- `Footer` - Navigation links, contact info, social links, copyright
+- `MobileMenu` - Open/close state, overlay click, escape key, body scroll lock
+
+**Navigation Components:**
+- `NavLink` - Active state, custom className, aria-current attribute
+
+**Theme Components:**
+- `ThemeToggle` - Icon switching (sun/moon), theme toggle function, screen reader text
+
+### Mocking Strategy
+
+#### Next.js Navigation
+Mock `next/navigation` for components that use routing hooks:
+
+```typescript
+vi.mock('next/navigation', () => ({
+  usePathname: () => '/',
+  useRouter: () => ({
+    push: vi.fn(),
+    replace: vi.fn(),
+    prefetch: vi.fn(),
+  }),
+}));
+```
+
+#### Next.js Link
+Mock `next/link` to test navigation without actual routing:
+
+```typescript
+vi.mock('next/link', () => ({
+  default: ({ children, href }: { children: React.ReactNode; href: string }) => (
+    <a href={href}>{children}</a>
+  ),
+}));
+```
+
+#### Theme Provider
+Use `renderWithProviders` from `@repo/test-utils` for components requiring theme context:
+
+```typescript
+import { renderWithProviders } from '@repo/test-utils';
+
+renderWithProviders(<Header navItems={navItems} />);
+```
+
+### Example Tests
+
+#### Button Component
+```typescript
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import { Button } from './button';
+
+describe('Button', () => {
+  it('renders button with default variant', () => {
+    render(<Button>Click me</Button>);
+    const button = screen.getByRole('button', { name: 'Click me' });
+    expect(button).toBeInTheDocument();
+    expect(button).toHaveClass('bg-primary');
+  });
+
+  it('handles click events', () => {
+    const handleClick = vi.fn();
+    render(<Button onClick={handleClick}>Click me</Button>);
+    const button = screen.getByRole('button', { name: 'Click me' });
+    button.click();
+    expect(handleClick).toHaveBeenCalledTimes(1);
+  });
+});
+```
+
+#### Card Component
+```typescript
+describe('Card', () => {
+  it('renders complete card with all subcomponents', () => {
+    render(
+      <Card>
+        <CardHeader>
+          <CardTitle>Title</CardTitle>
+          <CardDescription>Description</CardDescription>
+        </CardHeader>
+        <CardContent>Content</CardContent>
+        <CardFooter>Footer</CardFooter>
+      </Card>
+    );
+
+    expect(screen.getByText('Title')).toBeInTheDocument();
+    expect(screen.getByText('Description')).toBeInTheDocument();
+    expect(screen.getByText('Content')).toBeInTheDocument();
+    expect(screen.getByText('Footer')).toBeInTheDocument();
+  });
+});
+```
+
+#### Accordion Component
+```typescript
+describe('Accordion', () => {
+  it('expands item when trigger is clicked', async () => {
+    const user = userEvent.setup();
+    render(
+      <Accordion type="single" collapsible>
+        <AccordionItem value="item-1">
+          <AccordionTrigger>Item 1</AccordionTrigger>
+          <AccordionContent>Content 1</AccordionContent>
+        </AccordionItem>
+      </Accordion>
+    );
+
+    const trigger = screen.getByText('Item 1');
+    expect(screen.queryByText('Content 1')).not.toBeInTheDocument();
+
+    await user.click(trigger);
+    const content = screen.getByText('Content 1');
+    expect(content).toBeVisible();
+  });
+});
+```
+
+### Running UI Component Tests
+
+```bash
+# Run all UI component tests
+pnpm --filter @repo/ui test
+
+# Run specific component test
+pnpm --filter @repo/ui test -- button.test
+
+# Run in watch mode for development
+pnpm --filter @repo/ui test:watch
+```
+
 ## Best Practices
 
 ### Unit Testing
