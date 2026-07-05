@@ -190,6 +190,55 @@ To add a new FAQ:
 - **Honesty**: Address tough questions directly; don't avoid difficult topics
 - **Actionability**: Provide clear, actionable information in each answer
 
+## Static Page Content Structure
+
+Static pages provide core information about the firm and pricing. Each static page is represented as an MDX file with frontmatter metadata and markdown body content.
+
+### Current Static Pages
+
+The following static pages are currently available:
+
+1. **About Your Dedicated Marketer** (`about.mdx`) - Company mission, story, method, local connection, credibility
+2. **Pricing** (`pricing.mdx`) - Website design packages, add-ons, monthly retainers, FAQ
+
+### Static Page File Format
+
+Each static page MDX file includes:
+
+- **Frontmatter fields**:
+  - `title` - Display title of the page
+  - `slug` - URL-friendly identifier
+  - `description` - Short description for SEO and previews
+
+- **Content sections**:
+  - Mission statement and vision
+  - Company story and origin
+  - Method or approach
+  - Local connection and credibility (for About page)
+  - Pricing tables and tiers (for Pricing page)
+  - FAQ section (for Pricing page)
+  - Call-to-action
+
+### Adding New Static Pages
+
+To add a new static page:
+
+1. Create a new `.mdx` file in `apps/firm-website/src/content/pages/`
+2. Add frontmatter with required fields (`title`, `slug`, `description`)
+3. Write the content body following the established structure
+4. Update the static page list in this documentation
+5. The content will be automatically available through `getAllPages()` and `getPage(slug)`
+
+### Static Page Content Guidelines
+
+- **Word count**: 400-600 words per static page
+- **Tone**: Professional, authentic, and customer-focused
+- **Structure**: Use clear headings, bullet points, and sections for readability
+- **About page**: Include mission, story, method, local connection, and credibility elements
+- **Pricing page**: Use structured tables for pricing tiers, clear add-on pricing, and address common objections in FAQ
+- **Transparency**: Be honest about pricing, terms, and what's included
+- **CTA**: End with a clear call-to-action
+
 ### Demo File Format
 
 Each demo MDX file includes:

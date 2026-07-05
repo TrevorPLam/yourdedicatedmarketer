@@ -54,9 +54,13 @@ describe('Content Utilities', () => {
       expect(Array.isArray(contents)).toBe(true);
       expect(contents.length).toBeGreaterThan(0);
       
-      const samplePage = contents.find(item => item.data.slug === 'sample-mdx');
-      expect(samplePage).toBeDefined();
-      expect(samplePage?.data.title).toBe('Sample MDX Page');
+      const aboutPage = contents.find(item => item.data.slug === 'about');
+      expect(aboutPage).toBeDefined();
+      expect(aboutPage?.data.title).toBe('About Your Dedicated Marketer');
+
+      const pricingPage = contents.find(item => item.data.slug === 'pricing');
+      expect(pricingPage).toBeDefined();
+      expect(pricingPage?.data.title).toBe('Pricing');
     });
 
     it('should return empty array for non-existent directory', async () => {
@@ -351,6 +355,52 @@ describe('Content Utilities', () => {
       expect(cost?.data.category).toBe('pricing');
       expect(cost?.content).toBeDefined();
       expect(cost?.content.length).toBeGreaterThan(0);
+    });
+  });
+
+  describe('Static Page Content', () => {
+    it('should return all static page slugs', async () => {
+      const slugs = await getAllSlugs('pages');
+      expect(Array.isArray(slugs)).toBe(true);
+      expect(slugs.length).toBeGreaterThanOrEqual(2);
+      expect(slugs).toContain('about');
+      expect(slugs).toContain('pricing');
+    });
+
+    it('should return content for each static page', async () => {
+      const pages = await getAllContent<{ title: string; slug: string }>('pages');
+      
+      expect(pages.length).toBeGreaterThanOrEqual(2);
+      
+      const about = pages.find(item => item.data.slug === 'about');
+      expect(about).toBeDefined();
+      expect(about?.data.title).toBe('About Your Dedicated Marketer');
+
+      const pricing = pages.find(item => item.data.slug === 'pricing');
+      expect(pricing).toBeDefined();
+      expect(pricing?.data.title).toBe('Pricing');
+    });
+
+    it('should parse about page content with correct metadata', async () => {
+      const about = await getContentBySlug<{ title: string; slug: string; description: string }>('pages', 'about');
+      
+      expect(about).not.toBeNull();
+      expect(about?.data.title).toBe('About Your Dedicated Marketer');
+      expect(about?.data.slug).toBe('about');
+      expect(about?.data.description).toBeDefined();
+      expect(about?.content).toBeDefined();
+      expect(about?.content.length).toBeGreaterThan(0);
+    });
+
+    it('should parse pricing page content with correct metadata', async () => {
+      const pricing = await getContentBySlug<{ title: string; slug: string; description: string }>('pages', 'pricing');
+      
+      expect(pricing).not.toBeNull();
+      expect(pricing?.data.title).toBe('Pricing');
+      expect(pricing?.data.slug).toBe('pricing');
+      expect(pricing?.data.description).toBeDefined();
+      expect(pricing?.content).toBeDefined();
+      expect(pricing?.content.length).toBeGreaterThan(0);
     });
   });
 });

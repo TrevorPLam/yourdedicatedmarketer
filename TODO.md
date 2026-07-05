@@ -404,7 +404,7 @@ Monorepo, Next.js app, packages/lib, MDX rendering infrastructure, and design to
 
 ### Parent Task P007: Create Static Pages Content (About, Pricing)
 
-- [ ] **P007** | Status: `PENDING`  
+- [x] **P007** | Status: `COMPLETED`
   **Related File Paths:**
   - `apps/firm-website/src/content/pages/about.mdx`
   - `apps/firm-website/src/content/pages/pricing.mdx`
@@ -434,14 +434,22 @@ Monorepo, Next.js app, packages/lib, MDX rendering infrastructure, and design to
   - Depends on: MDX setup, content utilities (P002).
   - Blocks: later page development.
 
+  **Implementation Notes:**
+  - Created about.mdx with mission, story, method, local connection, and credibility sections (400+ words)
+  - Created pricing.mdx with website design packages, build-time add-ons, monthly retainers, bundle discounts, and FAQ (400+ words)
+  - Updated content.test.ts with 4 new test cases for static page content (30 total tests passing)
+  - Updated docs/content.md with static pages structure, guidelines, and documentation
+  - All tests pass (30 total), lint passes
+  - Pre-existing typecheck error unrelated to this task (can't find '@repo/lib' module)
+
 #### Subtasks
 
 | ID      | Agent/Human | File Path / Command                               | Description                                                                                  | Validation Command                            |
 | ------- | ----------- | ------------------------------------------------- | -------------------------------------------------------------------------------------------- | --------------------------------------------- |
-| P007-01 | AGENT       | `apps/firm-website/src/content/pages/about.mdx`   | MDX: "About Your Dedicated Marketer", slug "about". Write mission, story, method, etc.       | No command.                                   |
-| P007-02 | AGENT       | `apps/firm-website/src/content/pages/pricing.mdx` | MDX: "Pricing", slug "pricing". Write pricing table, add‑ons, retainers.                     | No command.                                   |
-| P007-03 | AGENT       | `apps/firm-website/src/lib/content.test.ts`       | Update tests: static page files detected and parsed correctly.                               | `pnpm --filter @repo/firm-website test` runs. |
-| P007-04 | AGENT       | Update `docs/content.md`                          | Document static pages content structure.                                                     | None.                                         |
+| P007-01 | AGENT       | `apps/firm-website/src/content/pages/about.mdx`   | MDX: "About Your Dedicated Marketer", slug "about". Write mission, story, method, etc.       | ✅ Complete                                   |
+| P007-02 | AGENT       | `apps/firm-website/src/content/pages/pricing.mdx` | MDX: "Pricing", slug "pricing". Write pricing table, add‑ons, retainers.                     | ✅ Complete                                   |
+| P007-03 | AGENT       | `apps/firm-website/src/lib/content.test.ts`       | Update tests: static page files detected and parsed correctly.                               | ✅ Complete (30 tests passing)                |
+| P007-04 | AGENT       | Update `docs/content.md`                          | Document static pages content structure.                                                     | ✅ Complete                                   |
 
 ---
 
