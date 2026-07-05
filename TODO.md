@@ -77,7 +77,7 @@ Monorepo with Next.js 15 app, `@repo/ui` component library, content utilities, d
 
 ### Parent Task P031: Write Unit Tests for Utility Functions
 
-- [ ] **P031** | Status: `PENDING`  
+- [x] **P031** | Status: `COMPLETED`
   **Related File Paths:**
   - `apps/firm-website/src/lib/content.test.ts`
   - `apps/firm-website/src/lib/navigation.test.ts`
@@ -107,6 +107,16 @@ Monorepo with Next.js 15 app, `@repo/ui` component library, content utilities, d
   **Depends On / Blocks:**
   - Depends on: shared test utils (P030), content/navigation utilities (Phase 1).
   - Blocks: none.
+
+**Implementation Notes:**
+- Rewrote `content.test.ts` to use unit tests with mocked `fs` and `path` modules using `vi.hoisted()` pattern
+- Used unique cache keys (different dir/slug combinations) per test to avoid module-level cache collisions
+- gray-matter and remark libraries work naturally with test data (valid MDX format required)
+- Rewrote `navigation.test.ts` to use unit tests with mocked content utilities
+- Added default empty array returns to mocked content utilities to prevent undefined errors
+- All 10 content tests and 20 navigation tests pass
+- Linting passes (only pre-existing warnings in seo.test.ts)
+- Documented utility testing approach in `docs/testing.md` with examples
 
 #### Subtasks
 

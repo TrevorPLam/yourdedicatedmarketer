@@ -123,6 +123,96 @@ pnpm --filter @repo/firm-website exec playwright install
 ### Test Structure
 E2E tests use Playwright's test API with page objects and locators for reliable element selection.
 
+## Utility Testing
+
+Unit tests for utility functions (content.ts, navigation.ts) use Vitest with mocked file system and content dependencies to test public API behavior without touching real files or external systems.
+
+### Content Utilities (`content.test.ts`)
+
+Tests cover the core content management functions:
+- `getAllSlugs()` - Returns array of slugs from a directory, handles non-existent directories
+- `getContentBySlug()` - Returns content data for valid slugs, returns null for missing files/errors
+- `getAllContent()` - Returns array of all content items, filters nulls, handles errors
+
+**Mocking Strategy:**
+- `fs` module mocked using `vi.hoisted()` to create mock functions before `vi.mock()`
+- `path` module mocked for path joining
+- gray-matter and remark libraries work naturally with test data (valid MDX format required)
+- Unique cache keys (different dir/slug combinations) used per test to avoid module-level cache collisions
+
+**Example:**
+```typescript
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+
+const { mockReaddirSync, mockReadFileSync, mockExistsSync } = vi.hoisted(() => ({
+  mockReaddirSync: vi.fn(),
+  mockReadFileSync: vi.fn(),
+  mockExistsSync: vi.fn(),
+}));
+
+vi.mock('fs', () => ({
+  default: {
+    readdirSync: mockReaddirSync,
+    readFileSync: mockReadFileSync,
+    existsSync: mockExistsSync,
+  },
+}));
+
+describe('Content Utilities', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('should return an array of slugs from directory', async () => {
+    mockReaddirSync.mockReturnValue(['test1.mdx', 'test2.mdx']);
+    const slugs = await getAllSlugs('test-dir');
+    expect(slugs).toEqual(['test1', 'test2']);
+  });
+});
+```
+
+### Navigation Utilities (`navigation.test.ts`)
+
+Tests cover navigation, breadcrumbs, and related content functions:
+- `getNavItems()` - Returns array of navigation items with label and href
+- `getBreadcrumbs()` - Returns breadcrumb trail for pages, handles services/industries/demos/static pages
+- `getRelatedContent()` - Returns related items based on type and current slug, limits to 3 items
+
+**Mocking Strategy:**
+- Content utilities (`getAllServices`, `getAllIndustries`, etc.) mocked with default empty array returns
+- Mocks overridden in specific tests to provide test data
+- Tests verify public API behavior, not internal implementation
+
+**Example:**
+```typescript
+vi.mock('./content', () => ({
+  getAllServices: vi.fn(() => Promise.resolve([])),
+  getAllIndustries: vi.fn(() => Promise.resolve([])),
+  getAllDemos: vi.fn(() => Promise.resolve([])),
+  getAllFAQs: vi.fn(() => Promise.resolve([])),
+}));
+
+describe('Navigation Utilities', () => {
+  it('should return correct breadcrumbs for service pages', async () => {
+    vi.mocked(getAllServices).mockResolvedValue([
+      { data: { title: 'Website Design', slug: 'website-design' }, content: '' },
+    ]);
+    const breadcrumbs = await getBreadcrumbs('website-design');
+    expect(breadcrumbs[1]?.label).toBe('Services');
+  });
+});
+```
+
+### Running Utility Tests
+
+```bash
+# Run content utility tests
+pnpm --filter @repo/firm-website test -- content.test
+
+# Run navigation utility tests
+pnpm --filter @repo/firm-website test -- navigation
+```
+
 ## Best Practices
 
 ### Unit Testing
@@ -130,6 +220,8 @@ E2E tests use Playwright's test API with page objects and locators for reliable 
 - Use descriptive test names that explain the behavior
 - Follow the Arrange-Act-Assert pattern
 - Mock external dependencies to isolate the unit under test
+- Use `vi.hoisted()` for mocks that need to be referenced in `vi.mock()`
+- Use unique cache keys when testing functions with module-level caching
 
 ### E2E Testing
 - Test user flows and critical paths

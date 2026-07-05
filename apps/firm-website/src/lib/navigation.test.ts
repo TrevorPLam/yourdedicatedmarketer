@@ -1,7 +1,21 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { getNavItems, getBreadcrumbs, getRelatedContent } from './navigation';
 
-describe('Navigation Utilities', () => {
+// Mock content utilities
+vi.mock('./content', () => ({
+  getAllServices: vi.fn(() => Promise.resolve([])),
+  getAllIndustries: vi.fn(() => Promise.resolve([])),
+  getAllDemos: vi.fn(() => Promise.resolve([])),
+  getAllFAQs: vi.fn(() => Promise.resolve([])),
+}));
+
+import { getAllServices, getAllIndustries, getAllDemos, getAllFAQs } from './content';
+
+describe('Navigation Utilities - Unit Tests with Mocked Content', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   describe('getNavItems', () => {
     it('should return an array of navigation items', async () => {
       const navItems = await getNavItems();
@@ -63,6 +77,10 @@ describe('Navigation Utilities', () => {
     });
 
     it('should return correct breadcrumbs for service pages', async () => {
+      vi.mocked(getAllServices).mockResolvedValue([
+        { data: { title: 'Website Design', slug: 'website-design' }, content: '' },
+      ]);
+      
       const breadcrumbs = await getBreadcrumbs('website-design');
       
       expect(breadcrumbs.length).toBeGreaterThanOrEqual(2);
@@ -71,6 +89,10 @@ describe('Navigation Utilities', () => {
     });
 
     it('should return correct breadcrumbs for industry pages', async () => {
+      vi.mocked(getAllIndustries).mockResolvedValue([
+        { data: { title: 'Home Services', slug: 'home-services' }, content: '' },
+      ]);
+      
       const breadcrumbs = await getBreadcrumbs('home-services');
       
       expect(breadcrumbs.length).toBeGreaterThanOrEqual(2);
@@ -79,6 +101,10 @@ describe('Navigation Utilities', () => {
     });
 
     it('should return correct breadcrumbs for demo pages', async () => {
+      vi.mocked(getAllDemos).mockResolvedValue([
+        { data: { title: 'Plumbing Demo', slug: 'plumbing' }, content: '' },
+      ]);
+      
       const breadcrumbs = await getBreadcrumbs('plumbing');
       
       expect(breadcrumbs.length).toBeGreaterThanOrEqual(2);
@@ -98,6 +124,10 @@ describe('Navigation Utilities', () => {
     });
 
     it('should return only Home for unknown slugs', async () => {
+      vi.mocked(getAllServices).mockResolvedValue([]);
+      vi.mocked(getAllIndustries).mockResolvedValue([]);
+      vi.mocked(getAllDemos).mockResolvedValue([]);
+      
       const breadcrumbs = await getBreadcrumbs('unknown-page');
       
       expect(breadcrumbs.length).toBe(1);
@@ -114,12 +144,21 @@ describe('Navigation Utilities', () => {
 
   describe('getRelatedContent', () => {
     it('should return an array of related content items', async () => {
+      vi.mocked(getAllDemos).mockResolvedValue([
+        { data: { title: 'Plumbing', slug: 'plumbing', industry: 'home-services' }, content: '' },
+      ]);
+      
       const related = await getRelatedContent('plumbing', 'demo');
       
       expect(Array.isArray(related)).toBe(true);
     });
 
     it('should return related demos in the same industry', async () => {
+      vi.mocked(getAllDemos).mockResolvedValue([
+        { data: { title: 'Plumbing', slug: 'plumbing', industry: 'home-services' }, content: '' },
+        { data: { title: 'HVAC', slug: 'hvac', industry: 'home-services' }, content: '' },
+      ]);
+      
       const related = await getRelatedContent('plumbing', 'demo');
       
       related.forEach((item) => {
@@ -131,6 +170,11 @@ describe('Navigation Utilities', () => {
     });
 
     it('should return related industries', async () => {
+      vi.mocked(getAllIndustries).mockResolvedValue([
+        { data: { title: 'Home Services', slug: 'home-services', order: 1 }, content: '' },
+        { data: { title: 'Medical', slug: 'medical', order: 2 }, content: '' },
+      ]);
+      
       const related = await getRelatedContent('home-services', 'industry');
       
       related.forEach((item) => {
@@ -140,6 +184,11 @@ describe('Navigation Utilities', () => {
     });
 
     it('should return related services', async () => {
+      vi.mocked(getAllServices).mockResolvedValue([
+        { data: { title: 'Website Design', slug: 'website-design', order: 1 }, content: '' },
+        { data: { title: 'Local SEO', slug: 'local-seo', order: 2 }, content: '' },
+      ]);
+      
       const related = await getRelatedContent('website-design', 'service');
       
       related.forEach((item) => {
@@ -149,6 +198,11 @@ describe('Navigation Utilities', () => {
     });
 
     it('should return related FAQs in the same category', async () => {
+      vi.mocked(getAllFAQs).mockResolvedValue([
+        { data: { title: 'Cost FAQ', slug: 'cost', category: 'pricing', order: 1, question: 'How much?' }, content: '' },
+        { data: { title: 'Timeline FAQ', slug: 'timeline', category: 'pricing', order: 2, question: 'How long?' }, content: '' },
+      ]);
+      
       const related = await getRelatedContent('cost', 'faq');
       
       related.forEach((item) => {
@@ -158,12 +212,21 @@ describe('Navigation Utilities', () => {
     });
 
     it('should limit related content to 3 items', async () => {
+      vi.mocked(getAllIndustries).mockResolvedValue([
+        { data: { title: 'Home Services', slug: 'home-services', order: 1 }, content: '' },
+        { data: { title: 'Medical', slug: 'medical', order: 2 }, content: '' },
+        { data: { title: 'Personal Services', slug: 'personal-services', order: 3 }, content: '' },
+        { data: { title: 'Professional Services', slug: 'professional-services', order: 4 }, content: '' },
+      ]);
+      
       const related = await getRelatedContent('home-services', 'industry');
       
       expect(related.length).toBeLessThanOrEqual(3);
     });
 
     it('should return empty array for non-existent content', async () => {
+      vi.mocked(getAllServices).mockResolvedValue([]);
+      
       const related = await getRelatedContent('non-existent', 'service');
       
       expect(related).toEqual([]);
