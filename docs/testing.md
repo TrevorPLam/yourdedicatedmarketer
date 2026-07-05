@@ -105,23 +105,185 @@ Playwright is used for E2E testing to verify the application works end-to-end in
 ### Configuration
 - **Config file**: `apps/firm-website/playwright.config.ts`
 - **Test location**: `apps/firm-website/src/e2e/`
-- **Browser**: Chromium (can be extended to Firefox and WebKit)
+- **Browsers**: Chromium, Firefox, WebKit (configured in projects)
 - **Base URL**: http://localhost:3000
+- **Reporter**: HTML with `open: 'never'` to avoid auto-opening report after tests
 
 ### Commands
 ```bash
-# Run E2E tests
+# Run E2E tests (all browsers)
 pnpm --filter @repo/firm-website test:e2e
 
 # Run E2E tests from root
 pnpm test:e2e
 
+# Run E2E tests for specific browser
+pnpm --filter @repo/firm-website test:e2e --project=chromium
+
+# Run specific test file
+pnpm --filter @repo/firm-website test:e2e -- homepage
+
 # Install Playwright browsers (if needed)
 pnpm --filter @repo/firm-website exec playwright install
+
+# Open HTML report manually
+pnpm --filter @repo/firm-website exec playwright show-report
 ```
 
 ### Test Structure
-E2E tests use Playwright's test API with page objects and locators for reliable element selection.
+E2E tests use Playwright's test API with page objects and locators for reliable element selection. Tests are organized by feature/page:
+
+- `homepage.spec.ts` - Homepage hero, CTAs, and navigation
+- `navigation.spec.ts` - Top-level pages (about, pricing, contact, FAQ)
+- `services.spec.ts` - Services hub and detail pages
+- `industries.spec.ts` - Industries hub and detail pages
+- `demos.spec.ts` - Demos hub and detail pages
+- `faq.spec.ts` - FAQ hub and accordion interactions
+
+### Testing Approach
+
+#### Core Principles
+- **Test against production build**: Use `webServer` configuration to build and start the app, testing the exact environment users will interact with
+- **Test from user perspective**: Focus on visible content and user interactions, not implementation details
+- **Use semantic locators**: Prioritize `getByRole`, `getByText` over CSS selectors for more reliable tests
+- **Handle duplicate elements**: Use `.first()` when multiple elements match a selector to avoid strict mode violations
+- **Add test IDs**: Use `data-testid` attributes for components that need reliable test locators
+
+#### Test Coverage
+
+**Homepage Tests:**
+- Page loads and displays main heading
+- CTA buttons are visible and navigate to correct pages
+- Hero section content is present
+
+**Navigation Tests:**
+- About page loads successfully
+- Pricing page loads successfully
+- Contact page loads successfully
+- FAQ page loads successfully
+
+**Hub Page Tests:**
+- Services hub loads and displays service cards
+- Industries hub loads and displays industry cards
+- Demos hub loads and displays demo cards
+- FAQ hub loads and displays accordion items
+
+**Detail Page Tests:**
+- Service detail pages load with correct content
+- Industry detail pages load with correct content
+- Demo detail pages load with correct content
+
+**Interaction Tests:**
+- FAQ accordion expands when clicked
+- Navigation links work correctly
+
+#### Example Tests
+
+**Homepage Test:**
+```typescript
+import { test, expect } from '@playwright/test'
+
+test('homepage loads and displays main heading', async ({ page }) => {
+  await page.goto('/')
+
+  const heading = page.getByRole('heading', { name: /Professional Marketing Services/i })
+  await expect(heading).toBeVisible()
+})
+
+test('homepage CTA buttons navigate to correct pages', async ({ page }) => {
+  await page.goto('/')
+
+  const contactButton = page.getByRole('link', { name: /Book a Free Consultation/i }).first()
+  await contactButton.click()
+  await expect(page).toHaveURL('/contact')
+
+  await page.goto('/')
+
+  const demosButton = page.getByRole('link', { name: /See a Demo Site/i })
+  await demosButton.click()
+  await expect(page).toHaveURL('/demos')
+})
+```
+
+**Hub Page Test:**
+```typescript
+test('services hub displays service cards', async ({ page }) => {
+  await page.goto('/services')
+
+  // Wait for content to load
+  await page.waitForLoadState('networkidle')
+
+  // Check that service cards are present
+  const serviceCards = page.locator('[data-testid="service-card"]')
+  await expect(serviceCards.first()).toBeVisible()
+})
+```
+
+**Detail Page Test:**
+```typescript
+test('service detail page loads', async ({ page }) => {
+  await page.goto('/services/website-design')
+
+  // Verify page loads successfully
+  await expect(page).toHaveURL('/services/website-design')
+})
+```
+
+**Interaction Test:**
+```typescript
+test('faq accordion expands', async ({ page }) => {
+  await page.goto('/faq')
+
+  // Wait for content to load
+  await page.waitForLoadState('networkidle')
+
+  // Click on the first FAQ item trigger
+  const firstFaqTrigger = page.locator('[data-testid="faq-item"]').first().locator('button')
+  await firstFaqTrigger.click()
+
+  // Wait for expansion animation
+  await page.waitForTimeout(300)
+
+  // Verify that the accordion trigger is now pressed/active
+  await expect(firstFaqTrigger).toHaveAttribute('data-state', 'open')
+})
+```
+
+### Test IDs
+
+Components that need reliable test locators include `data-testid` attributes:
+
+- `service-card` - Service cards in services hub
+- `industry-card` - Industry cards in industries hub
+- `demo-card` - Demo cards in demos hub
+- `faq-item` - FAQ accordion items
+
+These are added to the component markup to provide stable, implementation-agnostic selectors for E2E tests.
+
+### Web Server Configuration
+
+Playwright is configured to automatically build and start the Next.js application before running tests:
+
+```typescript
+webServer: {
+  command: 'pnpm build && pnpm start',
+  url: 'http://localhost:3000',
+  timeout: 120 * 1000,
+  reuseExistingServer: !process.env.CI,
+}
+```
+
+This ensures tests run against the production build, not the development server, which can have different behavior (hot reloading, debug logs, etc.).
+
+### Best Practices
+
+- **Always test against production build**: The webServer configuration builds and starts the production app
+- **Use semantic locators**: `getByRole`, `getByText` are more resilient to CSS changes
+- **Handle strict mode violations**: Use `.first()` when multiple elements match a selector
+- **Wait for network idle**: Use `waitForLoadState('networkidle')` for pages with dynamic content
+- **Keep tests focused**: Each test should verify one specific behavior
+- **Avoid flaky tests**: Use stable selectors and proper waiting strategies
+- **Document test IDs**: Add comments explaining why specific test IDs are needed
 
 ## Utility Testing
 

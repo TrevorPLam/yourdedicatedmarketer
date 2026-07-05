@@ -57,7 +57,7 @@ export async function IndustriesHub({ title, description }: IndustriesHubProps) 
                 href={`/industries/${industryData.slug}` as Route}
                 className="group"
               >
-                <Card className="h-full transition-all hover:shadow-lg hover:border-primary/50">
+                <Card data-testid="industry-card" className="h-full transition-all hover:shadow-lg hover:border-primary/50">
                   <CardHeader>
                     <div className="flex items-center gap-3 mb-2">
                       {industryData.icon && (

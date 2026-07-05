@@ -57,7 +57,7 @@ export async function DemosHub({ title, description }: DemosHubProps) {
                 href={`/demos/${demoData.slug}` as Route}
                 className="group"
               >
-                <Card className="h-full transition-all hover:shadow-lg hover:border-primary/50">
+                <Card data-testid="demo-card" className="h-full transition-all hover:shadow-lg hover:border-primary/50">
                   <CardHeader>
                     <CardTitle className="group-hover:text-primary transition-colors">
                       {demoData.title}

@@ -56,7 +56,7 @@ export async function ServicesHub({ title, description }: ServicesHubProps) {
                 href={`/services/${serviceData.slug}` as Route}
                 className="group"
               >
-                <Card className="h-full transition-all hover:shadow-lg hover:border-primary/50">
+                <Card data-testid="service-card" className="h-full transition-all hover:shadow-lg hover:border-primary/50">
                   <CardHeader>
                     <CardTitle className="group-hover:text-primary transition-colors">
                       {serviceData.title}
