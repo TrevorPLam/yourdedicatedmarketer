@@ -154,11 +154,59 @@ Dynamic pages are generated from content collections.
 - Default export: Fetches service content, renders with `ServiceDetail`, calls `notFound()` if service doesn't exist
 - Uses Next.js 15 async params pattern (params is a Promise)
 
-### Industry Pages (`/industries/[slug]`)
+### Industry Pages
 
-- Generated from `src/content/industries/*.mdx`
-- Dynamic route with slug parameter
-- Renders industry content with metadata
+#### Industries Hub (`/industries`)
+
+- **Path:** `app/(marketing)/industries/page.tsx`
+- **Component:** `components/features/industries/industries-hub.tsx`
+- **Content Source:** `src/content/industries/*.mdx` (all industry files)
+- **Features:**
+  - Lists all industries as cards using `getAllIndustries()` utility
+  - Industries sorted by `order` field from frontmatter
+  - Each card shows icon (if available), title, description, and links to detail page
+  - Responsive grid layout (1 column mobile, 2 columns tablet, 3 columns desktop)
+  - Hover effects on cards for better UX
+  - Metadata generated via `generateMetadata()` utility
+
+**IndustriesHub Component:**
+- Props: `title` (optional), `description` (optional)
+- Fetches industries using `getAllIndustries()` from content utilities
+- Sorts industries by order field if available
+- Renders cards with `Card`, `CardHeader`, `CardTitle`, `CardContent` from `@repo/ui`
+- Displays icon from frontmatter if available (emoji or icon identifier)
+- Uses `next/link` with `Route` type for type-safe navigation
+- Follows deep module pattern with simple interface
+
+#### Industry Detail Pages (`/industries/[slug]`)
+
+- **Path:** `app/(marketing)/industries/[slug]/page.tsx`
+- **Component:** `components/features/industries/industry-detail.tsx`
+- **Content Source:** `src/content/industries/[slug].mdx` (individual industry file)
+- **Features:**
+  - Dynamic route with slug parameter
+  - `generateStaticParams()` pre-renders all industry pages at build time
+  - `generateMetadata()` sets dynamic metadata per industry (title, description from frontmatter)
+  - `dynamicParams = false` returns 404 for unknown slugs
+  - Breadcrumbs implemented with `getBreadcrumbs()` utility
+  - Renders MDX content via `ContentPage` pattern
+  - "See it in Action" section links to matching demo page when available
+  - Handles 404 case when industry not found
+
+**IndustryDetail Component:**
+- Props: `content` (HTML string), `title` (string), `slug` (string)
+- Generates breadcrumbs using `getBreadcrumbs()` utility
+- Renders breadcrumb navigation with semantic HTML
+- Uses `ContentPage` component for consistent content layout
+- Finds matching demo page using `getAllDemos()` and industry slug
+- Displays "See it in Action" call-to-action with link to demo when available
+- Follows deep module pattern by encapsulating industry detail rendering
+
+**Dynamic Page Implementation:**
+- `generateStaticParams()`: Fetches all industry slugs using `getAllSlugs('industries')`
+- `generateMetadata()`: Fetches industry by slug, generates metadata with title and description
+- Default export: Fetches industry content, renders with `IndustryDetail`, calls `notFound()` if industry doesn't exist
+- Uses Next.js 15 async params pattern (params is a Promise)
 
 ### Demo Pages (`/demos/[slug]`)
 
