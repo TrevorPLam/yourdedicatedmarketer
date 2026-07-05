@@ -223,13 +223,23 @@ This document defines all tasks required to set up the project foundation, inclu
 
 ### Parent Task P004: Setup Testing Infrastructure (Vitest + Playwright)
 
-- [ ] **P004** | Status: `PENDING`  
+- [x] **P004** | Status: `COMPLETE`
       **Related File Paths:**
   - `vitest.config.ts` (in `apps/firm-website`)
   - `apps/firm-website/src/test/` (or `__tests__/`)
   - `playwright.config.ts` (in root or `apps/firm-website`)
   - `apps/firm-website/package.json` (add test scripts)
   - Root `package.json` (test script uses turbo)
+
+  **Implementation Notes:**
+  - Vitest configured with jsdom environment, globals enabled, and e2e directory excluded
+  - Added vitest/globals to tsconfig.json for TypeScript support
+  - Created sample unit test for add utility function (3 tests passing)
+  - Playwright configured with Chromium, webServer for dev server auto-start
+  - Created E2E tests for homepage heading and button (2 tests passing)
+  - Added test:e2e task to turbo.json
+  - Fixed pre-existing issue: added tsconfig.json to eslint-config package
+  - All QA checks passing: typecheck, lint, unit tests, E2E tests
 
   **Definition of Done:**
   - Vitest is installed and configured in `apps/firm-website`.

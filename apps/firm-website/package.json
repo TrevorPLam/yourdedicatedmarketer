@@ -9,7 +9,9 @@
     "start": "next start",
     "lint": "eslint src",
     "check-types": "tsc --noEmit",
-    "test": "vitest"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "next": "15",
@@ -17,16 +19,24 @@
     "react-dom": "19"
   },
   "devDependencies": {
+    "@playwright/test": "^1.61.1",
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@tailwindcss/postcss": "^4.3.2",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/jsdom": "^28.0.3",
     "@types/react": "19",
     "@types/react-dom": "19",
+    "@vitejs/plugin-react": "^6.0.3",
     "autoprefixer": "^10.5.2",
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
+    "jsdom": "^29.1.1",
     "postcss": "^8.5.16",
     "tailwindcss": "4",
-    "typescript": "6"
+    "typescript": "6",
+    "vitest": "^4.1.9"
   }
 }
