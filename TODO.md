@@ -765,7 +765,7 @@ Contact form with Server Action and `useActionState` exists (Phase 3, P018). No 
 
 ### Parent Task P028: Add Vercel Analytics (Optional)
 
-- [ ] **P028** | Status: `PENDING`  
+- [x] **P028** | Status: `COMPLETED`  
   **Related File Paths:**
   - `apps/firm-website/package.json` (add `@vercel/analytics`)
   - `apps/firm-website/src/app/layout.tsx`
@@ -790,11 +790,21 @@ Contact form with Server Action and `useActionState` exists (Phase 3, P018). No 
 
 #### Subtasks
 
-| ID      | Agent/Human | File Path / Command                    | Description                                                                       | Validation Command                      |
-| ------- | ----------- | -------------------------------------- | --------------------------------------------------------------------------------- | --------------------------------------- |
-| P028-01 | AGENT       | `apps/firm-website` (install)          | Run: `pnpm --filter @repo/firm-website add @vercel/analytics`.                     | `pnpm list @vercel/analytics` shows it. |
-| P028-02 | AGENT       | `apps/firm-website/src/app/layout.tsx` | Import `Analytics` and render after children.                                     | No command.                             |
-| P028-03 | AGENT       | Update `docs/analytics.md`             | Document Vercel Analytics setup.                                                  | None.                                   |
+| ID      | Agent/Human | File Path / Command                    | Description                                                                       | Validation Command                      | Status  |
+| ------- | ----------- | -------------------------------------- | --------------------------------------------------------------------------------- | --------------------------------------- | ------- |
+| P028-01 | AGENT       | `apps/firm-website` (install)          | Run: `pnpm --filter @repo/firm-website add @vercel/analytics`.                     | `pnpm list @vercel/analytics` shows it. | ✅      |
+| P028-02 | AGENT       | `apps/firm-website/src/app/layout.tsx` | Import `Analytics` and render after children.                                     | No command.                             | ✅      |
+| P028-03 | AGENT       | Update `docs/analytics.md`             | Document Vercel Analytics setup.                                                  | None.                                   | ✅      |
+
+**Implementation Notes:**
+- @vercel/analytics package installed successfully
+- Analytics component imported from @vercel/analytics/next (React 19 compatible)
+- Component rendered in root layout after GA4Script
+- Automatically tracks Web Vitals (LCP, CLS, FID, INP) and page views
+- Only loads in production to avoid skewing development data
+- No configuration required - works out of the box with Vercel deployment
+- Documentation added to docs/analytics.md with installation, implementation, features, and requirements
+- All QA passed: lint ✓ (pre-existing warnings in seo.test.ts only), tests ✓ (100 passed)
 
 ---
 
