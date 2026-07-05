@@ -262,7 +262,7 @@ Monorepo with Next.js 15 app, `@repo/ui` component library, content utilities, d
 
 ### Parent Task P034: Write Server Action Tests
 
-- [ ] **P034** | Status: `PENDING`  
+- [x] **P034** | Status: `COMPLETED`
   **Related File Paths:**
   - `apps/firm-website/src/app/actions/contact.test.ts`
 
@@ -286,6 +286,14 @@ Monorepo with Next.js 15 app, `@repo/ui` component library, content utilities, d
   **Depends On / Blocks:**
   - Depends on: shared test utils (P030), Resend integration (completed).
   - Blocks: none.
+
+**Implementation Notes:**
+- Created comprehensive server action tests for `submitContact` using Vitest
+- Used `vi.hoisted()` pattern to properly mock Resend class constructor
+- Tests cover all required scenarios: valid submission, email validation, missing fields, API failures
+- All 10 tests pass successfully
+- Documented server action testing approach in `docs/testing.md` with examples
+- Tests do not send real emails - Resend is fully mocked
 
 #### Subtasks
 
@@ -485,6 +493,50 @@ Monorepo with Next.js 15 app, `@repo/ui` component library, content utilities, d
 | P038-10 | AGENT       | `packages/ui/src/components/ui/accordion.stories.tsx`  | Stories: default, multiple items, custom content.                                                     | Same as above.                     |
 | P038-11 | AGENT       | `packages/ui/package.json` scripts                     | Add `"storybook": "storybook dev -p 6006"`, `"storybook:build": "storybook build"`.                   | No command.                        |
 | P038-12 | AGENT       | Update `docs/testing.md`                               | Document Storybook setup.                                                                              | None.                              |
+
+---
+
+### Parent Task P035: Fix Pre-existing Lint Errors
+
+- [ ] **P035** | Status: `PENDING`
+  **Related File Paths:**
+  - `apps/firm-website/src/components/features/contact/contact-form.test.tsx`
+  - `apps/firm-website/src/components/features/demos/demos-hub.test.tsx`
+  - `apps/firm-website/src/components/features/faq/faq-hub.test.tsx`
+  - `apps/firm-website/src/components/features/home/demo-preview.test.tsx`
+  - `apps/firm-website/src/components/features/home/faq-snippet.test.tsx`
+  - `apps/firm-website/src/components/features/industries/industries-hub.test.tsx`
+  - `apps/firm-website/src/components/features/services/services-hub.test.tsx`
+  - `apps/firm-website/src/lib/seo.test.ts`
+
+  **Definition of Done:**
+  - Remove unused `screen` imports from test files
+  - Replace `any` types with proper TypeScript types in test files
+  - `pnpm run lint` passes without errors
+
+  **Out of Scope:**
+  - None.
+
+  **Rules to Follow:**
+  - Fix lint errors one at a time
+  - Use proper TypeScript types instead of `any`
+
+  **Depends On / Blocks:**
+  - Depends on: none.
+  - Blocks: CI pipeline (P040).
+
+#### Subtasks
+
+| ID      | Agent/Human | File Path / Command                                 | Description                                                                 | Validation Command |
+| ------- | ----------- | --------------------------------------------------- | --------------------------------------------------------------------------- | ------------------ |
+| P035-01 | AGENT       | `apps/firm-website/src/components/features/demos/demos-hub.test.tsx` | Remove unused `screen` import.                                             | `pnpm run lint`    |
+| P035-02 | AGENT       | `apps/firm-website/src/components/features/faq/faq-hub.test.tsx` | Remove unused `screen` import.                                             | Same as above.     |
+| P035-03 | AGENT       | `apps/firm-website/src/components/features/home/demo-preview.test.tsx` | Remove unused `screen` import.                                             | Same as above.     |
+| P035-04 | AGENT       | `apps/firm-website/src/components/features/home/faq-snippet.test.tsx` | Remove unused `screen` import.                                             | Same as above.     |
+| P035-05 | AGENT       | `apps/firm-website/src/components/features/industries/industries-hub.test.tsx` | Remove unused `screen` import.                                             | Same as above.     |
+| P035-06 | AGENT       | `apps/firm-website/src/components/features/services/services-hub.test.tsx` | Remove unused `screen` import.                                             | Same as above.     |
+| P035-07 | AGENT       | `apps/firm-website/src/components/features/contact/contact-form.test.tsx` | Replace `any` types with proper types.                                     | Same as above.     |
+| P035-08 | AGENT       | `apps/firm-website/src/lib/seo.test.ts`              | Replace `any` types with proper types.                                     | Same as above.     |
 
 ---
 

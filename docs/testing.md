@@ -440,6 +440,117 @@ Chromatic runs on every pull request to detect visual regressions:
 - Use autodocs tag for automatic documentation generation
 - Test key components first before expanding coverage
 
+## Server Action Testing
+
+Server Actions are functions marked with `'use server'` that run on the server. Testing them requires mocking external dependencies and testing the decision logic in isolation.
+
+### Test Location
+- **Server Actions**: `apps/firm-website/src/app/actions/*.test.ts`
+
+### Testing Approach
+
+#### Core Principles
+- **Mock external dependencies**: Use `vi.mock()` for services like Resend, databases, etc.
+- **Test decision logic**: Focus on validation, error handling, and control flow
+- **Use vi.hoisted()**: Define mock classes/functions before `vi.mock()` to avoid hoisting issues
+- **Test all code paths**: Success, validation errors, API failures, missing configuration
+
+#### Mocking Strategy
+
+##### Resend Email Service
+Mock the Resend SDK to prevent real email sending during tests:
+
+```typescript
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { submitContact, initialContactState } from './contact';
+
+// Use vi.hoisted() to define mock before vi.mock()
+const { mockEmailsSend, MockResend } = vi.hoisted(() => {
+  const mockEmailsSend = vi.fn();
+  class MockResend {
+    constructor() {
+      // Mock constructor
+    }
+    emails = {
+      send: mockEmailsSend,
+    };
+  }
+  return { mockEmailsSend, MockResend };
+});
+
+vi.mock('resend', () => ({
+  Resend: MockResend,
+}));
+
+describe('submitContact Server Action', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    // Set required environment variables
+    process.env.RESEND_API_KEY = 'test_api_key';
+    process.env.CONTACT_EMAIL = 'test@example.com';
+    process.env.FROM_EMAIL = 'noreply@example.com';
+  });
+
+  it('should return success and call Resend with valid form data', async () => {
+    mockEmailsSend.mockResolvedValue({ data: { id: 'test-id' }, error: null });
+
+    const formData = new FormData();
+    formData.append('name', 'John Doe');
+    formData.append('email', 'john@example.com');
+    formData.append('message', 'This is a test message with sufficient length.');
+
+    const result = await submitContact(initialContactState, formData);
+
+    expect(result.success).toBe(true);
+    expect(mockEmailsSend).toHaveBeenCalledTimes(1);
+  });
+
+  it('should return validation error for invalid email', async () => {
+    const formData = new FormData();
+    formData.append('name', 'John Doe');
+    formData.append('email', 'not-an-email');
+    formData.append('message', 'This is a test message with sufficient length.');
+
+    const result = await submitContact(initialContactState, formData);
+
+    expect(result.success).toBe(false);
+    expect(result.errors).toHaveProperty('email');
+    expect(mockEmailsSend).not.toHaveBeenCalled();
+  });
+
+  it('should return error when Resend API fails', async () => {
+    mockEmailsSend.mockRejectedValue(new Error('Resend API error'));
+
+    const formData = new FormData();
+    formData.append('name', 'John Doe');
+    formData.append('email', 'john@example.com');
+    formData.append('message', 'This is a test message with sufficient length.');
+
+    const result = await submitContact(initialContactState, formData);
+
+    expect(result.success).toBe(false);
+    expect(result.message).toBe('Failed to send message. Please try again later.');
+    expect(mockEmailsSend).toHaveBeenCalledTimes(1);
+  });
+});
+```
+
+### Running Server Action Tests
+
+```bash
+# Run server action tests
+pnpm --filter @repo/firm-website test -- contact.test
+```
+
+### Best Practices
+
+- **Use vi.hoisted()**: Always use `vi.hoisted()` when defining mocks that reference variables
+- **Clear mocks in beforeEach**: Reset mock state between tests to avoid interference
+- **Set environment variables**: Configure required env vars in beforeEach for tests that need them
+- **Test validation logic**: Verify Zod schema validation returns correct error messages
+- **Test error handling**: Ensure external service failures are caught and return appropriate error states
+- **Don't test implementation**: Focus on public API behavior (inputs/outputs), not internal logic
+
 ## CI/CD Integration
 
 All test suites are integrated with Turborepo:
