@@ -2,6 +2,48 @@
 
 This document outlines the testing infrastructure and strategy for the firm website project.
 
+## Shared Test Utilities
+
+The `@repo/test-utils` package provides common testing utilities and mocks shared across all workspaces to reduce boilerplate and ensure consistency.
+
+### Location
+- **Package**: `packages/test-utils/`
+- **Entry point**: `packages/test-utils/src/index.ts`
+
+### Exports
+
+#### `renderWithProviders`
+A wrapper around `@testing-library/react`'s `render` that includes the `ThemeProvider` from `@repo/ui` for components that require theme context.
+
+```typescript
+import { renderWithProviders } from '@repo/test-utils';
+
+renderWithProviders(<MyComponent />);
+```
+
+#### Mock Functions
+
+- `mockNextNavigation()` - Mocks Next.js App Router navigation hooks (`useRouter`, `usePathname`, `useSearchParams`, `useParams`, `redirect`, `notFound`)
+- `mockResend()` - Mocks the Resend email SDK to prevent real email sending during tests
+- `mockUseActionState()` - Mocks React's `useActionState` hook for Server Action testing
+
+### Usage
+
+Import and call mock functions at the top of your test files:
+
+```typescript
+import { mockNextNavigation, renderWithProviders } from '@repo/test-utils';
+
+mockNextNavigation();
+
+describe('MyComponent', () => {
+  it('renders correctly', () => {
+    renderWithProviders(<MyComponent />);
+    // ...
+  });
+});
+```
+
 ## Unit Testing with Vitest
 
 Vitest is used for unit testing utility functions and components. It provides a fast, modern testing experience with native ESM support.
