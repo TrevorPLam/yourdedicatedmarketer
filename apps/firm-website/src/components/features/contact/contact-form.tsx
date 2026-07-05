@@ -7,8 +7,17 @@ import { Button } from '@repo/ui';
 import { Input } from '@repo/ui';
 import { Textarea } from '@repo/ui';
 import { Label } from '@repo/ui';
-import { submitContact, initialContactState, type ContactFormState } from '@/app/actions/contact';
+import { submitContact, type ContactFormState } from '@/app/actions/contact';
 import { event } from '@/lib/gtag';
+
+/**
+ * Initial state for the contact form.
+ */
+const initialContactState: ContactFormState = {
+  success: false,
+  message: '',
+  errors: {},
+};
 
 /**
  * Submit button component with loading state.
@@ -38,6 +47,7 @@ export function ContactForm() {
   const formRef = useRef<HTMLFormElement>(null);
   const conversionEventFired = useRef(false);
   const isInitialRender = useRef(true);
+  const wasSuccess = useRef(false);
 
   // Show toast notifications on state changes (not on initial render)
   useEffect(() => {
@@ -47,15 +57,26 @@ export function ContactForm() {
       return;
     }
 
-    // Show success toast
-    if (state.success) {
+    // Show success toast (only when transitioning to success)
+    if (state.success && !wasSuccess.current) {
       toast.success('Message sent successfully!');
+      wasSuccess.current = true;
 
       // Track GA4 conversion event (only once per submission)
       if (!conversionEventFired.current) {
         event('form_submission', { form_type: 'contact' });
         conversionEventFired.current = true;
       }
+
+      // Reset form on successful submission
+      if (formRef.current) {
+        formRef.current.reset();
+      }
+    }
+
+    // Reset success flag when form is submitted again
+    if (!state.success) {
+      wasSuccess.current = false;
     }
 
     // Show error toast (when not successful and has a message)
@@ -64,13 +85,8 @@ export function ContactForm() {
     }
   }, [state]);
 
-  // Reset form on successful submission
-  if (state.success && formRef.current) {
-    formRef.current.reset();
-  }
-
   return (
-    <form ref={formRef} action={formAction} className="space-y-6">
+    <form ref={formRef} action={formAction} noValidate className="space-y-6">
       {/* Name Field */}
       <div className="space-y-2">
         <Label htmlFor="name">Name *</Label>

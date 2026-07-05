@@ -25,15 +25,6 @@ export interface ContactFormState {
 }
 
 /**
- * Initial state for the contact form.
- */
-export const initialContactState: ContactFormState = {
-  success: false,
-  message: '',
-  errors: {},
-};
-
-/**
  * Server Action to handle contact form submission.
  * Validates form data with Zod and returns success/error state.
  *
@@ -45,13 +36,13 @@ export async function submitContact(
   prevState: ContactFormState,
   formData: FormData
 ): Promise<ContactFormState> {
-  // Extract form data
+  // Extract form data - handle null values properly
   const rawData = {
-    name: formData.get('name') as string,
-    email: formData.get('email') as string,
-    phone: formData.get('phone') as string | undefined || undefined,
-    company: formData.get('company') as string | undefined || undefined,
-    message: formData.get('message') as string,
+    name: formData.get('name') || '',
+    email: formData.get('email') || '',
+    phone: formData.get('phone') || undefined,
+    company: formData.get('company') || undefined,
+    message: formData.get('message') || '',
   };
 
   // Validate with Zod

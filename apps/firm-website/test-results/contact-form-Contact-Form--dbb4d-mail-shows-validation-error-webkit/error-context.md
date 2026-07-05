@@ -29,9 +29,31 @@ Call log:
 - banner:
   - link "Logo":
     - /url: /
-  - button "Toggle theme":
+  - navigation:
+    - list:
+      - listitem:
+        - link "Home":
+          - /url: /
+      - listitem:
+        - link "Services":
+          - /url: /services
+      - listitem:
+        - link "Industries":
+          - /url: /industries
+      - listitem:
+        - link "Demos":
+          - /url: /demos
+      - listitem:
+        - link "Pricing":
+          - /url: /pricing
+      - listitem:
+        - link "About":
+          - /url: /about
+      - listitem:
+        - link "Contact":
+          - /url: /contact
+  - button [disabled]:
     - img
-    - text: Toggle theme
   - button "Open menu":
     - img
 - heading "Get in Touch" [level=1]
@@ -106,7 +128,6 @@ Call log:
     - img
   - paragraph: © 2026 Your Dedicated Marketer. All rights reserved.
 - region "Notifications alt+T"
-- alert
 ```
 
 # Test source

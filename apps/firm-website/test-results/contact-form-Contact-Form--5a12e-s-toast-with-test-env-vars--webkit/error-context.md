@@ -29,15 +29,64 @@ Call log:
 - banner:
   - link "Logo":
     - /url: /
-  - button "Toggle theme":
+  - navigation:
+    - list:
+      - listitem:
+        - link "Home":
+          - /url: /
+      - listitem:
+        - link "Services":
+          - /url: /services
+      - listitem:
+        - link "Industries":
+          - /url: /industries
+      - listitem:
+        - link "Demos":
+          - /url: /demos
+      - listitem:
+        - link "Pricing":
+          - /url: /pricing
+      - listitem:
+        - link "About":
+          - /url: /about
+      - listitem:
+        - link "Contact":
+          - /url: /contact
+  - button [disabled]:
     - img
-    - text: Toggle theme
   - button "Open menu":
     - img
-- heading "Something went wrong" [level=1]
-- paragraph: We apologize for the inconvenience. An error occurred while loading this page.
-- button "Try again"
-- button "Go to homepage"
+- heading "Get in Touch" [level=1]
+- paragraph: Have a project in mind? We'd love to hear from you. Fill out the form below and we'll get back to you as soon as possible.
+- text: Name *
+- textbox "Name *":
+  - /placeholder: Your name
+  - text: John Doe
+- text: Email *
+- textbox "Email *":
+  - /placeholder: your@email.com
+  - text: john@example.com
+- text: Phone (Optional)
+- textbox "Phone (Optional)":
+  - /placeholder: +1 (555) 123-4567
+  - text: +1 (555) 123-4567
+- text: Company (Optional)
+- textbox "Company (Optional)":
+  - /placeholder: Your company
+  - text: Test Company
+- text: Message *
+- textbox "Message *":
+  - /placeholder: Tell us about your project...
+  - text: This is a test message with enough characters to meet the minimum requirement
+- button "Send Message"
+- heading "Email" [level=3]
+- paragraph: contact@yourdedicatedmarketer.com
+- heading "Phone" [level=3]
+- paragraph: +1 (555) 123-4567
+- heading "Address" [level=3]
+- paragraph: 123 Marketing St Business City, BC 12345
+- heading "Hours" [level=3]
+- paragraph: Monday - Friday 9:00 AM - 5:00 PM PST
 - contentinfo:
   - text: Your Dedicated Marketer
   - paragraph: Professional marketing services to help your business grow.
@@ -81,7 +130,6 @@ Call log:
     - img
   - paragraph: © 2026 Your Dedicated Marketer. All rights reserved.
 - region "Notifications alt+T"
-- alert
 ```
 
 # Test source

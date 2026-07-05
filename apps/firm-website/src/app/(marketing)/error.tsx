@@ -13,6 +13,8 @@ export default function Error({
   useEffect(() => {
     // Log error to console for debugging
     console.error('Error boundary caught:', error);
+    console.error('Error message:', error.message);
+    console.error('Error stack:', error.stack);
   }, [error]);
 
   return (
