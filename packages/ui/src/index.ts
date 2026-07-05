@@ -8,3 +8,6 @@ export { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from './
 export { cn } from './lib/utils'
 export { ThemeProvider } from './theme-provider'
 export { ThemeToggle } from './theme-toggle'
+export { Header } from './components/layout/header'
+export { MobileMenu } from './components/layout/mobile-menu'
+export { NavLink } from './components/navigation/nav-link'

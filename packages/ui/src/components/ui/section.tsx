@@ -7,10 +7,18 @@ export interface SectionProps extends React.HTMLAttributes<HTMLElement> {
 
 const Section = React.forwardRef<HTMLElement, SectionProps>(
   ({ className, as = 'section', ...props }, ref) => {
-    const Comp = as
+    if (as === 'div') {
+      return (
+        <div
+          ref={ref as React.Ref<HTMLDivElement>}
+          className={cn('py-12 md:py-20', className)}
+          {...props}
+        />
+      )
+    }
     return (
-      <Comp
-        ref={ref}
+      <section
+        ref={ref as React.Ref<HTMLElement>}
         className={cn('py-12 md:py-20', className)}
         {...props}
       />

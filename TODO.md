@@ -757,7 +757,7 @@ This document defines all tasks required to establish the design system foundati
 
 ### Parent Task P013: Build Header and Navigation Components
 
-- [ ] **P013** | Status: `PENDING`
+- [x] **P013** | Status: `COMPLETE`
       **Related File Paths:**
   - `packages/ui/src/components/layout/header.tsx`
   - `packages/ui/src/components/layout/mobile-menu.tsx`
@@ -798,15 +798,20 @@ This document defines all tasks required to establish the design system foundati
 
 #### Subtasks
 
-| ID      | Agent/Human | File Path / Command                                  | Description                                                                                                                                                                      | Validation Command                  |
-| ------- | ----------- | ---------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
-| P013-01 | AGENT       | `packages/ui/src/components/navigation/nav-link.tsx` | Create `NavLink` component that wraps Next.js `Link` and adds `aria-current="page"` when active. Accepts `href`, `children`, `className`.                                        | No command.                         |
-| P013-02 | AGENT       | `packages/ui/src/components/layout/header.tsx`       | Create `Header` component with: <br> - `Container` for layout <br> - Logo (placeholder) <br> - Desktop nav (ul > li > NavLink) <br> - ThemeToggle <br> - Mobile hamburger button | No command.                         |
-| P013-03 | AGENT       | `packages/ui/src/components/layout/mobile-menu.tsx`  | Create `MobileMenu` component: <br> - Slide‑out panel from right <br> - Overlay background <br> - Navigation links <br> - Close button <br> - Uses `useState` for open/close     | No command.                         |
-| P013-04 | AGENT       | `packages/ui/src/index.ts`                           | Add exports for `Header`, `MobileMenu`, `NavLink`.                                                                                                                               | No command.                         |
-| P013-05 | AGENT       | `packages/ui/src/components/layout/header.test.tsx`  | Write unit test: renders header, toggles mobile menu.                                                                                                                            | `pnpm --filter @repo/ui test` runs. |
-| P013-06 | AGENT       | `apps/firm-website/src/app/layout.tsx`               | Add `Header` to the layout (above `{children}`). Pass a `navItems` prop with initial links.                                                                                      | `pnpm dev` shows header.            |
-| P013-07 | AGENT       | Update `docs/components.md`                          | Document Header, NavLink, MobileMenu usage.                                                                                                                                      | None.                               |
+- ✅ P013-01: Created NavLink component with active state styling and aria-current support
+- ✅ P013-02: Created Header component with Container, logo, desktop nav, ThemeToggle, and mobile hamburger button
+- ✅ P013-03: Created MobileMenu component with slide-out panel, overlay, navigation links, close button, and useState for open/close
+- ✅ P013-04: Added exports for Header, MobileMenu, NavLink to packages/ui/src/index.ts
+- ✅ P013-05: Created header.test.tsx with 5 tests (render, custom logo, default logo, mobile menu toggle, theme toggle), all passing
+- ✅ P013-06: Added Header to apps/firm-website/src/app/layout.tsx with initial navItems (Home, About, Services)
+- ✅ P013-07: Updated docs/components.md with comprehensive documentation for Header, NavLink, and MobileMenu
+
+**Implementation Notes:**
+- Added Next.js and React type definitions as devDependencies to packages/ui for proper TypeScript support
+- Added missing globals (HTMLAnchorElement, Event, KeyboardEvent) to ESLint config
+- NavLink renders as span to avoid nested anchor tags when wrapped in Next.js Link
+- Fixed Section component TypeScript ref type error using conditional rendering
+- All components follow deep module principles with simple interfaces and composed functionality
 
 ---
 

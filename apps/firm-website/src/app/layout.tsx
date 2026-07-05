@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import React from 'react';
-import { ThemeProvider } from '@repo/ui';
+import { ThemeProvider, Header } from '@repo/ui';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -16,6 +16,12 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const navItems = [
+    { href: '/', label: 'Home' },
+    { href: '/about', label: 'About' },
+    { href: '/services', label: 'Services' },
+  ];
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
@@ -25,6 +31,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <Header navItems={navItems} />
           {children}
         </ThemeProvider>
       </body>

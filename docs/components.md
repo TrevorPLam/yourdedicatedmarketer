@@ -122,9 +122,100 @@ import { Section } from '@repo/ui';
 - Mobile: `py-12` (3rem)
 - Medium screens and up: `md:py-20` (5rem)
 
+## Header
+
+A responsive header component with navigation links, theme toggle, and mobile menu support.
+
+### Usage
+
+```tsx
+import { Header } from '@repo/ui';
+
+const navItems = [
+  { href: '/', label: 'Home' },
+  { href: '/about', label: 'About' },
+  { href: '/services', label: 'Services' },
+];
+
+<Header navItems={navItems} />
+```
+
+### Props
+
+- `navItems` - Array of navigation items with `href` and `label` properties
+- `logo` - Optional custom logo component (defaults to text "Logo")
+
+### Features
+
+- **Sticky positioning** - Header stays at top when scrolling
+- **Responsive design** - Desktop shows horizontal nav, mobile shows hamburger menu
+- **Active state highlighting** - Current page link is highlighted
+- **Theme toggle** - Includes dark/light mode toggle button
+- **Accessibility** - Semantic HTML with ARIA labels
+
+## NavLink
+
+A navigation link component that supports active state styling and ARIA attributes.
+
+### Usage
+
+```tsx
+import { NavLink } from '@repo/ui';
+
+<NavLink href="/about" isActive={pathname === '/about'} className="text-sm">
+  About
+</NavLink>
+```
+
+### Props
+
+- `href` - Link destination
+- `isActive` - Whether the link is currently active
+- `activeClassName` - CSS class for active state (default: `text-primary font-semibold`)
+- `className` - Additional CSS classes
+- `children` - Link content
+
+### Accessibility
+
+- Sets `aria-current="page"` when active
+- Supports keyboard navigation
+
+## MobileMenu
+
+A slide-out mobile menu component with overlay and keyboard support.
+
+### Usage
+
+```tsx
+import { MobileMenu } from '@repo/ui';
+
+<MobileMenu
+  isOpen={isOpen}
+  onClose={() => setIsOpen(false)}
+  navItems={navItems}
+  currentPath={pathname}
+/>
+```
+
+### Props
+
+- `isOpen` - Whether the menu is open
+- `onClose` - Callback to close the menu
+- `navItems` - Array of navigation items
+- `currentPath` - Current pathname for active state
+
+### Features
+
+- **Slide-out animation** - Smooth slide-in from right
+- **Overlay backdrop** - Semi-transparent background
+- **Keyboard support** - Press Escape to close
+- **Body scroll lock** - Prevents scrolling when open
+- **Accessibility** - ARIA dialog with proper labels
+
 ## Best Practices
 
 1. **Use Server Components by default** - All components are Server Components unless they need interactivity
 2. **Use variants instead of raw classes** - Prefer variant props over passing raw Tailwind classes
 3. **Compose components** - Use Container and Section together for consistent layouts
 4. **Test components** - All components have unit tests using Vitest and React Testing Library
+5. **Navigation components** - Header, NavLink, and MobileMenu are Client Components that use Next.js hooks for routing

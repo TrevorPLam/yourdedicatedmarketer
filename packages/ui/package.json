@@ -19,9 +19,12 @@
     "@tailwindcss/postcss": "^4.3.2",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.1.0",
+    "@types/react": "19",
+    "@types/react-dom": "19",
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.5.2",
     "jsdom": "^25.0.1",
+    "next": "15",
     "postcss": "^8.5.16",
     "tailwindcss": "4",
     "typescript": "6",
@@ -38,5 +41,8 @@
     "react": "19",
     "react-dom": "19",
     "tailwind-merge": "^2.6.0"
+  },
+  "peerDependencies": {
+    "next": "15"
   }
 }
