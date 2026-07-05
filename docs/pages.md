@@ -104,11 +104,55 @@ The `ContentPage` component (`components/features/content-page.tsx`) is a reusab
 
 Dynamic pages are generated from content collections.
 
-### Service Pages (`/services/[slug]`)
+### Service Pages
 
-- Generated from `src/content/services/*.mdx`
-- Dynamic route with slug parameter
-- Renders service content with metadata
+#### Services Hub (`/services`)
+
+- **Path:** `app/(marketing)/services/page.tsx`
+- **Component:** `components/features/services/services-hub.tsx`
+- **Content Source:** `src/content/services/*.mdx` (all service files)
+- **Features:**
+  - Lists all services as cards using `getAllServices()` utility
+  - Services sorted by `order` field from frontmatter
+  - Each card shows title, description, and links to detail page
+  - Responsive grid layout (1 column mobile, 2 columns tablet, 3 columns desktop)
+  - Hover effects on cards for better UX
+  - Metadata generated via `generateMetadata()` utility
+
+**ServicesHub Component:**
+- Props: `title` (optional), `description` (optional)
+- Fetches services using `getAllServices()` from content utilities
+- Sorts services by order field if available
+- Renders cards with `Card`, `CardHeader`, `CardTitle`, `CardContent` from `@repo/ui`
+- Uses `next/link` with `Route` type for type-safe navigation
+- Follows deep module pattern with simple interface
+
+#### Service Detail Pages (`/services/[slug]`)
+
+- **Path:** `app/(marketing)/services/[slug]/page.tsx`
+- **Component:** `components/features/services/service-detail.tsx`
+- **Content Source:** `src/content/services/[slug].mdx` (individual service file)
+- **Features:**
+  - Dynamic route with slug parameter
+  - `generateStaticParams()` pre-renders all service pages at build time
+  - `generateMetadata()` sets dynamic metadata per service (title, description from frontmatter)
+  - `dynamicParams = false` returns 404 for unknown slugs
+  - Breadcrumbs implemented with `getBreadcrumbs()` utility
+  - Renders MDX content via `ContentPage` pattern
+  - Handles 404 case when service not found
+
+**ServiceDetail Component:**
+- Props: `content` (HTML string), `title` (string), `slug` (string)
+- Generates breadcrumbs using `getBreadcrumbs()` utility
+- Renders breadcrumb navigation with semantic HTML
+- Uses `ContentPage` component for consistent content layout
+- Follows deep module pattern by encapsulating service detail rendering
+
+**Dynamic Page Implementation:**
+- `generateStaticParams()`: Fetches all service slugs using `getAllSlugs('services')`
+- `generateMetadata()`: Fetches service by slug, generates metadata with title and description
+- Default export: Fetches service content, renders with `ServiceDetail`, calls `notFound()` if service doesn't exist
+- Uses Next.js 15 async params pattern (params is a Promise)
 
 ### Industry Pages (`/industries/[slug]`)
 

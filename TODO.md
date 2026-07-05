@@ -895,7 +895,7 @@ Route group infrastructure not yet established, but all foundational pieces are 
 
 ### Parent Task P014: Build Services Hub and Dynamic Service Pages
 
-- [ ] **P014** | Status: `PENDING`  
+- [x] **P014** | Status: `COMPLETED`
   **Related File Paths:**
   - `apps/firm-website/src/app/(marketing)/services/page.tsx`
   - `apps/firm-website/src/app/(marketing)/services/[slug]/page.tsx`
@@ -931,16 +931,29 @@ Route group infrastructure not yet established, but all foundational pieces are 
   - Depends on: content utilities, service content (Phase 1), layout, navigation utilities.
   - Blocks: none.
 
+  **Implementation Notes:**
+  - Created ServicesHub component that fetches all services via getAllServices() and renders them as cards
+  - Services sorted by order field from frontmatter for consistent display
+  - Services hub page renders ServicesHub with metadata using generateMetadata() utility
+  - Created ServiceDetail component that renders MDX content with breadcrumbs using getBreadcrumbs()
+  - Dynamic service page uses generateStaticParams() to pre-render all service pages at build time
+  - generateMetadata() sets dynamic metadata per service using title and description from frontmatter
+  - Set dynamicParams = false to return 404 for unknown slugs
+  - Used Next.js 15 async params pattern (params is a Promise)
+  - Added unit tests for dynamic service pages (2 tests passing)
+  - Updated docs/pages.md with comprehensive services pages documentation
+  - All tests pass (78 total), lint passes with pre-existing warnings in seo.test.ts (unrelated to this task)
+
 #### Subtasks
 
 | ID      | Agent/Human | File Path / Command                                                     | Description                                                                                                                                                          | Validation Command                            |
 | ------- | ----------- | ----------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
-| P014-01 | AGENT       | `apps/firm-website/src/components/features/services/services-hub.tsx`   | Create ServicesHub component: fetch via `getAllServices()`, render Card per service with title, description, link to `/services/[slug]`.                              | No command.                                   |
-| P014-02 | AGENT       | `apps/firm-website/src/app/(marketing)/services/page.tsx`               | Create Services Hub page: render `ServicesHub`, set metadata.                                                                                                        | `pnpm dev` shows /services.                   |
-| P014-03 | AGENT       | `apps/firm-website/src/components/features/services/service-detail.tsx` | Create ServiceDetail component: accepts MDX module, renders with `ContentPage` pattern, adds breadcrumbs from `getBreadcrumbs()`.                                    | No command.                                   |
-| P014-04 | AGENT       | `apps/firm-website/src/app/(marketing)/services/[slug]/page.tsx`        | Create dynamic page: `generateStaticParams` returns all service slugs, `generateMetadata` sets SEO, default export fetches MDX and renders `ServiceDetail`.          | `pnpm dev` shows /services/website-design.    |
-| P014-05 | AGENT       | `apps/firm-website/src/app/(marketing)/services/[slug]/page.test.tsx`   | Write unit test: dynamic pages render content, metadata correct.                                                                                                     | `pnpm --filter @repo/firm-website test` runs. |
-| P014-06 | AGENT       | Update `docs/pages.md`                                                  | Document services pages and dynamic routing.                                                                                                                         | None.                                         |
+| P014-01 | AGENT       | `apps/firm-website/src/components/features/services/services-hub.tsx`   | Create ServicesHub component: fetch via `getAllServices()`, render Card per service with title, description, link to `/services/[slug]`.                              | ✅ Complete                                   |
+| P014-02 | AGENT       | `apps/firm-website/src/app/(marketing)/services/page.tsx`               | Create Services Hub page: render `ServicesHub`, set metadata.                                                                                                        | ✅ Complete                                   |
+| P014-03 | AGENT       | `apps/firm-website/src/components/features/services/service-detail.tsx` | Create ServiceDetail component: accepts MDX module, renders with `ContentPage` pattern, adds breadcrumbs from `getBreadcrumbs()`.                                    | ✅ Complete                                   |
+| P014-04 | AGENT       | `apps/firm-website/src/app/(marketing)/services/[slug]/page.tsx`        | Create dynamic page: `generateStaticParams` returns all service slugs, `generateMetadata` sets SEO, default export fetches MDX and renders `ServiceDetail`.          | ✅ Complete                                   |
+| P014-05 | AGENT       | `apps/firm-website/src/app/(marketing)/services/[slug]/page.test.tsx`   | Write unit test: dynamic pages render content, metadata correct.                                                                                                     | ✅ Complete (78 tests passing)                |
+| P014-06 | AGENT       | Update `docs/pages.md`                                                  | Document services pages and dynamic routing.                                                                                                                         | ✅ Complete                                   |
 
 ---
 
