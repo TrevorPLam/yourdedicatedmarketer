@@ -75,7 +75,7 @@ Monorepo, Next.js app, packages/lib, MDX rendering infrastructure, and design to
 
 ### Parent Task P002: Create Content Utility Functions
 
-- [ ] **P002** | Status: `PENDING`  
+- [x] **P002** | Status: `COMPLETED`
   **Related File Paths:**
   - `apps/firm-website/src/lib/content.ts`
   - `apps/firm-website/src/lib/content.test.ts`
@@ -114,18 +114,29 @@ Monorepo, Next.js app, packages/lib, MDX rendering infrastructure, and design to
   - Depends on: existing MDX setup, content types (P001).
   - Blocks: content creation tasks (P003–P007).
 
+  **Implementation Notes:**
+  - Content utilities already existed in `apps/firm-website/src/lib/content.ts`
+  - Added in-memory cache using `Map<string, { data: unknown; content: string }>` to avoid repeated file reads
+  - Updated file extension from `.md` to `.mdx` throughout the codebase
+  - Updated tests to use the existing `sample.mdx` file in `pages` directory
+  - Fixed vitest config by removing `dir: './src'` which was causing test discovery issues
+  - Fixed lint errors: removed unused `beforeEach` import, changed `any` to `unknown` in cache type
+  - Updated `docs/content.md` to document caching and `.mdx` file format
+  - All tests pass (14 tests), lint passes, no typecheck errors
+  - Committed and pushed to GitHub with conventional commit message
+
 #### Subtasks
 
 | ID      | Agent/Human | File Path / Command                       | Description                                                                                                                                                                                                                              | Validation Command                            |
 | ------- | ----------- | ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
-| P002-01 | AGENT       | `apps/firm-website` (install)             | Run: `pnpm --filter @repo/firm-website add gray-matter remark remark-html`.                                                                                                                                                              | `pnpm list` shows packages.                   |
-| P002-02 | AGENT       | `apps/firm-website/src/lib/content.ts`    | Implement `getAllContent(dir)`: read files, parse with `gray-matter`, return array of `{ slug, metadata, content }`.                                                                                                                     | No command.                                   |
-| P002-03 | AGENT       | `apps/firm-website/src/lib/content.ts`    | Implement `getContentBySlug(dir, slug)`: return single entry or `null`.                                                                                                                                                                  | No command.                                   |
-| P002-04 | AGENT       | `apps/firm-website/src/lib/content.ts`    | Implement `getAllSlugs(dir)` returning string array.                                                                                                                                                                                     | No command.                                   |
-| P002-05 | AGENT       | `apps/firm-website/src/lib/content.ts`    | Create convenience functions: `getServices()`, `getIndustries()`, `getDemos()`, `getFAQs()`, `getPages()` that call `getAllContent` with the appropriate directory.                                                                      | No command.                                   |
-| P002-06 | AGENT       | `apps/firm-website/src/lib/content.ts`    | Add in‑memory cache (`Map`) to avoid repeated reads.                                                                                                                                                                                     | No command.                                   |
-| P002-07 | AGENT       | `apps/firm-website/src/lib/content.test.ts` | Write unit tests: `getAllContent` returns correct count, `getContentBySlug` returns content/`null`, convenience functions return typed arrays, caching works.                                                                          | `pnpm --filter @repo/firm-website test` runs. |
-| P002-08 | AGENT       | Update `docs/content.md`                  | Document content utility functions and usage.                                                                                                                                                                                            | None.                                         |
+| P002-01 | AGENT       | `apps/firm-website` (install)             | Run: `pnpm --filter @repo/firm-website add gray-matter remark remark-html`.                                                                                                                                                              | ✅ Complete (packages already installed)     |
+| P002-02 | AGENT       | `apps/firm-website/src/lib/content.ts`    | Implement `getAllContent(dir)`: read files, parse with `gray-matter`, return array of `{ slug, metadata, content }`.                                                                                                                     | ✅ Complete (already implemented)             |
+| P002-03 | AGENT       | `apps/firm-website/src/lib/content.ts`    | Implement `getContentBySlug(dir, slug)`: return single entry or `null`.                                                                                                                                                                  | ✅ Complete (already implemented)             |
+| P002-04 | AGENT       | `apps/firm-website/src/lib/content.ts`    | Implement `getAllSlugs(dir)` returning string array.                                                                                                                                                                                     | ✅ Complete (already implemented)             |
+| P002-05 | AGENT       | `apps/firm-website/src/lib/content.ts`    | Create convenience functions: `getServices()`, `getIndustries()`, `getDemos()`, `getFAQs()`, `getPages()` that call `getAllContent` with the appropriate directory.                                                                      | ✅ Complete (already implemented)             |
+| P002-06 | AGENT       | `apps/firm-website/src/lib/content.ts`    | Add in‑memory cache (`Map`) to avoid repeated reads.                                                                                                                                                                                     | ✅ Complete                                  |
+| P002-07 | AGENT       | `apps/firm-website/src/lib/content.test.ts` | Write unit tests: `getAllContent` returns correct count, `getContentBySlug` returns content/`null`, convenience functions return typed arrays, caching works.                                                                          | ✅ Complete (14 tests passing)                |
+| P002-08 | AGENT       | Update `docs/content.md`                  | Document content utility functions and usage.                                                                                                                                                                                            | ✅ Complete                                  |
 
 ---
 
@@ -2145,3 +2156,491 @@ Phase 5 consists of 13 parent tasks (P030–P042). It establishes comprehensive 
 - GitHub Actions CI pipeline (lint, typecheck, unit tests, E2E)
 - Coverage thresholds (80%) enforced
 - Comprehensive testing documentation
+
+## Phase 6: Final Polish & Launch – Task List
+
+This document defines the tasks required to harden security, set up error tracking, configure the production environment, verify performance and SEO, and execute the launch. All tasks are designed to be **SMALL**, actionable, and built with **SDD, DDD, TDD, BDD**, and **Deep Modules** in mind.
+
+**Prerequisites:**  
+The website is fully built, content is published, forms work, analytics are integrated, and tests pass in CI. The app is deployed on Vercel via preview deployments. Now we prepare for production launch.
+
+---
+
+### Parent Task P043: Implement Security Headers
+
+- [ ] **P043** | Status: `PENDING`  
+  **Related File Paths:**
+  - `apps/firm-website/next.config.ts`
+
+  **Definition of Done:**
+  - `poweredByHeader: false` set.
+  - `headers()` function in `next.config.ts` applies the following to all routes:
+    - `Vary: RSC, Next-Router-State-Tree, Next-Router-Prefetch, Accept-Encoding`
+    - `X-Frame-Options: SAMEORIGIN`
+    - `X-XSS-Protection: 1; mode=block`
+    - `X-Content-Type-Options: nosniff`
+    - `Strict-Transport-Security: max-age=31536000; includeSubDomains; preload` (production only)
+    - `Referrer-Policy: strict-origin-when-cross-origin`
+  - Verified via `curl -I` on preview deployment.
+
+  **Out of Scope:**
+  - Full Content Security Policy (P044).
+
+  **Rules to Follow:**
+  - Use `headers()` async function.
+  - HSTS applied only when `NODE_ENV === 'production'`.
+
+  **Advanced Coding Pattern:**
+  - **Deep module** – security headers centralised in `next.config.ts`.
+
+  **Anti‑Patterns:**
+  - Omitting the Vary header (breaks RSC caching).
+  - Enabling HSTS in development.
+
+  **Depends On / Blocks:**
+  - Depends on: existing Next.js configuration.
+  - Blocks: none directly.
+
+#### Subtasks
+
+| ID      | Agent/Human | File Path / Command                | Description                                                                                                                | Validation Command               |
+| ------- | ----------- | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
+| P043-01 | AGENT       | `apps/firm-website/next.config.ts` | Set `poweredByHeader: false`.                                                                                              | No command.                      |
+| P043-02 | AGENT       | `apps/firm-website/next.config.ts` | Add `headers()` function returning all required security headers for `/:path*`. Conditionally apply HSTS for production.    | No command.                      |
+| P043-03 | AGENT       | Preview deployment                 | Deploy to Vercel preview and verify headers with `curl -I https://preview-url`.                                            | Headers present.                 |
+| P043-04 | AGENT       | `docs/security.md`                 | Document security headers and their purpose.                                                                               | None.                            |
+
+---
+
+### Parent Task P044: Implement Basic Content Security Policy
+
+- [ ] **P044** | Status: `PENDING`  
+  **Related File Paths:**
+  - `apps/firm-website/next.config.ts`
+
+  **Definition of Done:**
+  - A basic CSP header applied to all routes:
+    - `default-src 'self'`
+    - `script-src 'self' 'unsafe-inline' 'unsafe-eval'` (needed for Next.js)
+    - `style-src 'self' 'unsafe-inline'` (Tailwind requirement)
+    - `img-src 'self' data: https:`
+    - `font-src 'self' https:`
+    - `connect-src 'self' https:`
+    - `frame-ancestors 'none'`
+    - `upgrade-insecure-requests`
+  - Verified on preview that no resources are blocked.
+
+  **Out of Scope:**
+  - Nonce-based CSP, reporting endpoint (post-launch).
+
+  **Rules to Follow:**
+  - Add to the same `headers()` as security headers.
+  - Ensure all required external sources (fonts, analytics) are allowed.
+
+  **Anti‑Patterns:**
+  - Breaking the site due to missing sources.
+
+  **Depends On / Blocks:**
+  - Depends on: P043 (security headers).
+  - Blocks: none.
+
+#### Subtasks
+
+| ID      | Agent/Human | File Path / Command                | Description                                                                                               | Validation Command            |
+| ------- | ----------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------- | ----------------------------- |
+| P044-01 | AGENT       | `apps/firm-website/next.config.ts` | Add CSP to the `headers()` function with the policy above.                                                | No command.                   |
+| P044-02 | HUMAN       | Preview deployment                 | Deploy to preview, test site (all pages, analytics, fonts) – no CSP violations in browser console.         | No blocked resources.         |
+| P044-03 | AGENT       | `docs/security.md`                 | Document CSP policy and exceptions.                                                                       | None.                         |
+
+---
+
+### Parent Task P045: Set Up Sentry Error Tracking
+
+- [ ] **P045** | Status: `PENDING`  
+  **Related File Paths:**
+  - `apps/firm-website/package.json` (add `@sentry/nextjs`)
+  - `apps/firm-website/sentry.client.config.ts`
+  - `apps/firm-website/sentry.server.config.ts`
+  - `apps/firm-website/sentry.edge.config.ts`
+  - `apps/firm-website/next.config.ts` (Sentry integration)
+  - `apps/firm-website/.env.example` (add `NEXT_PUBLIC_SENTRY_DSN`)
+
+  **Definition of Done:**
+  - `@sentry/nextjs` installed and configured.
+  - Sentry DSN stored in environment variable (public for client).
+  - Sentry initialised on client, server, and edge.
+  - Source maps uploaded on build.
+  - Sentry captures unhandled errors and server action errors (only in production).
+
+  **Out of Scope:**
+  - Performance monitoring (can be added later).
+
+  **Rules to Follow:**
+  - Use `Sentry.init` in each config.
+  - `hideSourceMaps: true` to avoid leaking source code.
+  - Only enable in production.
+
+  **Advanced Coding Pattern:**
+  - **Deep module** – Sentry is a separate integration; automatic error collection.
+
+  **Anti‑Patterns:**
+  - Not uploading source maps (debugging hard).
+  - Capturing PII.
+
+  **Depends On / Blocks:**
+  - Depends on: existing Next.js setup.
+  - Blocks: none.
+
+#### Subtasks
+
+| ID      | Agent/Human | File Path / Command                         | Description                                                                                                | Validation Command |
+| ------- | ----------- | ------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ------------------ |
+| P045-01 | AGENT       | `apps/firm-website` (install)               | Run: `pnpm --filter @repo/firm-website add @sentry/nextjs`.                                                | Package installed. |
+| P045-02 | AGENT       | `apps/firm-website/sentry.client.config.ts` | Create client Sentry config: `Sentry.init({ dsn, environment })`.                                          | No command.        |
+| P045-03 | AGENT       | `apps/firm-website/sentry.server.config.ts` | Create server config (similar).                                                                             | No command.        |
+| P045-04 | AGENT       | `apps/firm-website/sentry.edge.config.ts`   | Create edge config.                                                                                        | No command.        |
+| P045-05 | AGENT       | `apps/firm-website/.env.example`            | Add `NEXT_PUBLIC_SENTRY_DSN=https://xxxx@xxxx.ingest.sentry.io/xxxx`.                                       | File updated.      |
+| P045-06 | AGENT       | `apps/firm-website/next.config.ts`          | Add Sentry properties: `sentry: { hideSourceMaps: true, autoInstrumentServerFunctions: true }`.            | No command.        |
+| P045-07 | HUMAN       | Sentry account setup                        | Create Sentry project, get DSN, add to Vercel environment variables.                                       | DSN set.           |
+| P045-08 | AGENT       | `docs/monitoring.md`                        | Document Sentry setup and how to view errors.                                                              | None.              |
+
+---
+
+### Parent Task P046: Configure Production Environment Variables
+
+- [ ] **P046** | Status: `PENDING`  
+  **Related File Paths:**
+  - Vercel dashboard
+
+  **Definition of Done:**
+  - All required environment variables are set in Vercel for production (and preview if needed):
+    - `NEXT_PUBLIC_SITE_URL` – production URL
+    - `RESEND_API_KEY`, `CONTACT_EMAIL`, `FROM_EMAIL`
+    - `NEXT_PUBLIC_GA_MEASUREMENT_ID`
+    - `NEXT_PUBLIC_SENTRY_DSN`
+  - Sensitive variables are not prefixed with `NEXT_PUBLIC_` (except sentry).
+  - Verified that production build uses the correct values.
+
+  **Out of Scope:**
+  - None.
+
+  **Rules to Follow:**
+  - Use Vercel dashboard or CLI.
+  - Preview environment can inherit from production where appropriate.
+
+  **Depends On / Blocks:**
+  - Depends on: Resend setup (Phase 4), GA4 (Phase 4), Sentry (P045).
+  - Blocks: production deployment (P052).
+
+#### Subtasks
+
+| ID      | Agent/Human | File Path / Command          | Description                                                                       | Validation Command |
+| ------- | ----------- | ---------------------------- | --------------------------------------------------------------------------------- | ------------------ |
+| P046-01 | HUMAN       | Vercel dashboard             | Go to Settings → Environment Variables and add all variables for Production.       | Variables saved.   |
+| P046-02 | HUMAN       | Vercel dashboard             | Add same variables for Preview environment if needed.                             | Variables saved.   |
+| P046-03 | AGENT       | `docs/environment.md`        | Document all required environment variables and where they are set.               | None.              |
+
+---
+
+### Parent Task P047: Configure Custom Domain and SSL
+
+- [ ] **P047** | Status: `PENDING`  
+  **Related File Paths:**
+  - Vercel dashboard, DNS provider dashboard
+
+  **Definition of Done:**
+  - Custom domain `yourdedicatedmarketer.com` added to Vercel project.
+  - `www.yourdedicatedmarketer.com` also added, redirect to apex configured.
+  - DNS records updated (A/CNAME per Vercel instructions).
+  - SSL certificate provisioned (auto via Vercel).
+  - Site loads correctly over HTTPS at the custom domain.
+
+  **Out of Scope:**
+  - Email DNS records (MX, etc.).
+
+  **Rules to Follow:**
+  - Use Vercel domain management.
+  - Redirect `www` to `apex` or vice versa.
+
+  **Depends On / Blocks:**
+  - Depends on: domain ownership.
+  - Blocks: final production verification (P050, P052).
+
+#### Subtasks
+
+| ID      | Agent/Human | File Path / Command            | Description                                                                       | Validation Command  |
+| ------- | ----------- | ------------------------------ | --------------------------------------------------------------------------------- | ------------------- |
+| P047-01 | HUMAN       | Vercel dashboard               | Add `yourdedicatedmarketer.com` to Domains.                                       | Domain added.       |
+| P047-02 | HUMAN       | Vercel dashboard               | Add `www.yourdedicatedmarketer.com` and set redirect to apex.                     | Redirect set.       |
+| P047-03 | HUMAN       | DNS provider                   | Update DNS records as instructed by Vercel.                                       | DNS updated.        |
+| P047-04 | HUMAN       | Verify                         | Wait for SSL, visit `https://yourdedicatedmarketer.com` – site loads correctly.    | HTTPS works.        |
+| P047-05 | AGENT       | `docs/deployment.md`           | Document custom domain configuration.                                             | None.               |
+
+---
+
+### Parent Task P048: Production Build Verification and Bundle Analysis
+
+- [ ] **P048** | Status: `PENDING`  
+  **Related File Paths:**
+  - `apps/firm-website/next.config.ts` (optional bundle analyzer)
+
+  **Definition of Done:**
+  - `pnpm build` runs successfully with no warnings.
+  - Output shows all pages as static (`●`).
+  - Bundle size verified: first-load JS < 200KB, total bundle < 300KB.
+  - All dynamic routes covered by `generateStaticParams`.
+
+  **Out of Scope:**
+  - None.
+
+  **Rules to Follow:**
+  - Run `next build` in the firm-website workspace.
+  - Check console output for large dependencies.
+
+  **Advanced Coding Pattern:**
+  - N/A.
+
+  **Depends On / Blocks:**
+  - Depends on: all pages built (Phase 3).
+  - Blocks: final deployment (P052).
+
+#### Subtasks
+
+| ID      | Agent/Human | File Path / Command          | Description                                                                       | Validation Command     |
+| ------- | ----------- | ---------------------------- | --------------------------------------------------------------------------------- | ---------------------- |
+| P048-01 | AGENT       | Terminal                     | Run `pnpm --filter @repo/firm-website build` and confirm success, static routes.   | Build succeeds.        |
+| P048-02 | AGENT       | Build output                 | Note bundle sizes (check `.next/analyze/` if using bundle analyzer).               | First load JS < 200KB. |
+| P048-03 | AGENT       | `docs/performance.md`        | Record build size and performance notes.                                           | None.                  |
+
+---
+
+### Parent Task P049: Lighthouse Audit and Final Performance Optimization
+
+- [ ] **P049** | Status: `PENDING`  
+  **Related File Paths:**
+  - All pages (audit across the entire app)
+
+  **Definition of Done:**
+  - Lighthouse scores 90+ on Performance, Accessibility, Best Practices, SEO for all key pages.
+  - Any issues identified are fixed.
+  - Screenshots or scores recorded.
+
+  **Out of Scope:**
+  - Mobile-specific issues beyond responsive design.
+
+  **Rules to Follow:**
+  - Run in Chrome incognito against production preview.
+  - Test homepage, service detail, about, pricing, faq.
+
+  **Depends On / Blocks:**
+  - Depends on: P048 (build verification), content.
+  - Blocks: P051 (Go/No-Go).
+
+#### Subtasks
+
+| ID      | Agent/Human | File Path / Command                | Description                                                                          | Validation Command |
+| ------- | ----------- | ---------------------------------- | ------------------------------------------------------------------------------------ | ------------------ |
+| P049-01 | HUMAN       | Chrome DevTools                    | Run Lighthouse on homepage – record scores.                                          | Scores ≥ 90.       |
+| P049-02 | HUMAN       | Chrome DevTools                    | Run Lighthouse on About, Pricing, Services, FAQ, Contact – record scores.            | Scores ≥ 90.       |
+| P049-03 | AGENT       | If any score < 90, fix issues      | Optimize images, font loading, etc.                                                  | Scores improve.    |
+| P049-04 | AGENT       | `docs/performance.md`              | Document final Lighthouse scores and any optimizations made.                         | None.              |
+
+---
+
+### Parent Task P050: Final Content and SEO Verification
+
+- [ ] **P050** | Status: `PENDING`  
+  **Related File Paths:**
+  - All content and SEO files
+
+  **Definition of Done:**
+  - All content reviewed: spelling, grammar, accuracy.
+  - All internal links working, external links valid.
+  - All images have alt text.
+  - JSON-LD validated with Google Rich Results Test.
+  - Sitemap and robots.txt verified at `/sitemap.xml` and `/robots.txt`.
+  - Open Graph tags previewed with Facebook Sharing Debugger.
+
+  **Out of Scope:**
+  - None.
+
+  **Depends On / Blocks:**
+  - Depends on: content (Phase 1), SEO (Phase 2).
+  - Blocks: Go/No-Go (P051).
+
+#### Subtasks
+
+| ID      | Agent/Human | File Path / Command  | Description                                                                       | Validation Command |
+| ------- | ----------- | -------------------- | --------------------------------------------------------------------------------- | ------------------ |
+| P050-01 | HUMAN       | Content review       | Spell-check and grammar review all MDX files.                                      | No issues.         |
+| P050-02 | HUMAN       | Link checker         | Manually or with tool check all links.                                             | No broken links.   |
+| P050-03 | HUMAN       | Image audit          | Verify alt text on all images.                                                     | Alt text present.  |
+| P050-04 | HUMAN       | Google Rich Results  | Test a service page, FAQ page, homepage for JSON-LD validity.                       | Valid.             |
+| P050-05 | HUMAN       | sitemap.xml          | Visit `/sitemap.xml` – all pages present.                                          | Correct.           |
+| P050-06 | HUMAN       | robots.txt           | Visit `/robots.txt` – allows all.                                                  | Correct.           |
+| P050-07 | HUMAN       | Open Graph debugger  | Use Facebook Sharing Debugger on homepage and a service page.                       | OG tags load.      |
+| P050-08 | AGENT       | `docs/seo.md`        | Record verification results.                                                       | None.              |
+
+---
+
+### Parent Task P051: Go/No-Go Decision Checklist
+
+- [ ] **P051** | Status: `PENDING`  
+  **Related File Paths:**
+  - `docs/go-no-go.md`
+
+  **Definition of Done:**
+  - A comprehensive Go/No-Go checklist created with all readiness criteria.
+  - Each item signed off as PASS.
+  - Decision documented: GO (launch) or NO-GO (fix issues).
+
+  **Out of Scope:**
+  - None.
+
+  **Rules to Follow:**
+  - Include: security headers, CSP, Sentry, env vars, domain, build, Lighthouse, SEO, content, tests, analytics.
+
+  **Depends On / Blocks:**
+  - Depends on: all previous tasks.
+  - Blocks: production deployment (P052).
+
+#### Subtasks
+
+| ID      | Agent/Human | File Path / Command  | Description                                                                       | Validation Command |
+| ------- | ----------- | -------------------- | --------------------------------------------------------------------------------- | ------------------ |
+| P051-01 | AGENT       | `docs/go-no-go.md`   | Create checklist with items from all verification tasks.                           | File exists.       |
+| P051-02 | HUMAN       | Review               | Go through each item, mark PASS/FAIL.                                              | All PASS.          |
+| P051-03 | HUMAN       | Decision             | Document decision to GO or NO-GO.                                                 | GO documented.     |
+
+---
+
+### Parent Task P052: Production Deployment and Smoke Testing
+
+- [ ] **P052** | Status: `PENDING`  
+  **Related File Paths:**
+  - Vercel dashboard
+
+  **Definition of Done:**
+  - Merge to `main` branch triggers production deployment (or manual deploy).
+  - Deployment completes successfully on Vercel.
+  - Smoke tests run on production:
+    - Homepage loads
+    - All top pages load
+    - Contact form submits (email sent)
+    - No console errors
+    - Site responsive on mobile
+  - Custom domain loads correctly.
+
+  **Out of Scope:**
+  - None.
+
+  **Depends On / Blocks:**
+  - Depends on: Go/No-Go (P051), custom domain (P047), env vars (P046).
+  - Blocks: none.
+
+#### Subtasks
+
+| ID      | Agent/Human | File Path / Command         | Description                                                                                 | Validation Command          |
+| ------- | ----------- | --------------------------- | ------------------------------------------------------------------------------------------- | --------------------------- |
+| P052-01 | HUMAN       | Git push / merge            | Merge the working branch into `main` and push, triggering Vercel production deployment.     | Deployment starts.          |
+| P052-02 | HUMAN       | Vercel dashboard            | Wait for deployment to complete successfully.                                               | Deployment succeeded.       |
+| P052-03 | HUMAN       | Smoke test                  | Navigate to homepage, services, industries, demos, FAQ, about, pricing, contact – all work. | All pages load.             |
+| P052-04 | HUMAN       | Form test                   | Submit the contact form (with a test email) – success toast appears, email received.        | Email delivered.            |
+| P052-05 | HUMAN       | Console errors              | Open browser dev tools on each page – no red errors.                                        | No console errors.          |
+| P052-06 | HUMAN       | Mobile view                 | Resize browser or use mobile device – layout is responsive.                                 | Responsive.                 |
+| P052-07 | HUMAN       | Custom domain               | Visit `https://yourdedicatedmarketer.com` – site loads.                                     | Works.                      |
+| P052-08 | AGENT       | `docs/deployment.md`        | Document final deployment details and smoke test results.                                   | None.                       |
+
+---
+
+### Parent Task P053: Update Documentation and Create Launch Plan
+
+- [ ] **P053** | Status: `PENDING`  
+  **Related File Paths:**
+  - `README.md` (root)
+  - `docs/launch.md`
+  - `docs/security.md`
+  - `docs/monitoring.md`
+  - `docs/deployment.md`
+
+  **Definition of Done:**
+  - `docs/launch.md` created with launch date, final checklist summary, post-launch monitoring plan.
+  - `README.md` updated with production URL and launch status.
+  - All documentation finalized.
+
+  **Out of Scope:**
+  - None.
+
+  **Depends On / Blocks:**
+  - Depends on: P052 (deployment).
+  - Blocks: none.
+
+#### Subtasks
+
+| ID      | Agent/Human | File Path / Command  | Description                                                                              | Validation Command |
+| ------- | ----------- | -------------------- | ---------------------------------------------------------------------------------------- | ------------------ |
+| P053-01 | AGENT       | `docs/launch.md`     | Create launch document: date, checklist summary, monitoring schedule.                     | File exists.       |
+| P053-02 | AGENT       | `README.md`          | Update with production URL, status badge, links to docs.                                 | Manual check.      |
+| P053-03 | AGENT       | `docs/monitoring.md` | Document Sentry checks, GA4 review, Web Vitals monitoring, contact form review frequency. | Manual check.      |
+| P053-04 | AGENT       | `docs/security.md`   | Finalize security docs with headers, CSP.                                                | Manual check.      |
+| P053-05 | AGENT       | `docs/deployment.md` | Finalize deployment documentation.                                                       | Manual check.      |
+| P053-06 | AGENT       | `docs/index.md`      | Create a documentation index page for easy navigation.                                   | None.              |
+
+---
+
+### Parent Task P054: Post-Launch Monitoring Plan
+
+- [ ] **P054** | Status: `PENDING`  
+  **Related File Paths:**
+  - `docs/launch.md` (detailed plan)
+
+  **Definition of Done:**
+  - A concrete monitoring schedule documented:
+    - Daily: check Sentry for errors, contact form submissions.
+    - Weekly: review GA4 traffic, Vercel Analytics Web Vitals, uptime.
+    - Issue response: critical errors immediate, minor within 24h, performance degradation within 48h.
+  - Optionally set up uptime monitoring (e.g., Uptime Robot).
+
+  **Out of Scope:**
+  - None.
+
+  **Depends On / Blocks:**
+  - Depends on: P053 (documentation).
+  - Blocks: none.
+
+#### Subtasks
+
+| ID      | Agent/Human | File Path / Command  | Description                                                                          | Validation Command |
+| ------- | ----------- | -------------------- | ------------------------------------------------------------------------------------ | ------------------ |
+| P054-01 | AGENT       | `docs/launch.md`     | Add detailed monitoring schedule and issue response plan.                            | Plan documented.   |
+| P054-02 | HUMAN       | Uptime Robot (opt.)  | Set up a free uptime monitor for the production URL.                                 | Monitor active.    |
+| P054-03 | AGENT       | `docs/monitoring.md` | Finalize monitoring documentation with links.                                        | None.              |
+
+---
+
+## Summary of Phase 6
+
+Phase 6 consists of 12 parent tasks (P043–P054). It hardens security, sets up error tracking with Sentry, configures the production environment, verifies performance and SEO, and executes the final launch.
+
+**Key Deliverables:**
+- Security headers and basic CSP
+- Sentry error tracking (client, server, edge)
+- Production environment variables in Vercel
+- Custom domain with SSL
+- Build verification and bundle analysis (JS < 200KB)
+- Lighthouse scores ≥ 90 on all key pages
+- Final content/SEO verification (JSON-LD, sitemap, OG)
+- Go/No-Go checklist signed off
+- Production deployment and smoke tests
+- Comprehensive documentation and post-launch monitoring plan
+
+**Go/No-Go Criteria Checklist (core items):**
+- All tests pass in CI
+- Security headers and CSP in place
+- Sentry configured and DSN set
+- Production env vars set
+- Custom domain active
+- Lighthouse ≥ 90
+- All links and content verified
+- Contact form delivers email
+- Analytics tracking page views
