@@ -47,11 +47,11 @@ export async function submitContact(
 ): Promise<ContactFormState> {
   // Extract form data
   const rawData = {
-    name: formData.get('name'),
-    email: formData.get('email'),
-    phone: formData.get('phone') === null ? undefined : formData.get('phone'),
-    company: formData.get('company') === null ? undefined : formData.get('company'),
-    message: formData.get('message'),
+    name: formData.get('name') as string,
+    email: formData.get('email') as string,
+    phone: formData.get('phone') as string | undefined || undefined,
+    company: formData.get('company') as string | undefined || undefined,
+    message: formData.get('message') as string,
   };
 
   // Validate with Zod
@@ -59,14 +59,15 @@ export async function submitContact(
 
   // Return validation errors if validation fails
   if (!result.success) {
-    const treeifiedError = z.treeifyError(result.error);
-    // Transform treeifiedError properties to fieldErrors format
+    // Transform Zod error issues to fieldErrors format
     const fieldErrors: Record<string, string[]> = {};
-    if (treeifiedError.properties) {
-      for (const [field, errorInfo] of Object.entries(treeifiedError.properties)) {
-        if (errorInfo && 'errors' in errorInfo) {
-          fieldErrors[field] = errorInfo.errors;
+    for (const issue of result.error.issues) {
+      const field = issue.path[0] as string | undefined;
+      if (field) {
+        if (!fieldErrors[field]) {
+          fieldErrors[field] = [];
         }
+        fieldErrors[field].push(issue.message);
       }
     }
     return {

@@ -139,6 +139,7 @@ E2E tests use Playwright's test API with page objects and locators for reliable 
 - `industries.spec.ts` - Industries hub and detail pages
 - `demos.spec.ts` - Demos hub and detail pages
 - `faq.spec.ts` - FAQ hub and accordion interactions
+- `contact-form.spec.ts` - Contact form validation, submission, and error handling
 
 ### Testing Approach
 
@@ -246,6 +247,51 @@ test('faq accordion expands', async ({ page }) => {
 
   // Verify that the accordion trigger is now pressed/active
   await expect(firstFaqTrigger).toHaveAttribute('data-state', 'open')
+})
+```
+
+**Contact Form Test:**
+```typescript
+test.describe('Contact Form E2E Tests', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/contact')
+  })
+
+  test('form loads with all required fields', async ({ page }) => {
+    await expect(page.getByLabel('Name *')).toBeVisible()
+    await expect(page.getByLabel('Email *')).toBeVisible()
+    await expect(page.getByLabel('Message *')).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Send Message' })).toBeVisible()
+  })
+
+  test('invalid email shows validation error', async ({ page }) => {
+    await page.getByLabel('Name *').fill('John Doe')
+    await page.getByLabel('Email *').fill('invalid-email')
+    await page.getByLabel('Message *').fill('This is a test message with enough characters')
+    await page.getByRole('button', { name: 'Send Message' }).click()
+    await expect(page.getByText('Invalid email address')).toBeVisible()
+  })
+
+  test('valid submission shows success toast (mocked Resend)', async ({ page }) => {
+    // Mock the Resend API to avoid real emails
+    await page.route('**/api/actions/contact', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          success: true,
+          message: 'Thank you for your message! We\'ll get back to you soon.',
+          errors: {}
+        })
+      })
+    })
+
+    await page.getByLabel('Name *').fill('John Doe')
+    await page.getByLabel('Email *').fill('john@example.com')
+    await page.getByLabel('Message *').fill('This is a test message with enough characters to meet the minimum requirement')
+    await page.getByRole('button', { name: 'Send Message' }).click()
+    await expect(page.getByText('Message sent successfully!')).toBeVisible()
+  })
 })
 ```
 

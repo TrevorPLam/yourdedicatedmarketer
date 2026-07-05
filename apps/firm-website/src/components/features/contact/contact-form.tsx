@@ -37,11 +37,13 @@ export function ContactForm() {
   );
   const formRef = useRef<HTMLFormElement>(null);
   const conversionEventFired = useRef(false);
+  const isInitialRender = useRef(true);
 
   // Show toast notifications on state changes (not on initial render)
   useEffect(() => {
-    // Skip initial render - state equals initialContactState
-    if (state === initialContactState) {
+    // Skip initial render
+    if (isInitialRender.current) {
+      isInitialRender.current = false;
       return;
     }
 
@@ -78,9 +80,9 @@ export function ContactForm() {
           type="text"
           placeholder="Your name"
           required
-          aria-invalid={!!state.errors.name}
+          aria-invalid={!!state.errors?.name}
         />
-        {state.errors.name && (
+        {state.errors?.name && (
           <p className="text-sm text-destructive">{state.errors.name[0]}</p>
         )}
       </div>
@@ -94,9 +96,9 @@ export function ContactForm() {
           type="email"
           placeholder="your@email.com"
           required
-          aria-invalid={!!state.errors.email}
+          aria-invalid={!!state.errors?.email}
         />
-        {state.errors.email && (
+        {state.errors?.email && (
           <p className="text-sm text-destructive">{state.errors.email[0]}</p>
         )}
       </div>
@@ -109,9 +111,9 @@ export function ContactForm() {
           name="phone"
           type="tel"
           placeholder="+1 (555) 123-4567"
-          aria-invalid={!!state.errors.phone}
+          aria-invalid={!!state.errors?.phone}
         />
-        {state.errors.phone && (
+        {state.errors?.phone && (
           <p className="text-sm text-destructive">{state.errors.phone[0]}</p>
         )}
       </div>
@@ -124,9 +126,9 @@ export function ContactForm() {
           name="company"
           type="text"
           placeholder="Your company"
-          aria-invalid={!!state.errors.company}
+          aria-invalid={!!state.errors?.company}
         />
-        {state.errors.company && (
+        {state.errors?.company && (
           <p className="text-sm text-destructive">{state.errors.company[0]}</p>
         )}
       </div>
@@ -140,9 +142,9 @@ export function ContactForm() {
           placeholder="Tell us about your project..."
           required
           rows={6}
-          aria-invalid={!!state.errors.message}
+          aria-invalid={!!state.errors?.message}
         />
-        {state.errors.message && (
+        {state.errors?.message && (
           <p className="text-sm text-destructive">{state.errors.message[0]}</p>
         )}
       </div>
