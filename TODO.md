@@ -2648,6 +2648,42 @@ Phase 6 consists of 12 parent tasks (P043–P054). It hardens security, sets up 
 - Production deployment and smoke tests
 - Comprehensive documentation and post-launch monitoring plan
 
+---
+
+## Infrastructure Issues
+
+### Issue I001: Typecheck Error - Cannot Find @repo/lib Module
+
+- [ ] **I001** | Status: `PENDING`
+  **Related File Paths:**
+  - `apps/firm-website/src/types/content.ts`
+  - `apps/firm-website/tsconfig.json`
+  - `packages/lib/package.json`
+
+  **Description:**
+  Typecheck fails with error: `src/types/content.ts(5,15): error TS2307: Cannot find module '@repo/lib' or its corresponding type declaration`. This prevents `pnpm -r run check-types` from passing.
+
+  **Root Cause:**
+  The `@repo/lib` workspace package may not be properly configured in the monorepo, or TypeScript module resolution is not correctly configured to resolve workspace package aliases.
+
+  **Impact:**
+  - Type checking fails across the monorepo
+  - Cannot verify type safety of code changes
+  - May affect IDE type hints and autocomplete
+
+  **Priority:** `HIGH` - Blocks type checking workflow
+
+  **Related Tasks:**
+  - P001 (Content Types) - depends on @repo/lib exports
+  - All subsequent tasks that use content types
+
+  **Suggested Resolution:**
+  1. Verify `packages/lib/package.json` has correct `name` field (`@repo/lib`)
+  2. Check `apps/firm-website/tsconfig.json` for correct module resolution
+  3. Verify workspace configuration in `pnpm-workspace.yaml`
+  4. Ensure `packages/lib` is built and types are generated
+  5. Check TypeScript path mappings in tsconfig files
+
 **Go/No-Go Criteria Checklist (core items):**
 - All tests pass in CI
 - Security headers and CSP in place
