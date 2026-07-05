@@ -410,43 +410,55 @@
 
 ---
 
-- [ ] **T009** | Status: `PENDING`  
+- [x] **T009** | Status: `COMPLETED` ✅
   **Related File Paths:**
   - `apps/firm-website/next.config.ts`
+  - `docs/security.md`
 
   **Definition of Done:**
   - A basic CSP header applied to all routes:
-    - `default-src 'self'`
-    - `script-src 'self' 'unsafe-inline' 'unsafe-eval'` (needed for Next.js)
-    - `style-src 'self' 'unsafe-inline'` (Tailwind requirement)
-    - `img-src 'self' data: https:`
-    - `font-src 'self' https:`
-    - `connect-src 'self' https:`
-    - `frame-ancestors 'none'`
-    - `upgrade-insecure-requests`
-  - Verified on preview that no resources are blocked.
+    - `default-src 'self'` ✅
+    - `script-src 'self' 'unsafe-inline' 'unsafe-eval'` (needed for Next.js) ✅
+    - `style-src 'self' 'unsafe-inline'` (Tailwind requirement) ✅
+    - `img-src 'self' data: https:` ✅
+    - `font-src 'self' https:` ✅
+    - `connect-src 'self' https:` ✅
+    - `frame-ancestors 'none'` ✅
+    - `upgrade-insecure-requests` ✅
+  - Verified on preview that no resources are blocked. ⏳ Pending T009-02 (human verification)
 
   **Out of Scope:**
   - Nonce-based CSP, reporting endpoint (post-launch).
 
   **Rules to Follow:**
-  - Add to the same `headers()` as security headers.
-  - Ensure all required external sources (fonts, analytics) are allowed.
+  - Add to the same `headers()` as security headers. ✅
+  - Ensure all required external sources (fonts, analytics) are allowed. ✅
 
   **Anti‑Patterns:**
   - Breaking the site due to missing sources.
+
+  **Advanced Coding Pattern:**
+  - **Deep module** – CSP header centralised in `next.config.ts`. ✅
 
   **Depends On / Blocks:**
   - Depends on: T008 (security headers).
   - Blocks: none.
 
+  **Implementation Notes:**
+  - Added Content-Security-Policy header to headers() function in next.config.ts
+  - Policy includes all required directives for Next.js, Tailwind CSS, and external resources
+  - Documented CSP policy with detailed explanations in docs/security.md
+  - Lint passed successfully
+  - Typecheck not applicable (no typecheck script in packages)
+  - Preview deployment verification (T009-02) pending human action
+
 #### Subtasks
 
-| ID      | Agent/Human | File Path / Command                | Description                                                                                               | Validation Command            |
-| ------- | ----------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------- | ----------------------------- |
-| T009-01 | AGENT       | `apps/firm-website/next.config.ts` | Add CSP to the `headers()` function with the policy above.                                                | No command.                   |
-| T009-02 | HUMAN       | Preview deployment                 | Deploy to preview, test site (all pages, analytics, fonts) – no CSP violations in browser console.         | No blocked resources.         |
-| T009-03 | AGENT       | `docs/security.md`                 | Document CSP policy and exceptions.                                                                       | None.                         |
+| ID      | Agent/Human | File Path / Command                | Description                                                                                               | Validation Command            | Status          |
+| ------- | ----------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------- | ----------------------------- | --------------- |
+| T009-01 | AGENT       | `apps/firm-website/next.config.ts` | Add CSP to the `headers()` function with the policy above.                                                | No command.                   | ✅ Completed    |
+| T009-02 | HUMAN       | Preview deployment                 | Deploy to preview, test site (all pages, analytics, fonts) – no CSP violations in browser console.         | No blocked resources.         | ⏳ Pending      |
+| T009-03 | AGENT       | `docs/security.md`                 | Document CSP policy and exceptions.                                                                       | None.                         | ✅ Completed    |
 
 ---
 
