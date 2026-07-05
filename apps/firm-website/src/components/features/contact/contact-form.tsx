@@ -8,6 +8,7 @@ import { Input } from '@repo/ui';
 import { Textarea } from '@repo/ui';
 import { Label } from '@repo/ui';
 import { submitContact, initialContactState, type ContactFormState } from '@/app/actions/contact';
+import { event } from '@/lib/gtag';
 
 /**
  * Submit button component with loading state.
@@ -35,6 +36,7 @@ export function ContactForm() {
     initialContactState
   );
   const formRef = useRef<HTMLFormElement>(null);
+  const conversionEventFired = useRef(false);
 
   // Show toast notifications on state changes (not on initial render)
   useEffect(() => {
@@ -46,6 +48,12 @@ export function ContactForm() {
     // Show success toast
     if (state.success) {
       toast.success('Message sent successfully!');
+
+      // Track GA4 conversion event (only once per submission)
+      if (!conversionEventFired.current) {
+        event('form_submission', { form_type: 'contact' });
+        conversionEventFired.current = true;
+      }
     }
 
     // Show error toast (when not successful and has a message)

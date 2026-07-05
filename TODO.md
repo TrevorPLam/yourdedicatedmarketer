@@ -717,7 +717,7 @@ Contact form with Server Action and `useActionState` exists (Phase 3, P018). No 
 
 ### Parent Task P027: Track Form Submissions as Conversion Events
 
-- [ ] **P027** | Status: `PENDING`  
+- [x] **P027** | Status: `COMPLETED`  
   **Related File Paths:**
   - `apps/firm-website/src/components/features/contact/contact-form.tsx`
   - `apps/firm-website/src/lib/gtag.ts`
@@ -751,6 +751,15 @@ Contact form with Server Action and `useActionState` exists (Phase 3, P018). No 
 | ------- | ----------- | -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ------------------ |
 | P027-01 | AGENT       | `apps/firm-website/src/components/features/contact/contact-form.tsx` | In `useEffect` watching `state`, on `state.success` true, call `event('form_submission', { form_type: 'contact' })`. Use ref to prevent double fire. | No command.        |
 | P027-02 | AGENT       | Update `docs/analytics.md`                                           | Document conversion event tracking.                                                                               | None.              |
+
+**Implementation Notes:**
+- Added `event` import from `@/lib/gtag` to ContactForm component
+- Created `conversionEventFired` ref to prevent double-firing of GA4 event
+- Event `form_submission` with parameter `form_type: 'contact'` fires on successful form submission
+- No PII sent to GA4 (only form_type parameter)
+- Event fires only once per submission due to ref guard
+- Documentation updated in docs/analytics.md with contact form conversion tracking details
+- All QA passed: lint ✓ (pre-existing warnings in seo.test.ts only), tests ✓ (100 passed)
 
 ---
 

@@ -55,6 +55,19 @@ The PageViewTracker is added to the marketing layout to track all marketing page
 
 ## Conversion Event Tracking
 
+### Contact Form Submission
+
+The contact form tracks successful submissions as conversion events using GA4. When a user successfully submits the contact form:
+
+- Event name: `form_submission`
+- Event parameter: `form_type: 'contact'`
+- Event fires only once per submission (prevents double-firing)
+- No PII (personally identifiable information) is sent to GA4
+
+The event is triggered in the `ContactForm` component (`src/components/features/contact/contact-form.tsx`) when the server action returns a successful state. A ref is used to ensure the event fires only once per submission, even if React re-renders.
+
+### Custom Events
+
 Custom events can be tracked using the `event()` helper function from `src/lib/gtag.ts`:
 
 ```typescript
