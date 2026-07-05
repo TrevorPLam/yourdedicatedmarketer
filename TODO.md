@@ -69,7 +69,7 @@ This document defines all tasks required to set up the project foundation, inclu
 
 ### Parent Task P002: Setup Next.js 15 App in `apps/firm-website` with TypeScript and Tailwind CSS
 
-- [ ] **P002** | Status: `PENDING`  
+- [x] **P002** | Status: `COMPLETE`  
   **Related File Paths:**  
   - `apps/firm-website/package.json`  
   - `apps/firm-website/next.config.ts`  
@@ -129,6 +129,18 @@ This document defines all tasks required to set up the project foundation, inclu
 | P002-10 | AGENT       | `apps/firm-website/src/app/page.tsx`             | Create a simple homepage with a heading like "Your Dedicated Marketer" and some Tailwind classes to verify styling.                                                                                                                                                                            | Run `pnpm dev` and open browser.                         |
 | P002-11 | AGENT       | `apps/firm-website/.env.example`                 | Create `.env.example` with `NEXT_PUBLIC_SITE_URL=http://localhost:3000`.                                                                                                                                                                                                                       | Check file exists.                                      |
 | P002-12 | AGENT       | Update docs                                      | Update `README.md` with instructions to run `pnpm dev` and access the site. Add a section on the monorepo structure.                                                                                                                                                                          | None.                                                   |
+
+**Implementation Notes:**
+- All subtasks completed successfully
+- Next.js 15.5.20 installed with React 19.2.7
+- Tailwind CSS v4.3.2 integrated with @tailwindcss/postcss
+- TypeScript 6.0.3 configured with strict mode
+- Development server runs successfully at http://localhost:3000
+- Build passes with type checking
+- Note: Removed `baseUrl` from tsconfig.json due to TypeScript 6 deprecation warning; path aliases still work without it
+- Note: Changed `experimental.typedRoutes` to `typedRoutes` per Next.js 15.5 guidance
+- Note: Removed `output: 'standalone'` from next.config.ts due to Windows symlink permission issues during build
+- Created `src/global.d.ts` for CSS module type declarations
 
 ---
 
