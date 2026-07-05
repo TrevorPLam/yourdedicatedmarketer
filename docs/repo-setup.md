@@ -39,6 +39,7 @@ We chose Turborepo combined with pnpm workspaces for the following reasons:
 ### Workspace Configuration
 
 The `pnpm-workspace.yaml` defines:
+
 ```yaml
 packages:
   - 'apps/*'
@@ -62,6 +63,7 @@ The `turbo.json` defines the following tasks:
 ### Reproducible Builds
 
 CI should use `pnpm install --frozen-lockfile` to ensure reproducible builds by:
+
 - Using the exact versions from `pnpm-lock.yaml`
 - Preventing automatic lockfile updates
 - Ensuring consistent dependency resolution across environments
@@ -69,6 +71,7 @@ CI should use `pnpm install --frozen-lockfile` to ensure reproducible builds by:
 ### Lockfile Commit
 
 The `pnpm-lock.yaml` is committed to version control to guarantee:
+
 - Consistent dependency installation across all environments
 - Reproducible builds in CI/CD pipelines
 - Team-wide dependency synchronization
@@ -76,6 +79,7 @@ The `pnpm-lock.yaml` is committed to version control to guarantee:
 ## Package Naming Convention
 
 All workspace packages follow the `@repo/*` naming convention:
+
 - `@repo/firm-website` for the marketing website
 - `@repo/ui` for shared UI components
 - `@repo/lib` for shared libraries

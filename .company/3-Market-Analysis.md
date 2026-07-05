@@ -14,16 +14,16 @@ The DFW metroplex represents a large and active small business base. The City of
 
 DFW has a well-established base of web design and digital marketing agencies, ranging from large multi-service firms to small boutique studios. 2026 market research confirms that Dallas-area agencies typically charge $2,000-$8,000+ for custom small business websites, with fully custom design running $8,000-$25,000, and template-based sites starting at $750-$1,500. [intrglobal](https://intrglobal.com/blog/dallas-web-design-costs.html) [saltechsystems](https://saltechsystems.com/web-design-cost-for-small-business-dallas-tx/) Per-page costs beyond a base package typically run $200-$500, and professional copywriting adds $50-$150/page. [intrglobal](https://intrglobal.com/blog/dallas-web-design-costs.html) Representative competitors identified in the local market include:
 
-| Competitor | Location | Positioning |
-|---|---|---|
-| JSL Marketing | Dallas, TX | Award-winning agency offering web design, SEO, content, and PPC [jsl](https://jsl.marketing) |
-| Magic Logix | Carrollton, TX | Mid-size firm (10-50 employees), high price tier [10bestdesign](https://www.10bestdesign.com/firms/dallas/) |
-| Ride for the Brand | Fort Worth, TX | International digital marketing agency based locally [10bestdesign](https://www.10bestdesign.com/firms/dallas/) |
-| 422 Studios | Fort Worth, TX | Local web development studio [10bestdesign](https://www.10bestdesign.com/firms/dallas/) |
-| Black Anchor Design | Fort Worth, TX | Positions around AI/local search visibility, run by a long-tenured (31-year) designer [blackanchordesign](https://www.blackanchordesign.com) |
+| Competitor            | Location                | Positioning                                                                                                                                          |
+| --------------------- | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| JSL Marketing         | Dallas, TX              | Award-winning agency offering web design, SEO, content, and PPC [jsl](https://jsl.marketing)                                                         |
+| Magic Logix           | Carrollton, TX          | Mid-size firm (10-50 employees), high price tier [10bestdesign](https://www.10bestdesign.com/firms/dallas/)                                          |
+| Ride for the Brand    | Fort Worth, TX          | International digital marketing agency based locally [10bestdesign](https://www.10bestdesign.com/firms/dallas/)                                      |
+| 422 Studios           | Fort Worth, TX          | Local web development studio [10bestdesign](https://www.10bestdesign.com/firms/dallas/)                                                              |
+| Black Anchor Design   | Fort Worth, TX          | Positions around AI/local search visibility, run by a long-tenured (31-year) designer [blackanchordesign](https://www.blackanchordesign.com)         |
 | 10com Web Development | Fort Worth (multi-city) | Custom, "template-free" web design and SEO for scaling Texas businesses [10comwebdevelopment](https://www.10comwebdevelopment.com/dallas-fort-worth) |
-| Factory Creative | Lewisville, TX | Small studio (1-10 employees) [10bestdesign](https://www.10bestdesign.com/firms/dallas/) |
-| MODassic Marketing | Richardson, TX | Mid-size firm [10bestdesign](https://www.10bestdesign.com/firms/dallas/) |
+| Factory Creative      | Lewisville, TX          | Small studio (1-10 employees) [10bestdesign](https://www.10bestdesign.com/firms/dallas/)                                                             |
+| MODassic Marketing    | Richardson, TX          | Mid-size firm [10bestdesign](https://www.10bestdesign.com/firms/dallas/)                                                                             |
 
 Directory platforms such as DesignRush and Clutch list numerous additional Fort Worth- and Dallas-specific web design agencies, indicating a competitive but fragmented market with no single dominant local player, which creates room for a differentiated, price-aggressive new entrant. [designrush](https://www.designrush.com/agency/website-design-development/texas/fort-worth)
 
@@ -60,4 +60,4 @@ The following market data points were not available through this research pass a
 
 However, 2026 market pricing data has been sufficiently validated to confirm the firm's undercutting strategy at all service tiers.
 
-*End of Document*
+_End of Document_

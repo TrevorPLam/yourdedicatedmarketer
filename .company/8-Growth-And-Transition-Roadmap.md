@@ -57,11 +57,11 @@ Hiring research provides concrete readiness signals directly applicable to this 
 
 ### Roadmap Summary Table
 
-| Phase | Timeframe | Primary Focus | Key Exit Signal |
-|---|---|---|---|
-| Phase 1 | Months 0-3 | Portfolio building, 3-5 case studies | 3-5 completed builds + 2-3 testimonials collected |
-| Phase 2 | Months 3-9 | Price normalization ($1,000 floor) | Consistent bookings, 70%+ close rate, quality improvement [saltandspruceco](https://saltandspruceco.com/blog/signs-ready-to-raise-prices-creative-business/) |
-| Phase 3 | Months 9-18 | Retainer growth, service expansion | 75-85% utilization, 4-6 week booked pipeline, hiring readiness signals [getharvest](https://www.getharvest.com/resources/5-signs-your-agency-is-ready-to-scale-and-3-signs-its-not) |
+| Phase   | Timeframe   | Primary Focus                        | Key Exit Signal                                                                                                                                                                     |
+| ------- | ----------- | ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Phase 1 | Months 0-3  | Portfolio building, 3-5 case studies | 3-5 completed builds + 2-3 testimonials collected                                                                                                                                   |
+| Phase 2 | Months 3-9  | Price normalization ($1,000 floor)   | Consistent bookings, 70%+ close rate, quality improvement [saltandspruceco](https://saltandspruceco.com/blog/signs-ready-to-raise-prices-creative-business/)                        |
+| Phase 3 | Months 9-18 | Retainer growth, service expansion   | 75-85% utilization, 4-6 week booked pipeline, hiring readiness signals [getharvest](https://www.getharvest.com/resources/5-signs-your-agency-is-ready-to-scale-and-3-signs-its-not) |
 
 ### Open Decisions for This Section
 
@@ -75,4 +75,4 @@ Most decisions have been resolved. The following remain intentionally signal-bas
 
 These signal-based items are intentionally left flexible rather than fixed, as they depend on real-world performance data that cannot be responsibly predetermined.
 
-*End of Document*
+_End of Document_

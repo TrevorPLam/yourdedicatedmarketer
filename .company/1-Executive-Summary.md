@@ -62,4 +62,4 @@ The following foundational items have been decided and are reflected throughout 
 
 **Remaining open item:** Cold email sequence revision (existing 4-email draft needs shortening to under 80 words per email with new-angle follow-ups) — tracked as a separate action item.
 
-*End of Document*
+_End of Document_

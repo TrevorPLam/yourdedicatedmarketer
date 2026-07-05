@@ -6,13 +6,13 @@ The firm's core operational advantage rests on compressing traditional website b
 
 **Technology stack options identified:**
 
-| Tool Category | Options | Notes |
-|---|---|---|
-| AI website builders (marketing sites) | Wix AI, Squarespace AI, Framer, 10Web, Hostinger AI, GoDaddy Airo, ChilledSites | Best suited for standard small-business brochure/service sites [playcode](https://playcode.io/best-ai-website-builders) |
-| AI full-stack/app builders | Lovable, Bolt.new, NxCode, Replit | Better suited for more complex, custom-functionality builds; likely overkill for Tier 1/2 packages [playcode](https://playcode.io/best-ai-website-builders) |
-| Agency-oriented AI builders | 10Web, Modulify | Specifically noted as useful for agencies managing multiple client sites due to reduced manual build time [wedoflow](https://www.wedoflow.com/post/7-best-ai-website-builders-for-designers-creators-in-2026) |
-| Hybrid AI + human service | B12 | Positioned at a premium price point (~$399/month) for service businesses wanting AI plus human oversight — likely not cost-effective for this firm's underpricing strategy [nxcode](https://www.nxcode.io/resources/news/best-ai-website-builder-2026) |
-| Traditional builders (non-AI) | Squarespace, WordPress | Still recommended by some sources as more reliable for small business use cases despite lack of AI generation [launchthedamnthing](https://launchthedamnthing.com/blog/best-website-builders) |
+| Tool Category                         | Options                                                                         | Notes                                                                                                                                                                                                                                                  |
+| ------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| AI website builders (marketing sites) | Wix AI, Squarespace AI, Framer, 10Web, Hostinger AI, GoDaddy Airo, ChilledSites | Best suited for standard small-business brochure/service sites [playcode](https://playcode.io/best-ai-website-builders)                                                                                                                                |
+| AI full-stack/app builders            | Lovable, Bolt.new, NxCode, Replit                                               | Better suited for more complex, custom-functionality builds; likely overkill for Tier 1/2 packages [playcode](https://playcode.io/best-ai-website-builders)                                                                                            |
+| Agency-oriented AI builders           | 10Web, Modulify                                                                 | Specifically noted as useful for agencies managing multiple client sites due to reduced manual build time [wedoflow](https://www.wedoflow.com/post/7-best-ai-website-builders-for-designers-creators-in-2026)                                          |
+| Hybrid AI + human service             | B12                                                                             | Positioned at a premium price point (~$399/month) for service businesses wanting AI plus human oversight — likely not cost-effective for this firm's underpricing strategy [nxcode](https://www.nxcode.io/resources/news/best-ai-website-builder-2026) |
+| Traditional builders (non-AI)         | Squarespace, WordPress                                                          | Still recommended by some sources as more reliable for small business use cases despite lack of AI generation [launchthedamnthing](https://launchthedamnthing.com/blog/best-website-builders)                                                          |
 
 **Technology stack selected: Cursor or Windsurf AI code editor + traditional framework (e.g., Next.js).**
 
@@ -20,10 +20,10 @@ This approach was chosen over AI website builders (Wix AI, 10Web, Framer, etc.) 
 
 **Pricing comparison (2026):**
 
-| Tool | Plan | Price | Key Feature |
-|---|---|---|---|
-| Cursor | Pro | $20/month ($16/mo annual) | $20 monthly usage credits; Auto mode unlimited; Agent mode, Composer (multi-file editing) [nxcode](https://www.nxcode.io/resources/news/cursor-ai-pricing-plans-guide-2026) |
-| Windsurf | Pro | $20/month (raised from $15 in March 2026) | Unlimited Cascade usage (no credit counting); daily/weekly quota system; all premium models [cloudzero](https://www.cloudzero.com/blog/windsurf-pricing/) |
+| Tool     | Plan | Price                                     | Key Feature                                                                                                                                                                 |
+| -------- | ---- | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Cursor   | Pro  | $20/month ($16/mo annual)                 | $20 monthly usage credits; Auto mode unlimited; Agent mode, Composer (multi-file editing) [nxcode](https://www.nxcode.io/resources/news/cursor-ai-pricing-plans-guide-2026) |
+| Windsurf | Pro  | $20/month (raised from $15 in March 2026) | Unlimited Cascade usage (no credit counting); daily/weekly quota system; all premium models [cloudzero](https://www.cloudzero.com/blog/windsurf-pricing/)                   |
 
 **Key difference:** Cursor Pro includes $20 monthly usage credits that deplete when manually selecting premium frontier models (Auto mode is unlimited). Windsurf Pro offers unlimited Cascade usage with no credit tracking. Both are $20/month. Annual billing saves ~20% on Cursor and ~17-20% on Windsurf. Either tool is viable; the founder should trial both and select based on personal workflow preference.
 
@@ -55,20 +55,20 @@ Multiple independent sources converge on the same essential components for a web
 
 **Contract terms finalized:**
 
-| Term | Decision | Rationale |
-|---|---|---|
-| Revision rounds | 3 rounds included per package | Industry standard; balances client satisfaction with scope protection. Additional revisions at $65/hour. |
-| Deposit structure | Tiered by package (see below) | Matches risk level to project size |
-| Overage rate | $65/hour for work beyond scope | Competitive freelance rate for web design work |
+| Term              | Decision                       | Rationale                                                                                                |
+| ----------------- | ------------------------------ | -------------------------------------------------------------------------------------------------------- |
+| Revision rounds   | 3 rounds included per package  | Industry standard; balances client satisfaction with scope protection. Additional revisions at $65/hour. |
+| Deposit structure | Tiered by package (see below)  | Matches risk level to project size                                                                       |
+| Overage rate      | $65/hour for work beyond scope | Competitive freelance rate for web design work                                                           |
 
 **Deposit schedule by package:**
 
-| Package | Deposit | Milestone | Final | Notes |
-|---|---|---|---|---|
-| Launch Case-Study (Free) | $0 (Care Plan first month upfront) | N/A | N/A | Hosting & Care Plan ($99) collected at enrollment |
-| Launch Case-Study ($250) | 100% upfront ($250) | N/A | N/A | Small amount, collect entirely upfront |
-| Core Small-Biz Site ($1,000) | 50% upfront ($500) | N/A | 50% on delivery ($500) | Simple two-payment structure |
-| Growth Site ($2,500) | 40% upfront ($1,000) | 30% at design approval ($750) | 30% on delivery ($750) | Three-payment structure for larger projects |
+| Package                      | Deposit                            | Milestone                     | Final                  | Notes                                             |
+| ---------------------------- | ---------------------------------- | ----------------------------- | ---------------------- | ------------------------------------------------- |
+| Launch Case-Study (Free)     | $0 (Care Plan first month upfront) | N/A                           | N/A                    | Hosting & Care Plan ($99) collected at enrollment |
+| Launch Case-Study ($250)     | 100% upfront ($250)                | N/A                           | N/A                    | Small amount, collect entirely upfront            |
+| Core Small-Biz Site ($1,000) | 50% upfront ($500)                 | N/A                           | 50% on delivery ($500) | Simple two-payment structure                      |
+| Growth Site ($2,500)         | 40% upfront ($1,000)               | 30% at design approval ($750) | 30% on delivery ($750) | Three-payment structure for larger projects       |
 
 **Contract template status:** Free templates from Elementor, Webflow, and OneSuite can serve as a starting structure, but the firm's specific terms above must be incorporated. A contract template incorporating these terms should be drafted before onboarding the first paying client. [onesuite](https://onesuite.io/blog/web-design-contract-template-included/)
 
@@ -91,13 +91,13 @@ Key planning inputs applied to this firm:
 
 Selected free/low-cost tool stack for launch phase, consistent with the revenue reinvestment funding model:
 
-| Function | Tool | Cost | Notes |
-|---|---|---|---|
-| CRM / Lead Tracking | HubSpot Free CRM | $0 | 1,000-contact cap, 2-user limit, deal pipeline, email tracking. Adequate for launch phase; upgrade when contact volume exceeds 1,000. [hubspot](https://www.hubspot.com/products/crm) |
-| Invoicing / Payments | Wave (Starter Plan) | $0/mo + 2.9% + $0.60 per card transaction | Free invoicing and accounting. Bank payments (ACH) at 1% ($1 min). Pro Plan ($19/mo) adds receipt scanning and bank transaction auto-import. [wave](https://www.waveapps.com/pricing) |
-| Project Management | Trello (Free) | $0 | Up to 10 boards per workspace, unlimited cards, 250 automation runs/month. Sufficient for solo operation with 2 concurrent builds. Upgrade to Standard ($5/mo) if board limit is reached. [trello](https://trello.com/pricing) |
-| Email / File Storage | Google Workspace (Business Starter) | $7/user/month | Custom business email (name@yourdedicatedmarketer.com), 30GB storage, Gemini AI in Gmail, 100-participant video conferencing. [google](https://workspace.google.com/pricing) |
-| Client Communication | Google Meet (free) + Calendly (free tier) | $0 | Video calls and scheduling at no cost |
+| Function             | Tool                                      | Cost                                      | Notes                                                                                                                                                                                                                          |
+| -------------------- | ----------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| CRM / Lead Tracking  | HubSpot Free CRM                          | $0                                        | 1,000-contact cap, 2-user limit, deal pipeline, email tracking. Adequate for launch phase; upgrade when contact volume exceeds 1,000. [hubspot](https://www.hubspot.com/products/crm)                                          |
+| Invoicing / Payments | Wave (Starter Plan)                       | $0/mo + 2.9% + $0.60 per card transaction | Free invoicing and accounting. Bank payments (ACH) at 1% ($1 min). Pro Plan ($19/mo) adds receipt scanning and bank transaction auto-import. [wave](https://www.waveapps.com/pricing)                                          |
+| Project Management   | Trello (Free)                             | $0                                        | Up to 10 boards per workspace, unlimited cards, 250 automation runs/month. Sufficient for solo operation with 2 concurrent builds. Upgrade to Standard ($5/mo) if board limit is reached. [trello](https://trello.com/pricing) |
+| Email / File Storage | Google Workspace (Business Starter)       | $7/user/month                             | Custom business email (name@yourdedicatedmarketer.com), 30GB storage, Gemini AI in Gmail, 100-participant video conferencing. [google](https://workspace.google.com/pricing)                                                   |
+| Client Communication | Google Meet (free) + Calendly (free tier) | $0                                        | Video calls and scheduling at no cost                                                                                                                                                                                          |
 
 **Total monthly admin cost: $7/month** (Google Workspace only; all other tools free)
 
@@ -113,4 +113,4 @@ Contract research confirms the standard industry practice is collecting payment 
 - **Contract template:** Terms finalized (3 revisions, tiered deposits, $65/hr overage). Template needs to be drafted incorporating these terms before first paying client.
 - **All other items resolved:** Founder capacity (20-30 hrs/week), concurrent builds (2), admin tools (selected), payment schedule (tiered deposits).
 
-*End of Document*
+_End of Document_

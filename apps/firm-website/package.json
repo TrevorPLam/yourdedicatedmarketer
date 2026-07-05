@@ -7,7 +7,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint src",
+    "check-types": "tsc --noEmit",
     "test": "vitest"
   },
   "dependencies": {
@@ -16,6 +17,8 @@
     "react-dom": "19"
   },
   "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
     "@tailwindcss/postcss": "^4.3.2",
     "@types/react": "19",
     "@types/react-dom": "19",

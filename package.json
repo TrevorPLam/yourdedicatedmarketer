@@ -9,7 +9,8 @@
     "build": "turbo build",
     "lint": "turbo lint",
     "test": "turbo test",
-    "check-types": "turbo check-types"
+    "check-types": "turbo check-types",
+    "format": "prettier --write ."
   },
   "keywords": [],
   "author": "",
@@ -17,6 +18,7 @@
   "packageManager": "pnpm@9.15.0",
   "devDependencies": {
     "@types/node": "22",
+    "prettier": "^3.4.2",
     "turbo": "latest"
   }
 }
