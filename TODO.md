@@ -666,7 +666,7 @@ Contact form with Server Action and `useActionState` exists (Phase 3, P018). No 
 
 ### Parent Task P026: Track Page Views with GA4
 
-- [ ] **P026** | Status: `PENDING`  
+- [x] **P026** | Status: `COMPLETED`
   **Related File Paths:**
   - `apps/firm-website/src/components/analytics/page-view-tracker.tsx`
   - `apps/firm-website/src/app/(marketing)/layout.tsx`
@@ -697,11 +697,21 @@ Contact form with Server Action and `useActionState` exists (Phase 3, P018). No 
 
 #### Subtasks
 
-| ID      | Agent/Human | File Path / Command                                                | Description                                                                                                                                     | Validation Command |
-| ------- | ----------- | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
-| P026-01 | AGENT       | `apps/firm-website/src/components/analytics/page-view-tracker.tsx` | Create `PageViewTracker`: `usePathname()`, `useSearchParams()`, `useEffect` calls `pageview(url)`, only in production.                          | No command.        |
-| P026-02 | AGENT       | `apps/firm-website/src/app/(marketing)/layout.tsx`                 | Add `PageViewTracker` to marketing layout.                                                                                                     | No command.        |
-| P026-03 | AGENT       | Update `docs/analytics.md`                                         | Document page view tracking.                                                                                                                   | None.              |
+| ID      | Agent/Human | File Path / Command                                                | Description                                                                                                                                     | Validation Command | Status  |
+| ------- | ----------- | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | ------- |
+| P026-01 | AGENT       | `apps/firm-website/src/components/analytics/page-view-tracker.tsx` | Create `PageViewTracker`: `usePathname()`, `useSearchParams()`, `useEffect` calls `pageview(url)`, only in production.                          | No command.        | ✅      |
+| P026-02 | AGENT       | `apps/firm-website/src/app/(marketing)/layout.tsx`                 | Add `PageViewTracker` to marketing layout.                                                                                                     | No command.        | ✅      |
+| P026-03 | AGENT       | Update `docs/analytics.md`                                         | Document page view tracking.                                                                                                                   | None.              | ✅      |
+
+**Implementation Notes:**
+- PageViewTracker component created with `usePathname` and `useSearchParams` hooks
+- useEffect tracks route changes and calls `pageview(url)` from gtag.ts
+- Production-only tracking via `process.env.NODE_ENV === 'production'` check
+- Search parameters included in tracked URLs
+- Component added to marketing layout for site-wide page view tracking
+- Documentation in docs/analytics.md already accurate, no updates needed
+- All tests passing (100 total tests)
+- Lint warnings in seo.test.ts are pre-existing and unrelated to this task
 
 ---
 
