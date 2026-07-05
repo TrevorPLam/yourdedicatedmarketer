@@ -536,6 +536,116 @@ export default function Page() {
 
 TypeScript declarations for `.mdx` files are included in `src/global.d.ts` to ensure proper type checking.
 
+## Navigation Utilities
+
+The navigation utilities are located in `apps/firm-website/src/lib/navigation.ts`. They provide data-driven navigation, breadcrumbs, and related content functionality.
+
+### Functions
+
+#### `getNavItems()`
+
+Returns primary navigation items for the website. Data-driven and can be extended as the site grows.
+
+**Returns**: `Promise<NavItem[]>` - Array of navigation items with `label` and `href`
+
+**Example**:
+```typescript
+import { getNavItems } from '@/lib/navigation';
+
+const navItems = await getNavItems();
+// Returns: [
+//   { label: 'Home', href: '/' },
+//   { label: 'Services', href: '/services' },
+//   { label: 'Industries', href: '/industries' },
+//   { label: 'Demos', href: '/demos' },
+//   { label: 'Pricing', href: '/pricing' },
+//   { label: 'About', href: '/about' },
+//   { label: 'Contact', href: '/contact' },
+// ]
+```
+
+#### `getBreadcrumbs(slug)`
+
+Returns breadcrumb trail for a given page slug. Reflects the content hierarchy of the website.
+
+**Parameters**:
+- `slug` (string) - The slug of the current page
+
+**Returns**: `Promise<BreadcrumbItem[]>` - Array of breadcrumb items with `label` and `href` (null for current page)
+
+**Example**:
+```typescript
+import { getBreadcrumbs } from '@/lib/navigation';
+
+const breadcrumbs = await getBreadcrumbs('website-design');
+// Returns: [
+//   { label: 'Home', href: '/' },
+//   { label: 'Services', href: '/services' },
+//   { label: 'Website Design & Development', href: null },
+// ]
+```
+
+**Behavior**:
+- Always includes "Home" as the first breadcrumb
+- For service pages: Home → Services → Service Name
+- For industry pages: Home → Industries → Industry Name
+- For demo pages: Home → Demos → Demo Name
+- For static pages: Home → Page Name
+- For unknown slugs: Returns only Home
+
+#### `getRelatedContent(currentSlug, type)`
+
+Returns related content based on the current slug and content type. Uses category/tag relationships to find relevant content.
+
+**Parameters**:
+- `currentSlug` (string) - The slug of the current content
+- `type` ('service' | 'industry' | 'demo' | 'faq') - The content type
+
+**Returns**: `Promise<RelatedContentItem[]>` - Array of related content items with `title`, `slug`, and `type`
+
+**Example**:
+```typescript
+import { getRelatedContent } from '@/lib/navigation';
+
+// Get related demos in the same industry
+const relatedDemos = await getRelatedContent('plumbing', 'demo');
+// Returns demos in the same industry as 'plumbing' (max 3)
+
+// Get related industries
+const relatedIndustries = await getRelatedContent('home-services', 'industry');
+// Returns other industries sorted by order (max 3)
+
+// Get related FAQs in the same category
+const relatedFAQs = await getRelatedContent('cost', 'faq');
+// Returns FAQs in the same category as 'cost' (max 3)
+```
+
+**Behavior**:
+- For demos: Finds other demos in the same industry
+- For industries: Finds other industries sorted by order
+- For services: Finds other services sorted by order
+- For FAQs: Finds FAQs in the same category sorted by order
+- Limits results to 3 items for each type
+- Returns empty array for non-existent content or unknown types
+
+### Extending Navigation
+
+To add new navigation items or modify breadcrumb behavior:
+
+1. Edit `apps/firm-website/src/lib/navigation.ts`
+2. Update the `getNavItems()` function to add new navigation items
+3. Update the `getBreadcrumbs()` function to handle new content types
+4. Update the `getRelatedContent()` function to add new content type relationships
+5. Add corresponding tests in `apps/firm-website/src/lib/navigation.test.ts`
+
+### Best Practices
+
+- Keep navigation data-driven from content
+- Ensure breadcrumbs reflect the actual content hierarchy
+- Use related content to improve user engagement and SEO
+- Limit related content to 3-5 items to avoid overwhelming users
+- Test navigation utilities when adding new content types
+
 ## Notes
 
 - All content functions are server-side only (Node.js)
@@ -544,3 +654,4 @@ TypeScript declarations for `.mdx` files are included in `src/global.d.ts` to en
 - MDX files can use React components directly in markdown
 - TypeScript types are defined in `src/types/content.ts`
 - Zod schemas are defined in `packages/lib/src/schemas/content.ts` for runtime validation
+- Navigation utilities are data-driven and should be updated when adding new content types
