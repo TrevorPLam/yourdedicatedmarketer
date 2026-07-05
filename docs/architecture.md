@@ -73,10 +73,147 @@ Applications depend on packages, but packages do not depend on applications. Thi
 
 ### Content Management
 
-- **Markdown with frontmatter**: Content stored as MD files with YAML metadata
-- **gray-matter**: Frontmatter parsing
+- **MDX (Markdown + JSX)**: Content stored as `.mdx` files with React component support
+- **Frontmatter**: YAML metadata for content properties (title, slug, description, etc.)
+- **gray-matter**: Frontmatter parsing library
 - **remark + remark-html**: Markdown to HTML conversion
 - **Zod**: Runtime schema validation for content types
+- **In-memory caching**: Map-based cache to avoid repeated file reads
+
+## Content Architecture
+
+The content architecture follows a file-based approach with static generation, enabling fast build times and easy content management without a database.
+
+### Content Structure
+
+All content is stored in `apps/firm-website/src/content/` with the following directory structure:
+
+```
+src/content/
+├── services/       # Service offerings (6 files)
+├── industries/     # Industry-specific content (6 files)
+├── demos/          # Portfolio/proof-of-concept items (6 files)
+├── faq/            # Frequently asked questions (10 files)
+└── pages/          # Static page content (2 files)
+```
+
+### MDX Format
+
+Each content file is an MDX file (`.mdx`) that combines:
+- **YAML frontmatter** for metadata
+- **Markdown/MDX body** for content
+- **React components** for interactive elements
+
+Example structure:
+```mdx
+---
+title: "Website Design"
+slug: "website-design"
+description: "Professional website design services"
+featured: true
+order: 1
+---
+
+# Website Design
+
+We create beautiful, functional websites...
+
+<Button variant="default">Get Started</Button>
+```
+
+### Frontmatter Schema
+
+Each content type has specific frontmatter fields:
+
+**Services**: `title`, `slug`, `description`, `featured?`, `order?`
+**Industries**: `title`, `slug`, `description`, `icon?`, `order?`
+**Demos**: `title`, `slug`, `description`, `industry`
+**FAQs**: `title`, `slug`, `description`, `category`, `order?`
+**Pages**: `title`, `slug`, `description`
+
+### Content Types and Validation
+
+TypeScript interfaces are defined in `packages/lib/src/types/content.ts` with branded types for type safety:
+
+```typescript
+export type Slug = string & { __brand: 'slug' };
+
+interface Service {
+  title: string;
+  slug: Slug;
+  description: string;
+  body: string;
+  featured?: boolean;
+  order?: number;
+}
+```
+
+Zod schemas in `packages/lib/src/schemas/content.ts` provide runtime validation for content data.
+
+### Content Utilities
+
+Server-side utility functions in `apps/firm-website/src/lib/content.ts` provide:
+
+- `getAllContent(dir)` - Read all `.mdx` files from a directory
+- `getContentBySlug(dir, slug)` - Get a single content item
+- `getAllSlugs(dir)` - Get all slugs from a directory
+- Type-specific helpers: `getServices()`, `getIndustries()`, `getDemos()`, `getFAQs()`, `getPages()`
+
+These utilities use:
+- Node.js `fs` and `path` for file operations (server-only)
+- `gray-matter` for frontmatter parsing
+- In-memory `Map` cache to avoid repeated file reads
+- Error handling for missing files and invalid frontmatter
+
+### Static Generation
+
+Content is generated at build time using Next.js static generation:
+
+- All content is pre-rendered during build
+- No database required for static content
+- Fast page loads with pre-generated HTML
+- SEO-friendly with static URLs
+- Easy to deploy to CDN (Vercel)
+
+### Navigation Architecture
+
+Navigation utilities in `apps/firm-website/src/lib/navigation.ts` provide:
+
+- `getNavItems()` - Primary navigation items (data-driven)
+- `getBreadcrumbs(slug)` - Hierarchical breadcrumb trails
+- `getRelatedContent(currentSlug, type)` - Related content based on categories/tags
+
+These utilities are data-driven from content, ensuring navigation stays in sync with the actual content structure.
+
+### MDX Component Mapping
+
+MDX files can use React components from `@repo/ui`:
+- `Button` - Interactive buttons
+- `Card` - Content cards with header/footer
+- `Container` - Responsive containers
+- `Section` - Sectioned content areas
+- `Accordion` - Collapsible content
+
+Components are mapped in `apps/firm-website/mdx-components.tsx` for use in MDX files.
+
+### Content Workflow
+
+1. **Create content**: Add `.mdx` file to appropriate directory
+2. **Add frontmatter**: Include required metadata fields
+3. **Write content**: Use Markdown and MDX components
+4. **Automatic availability**: Content utilities automatically detect new files
+5. **Type safety**: TypeScript interfaces ensure correct usage
+6. **Runtime validation**: Zod schemas validate data at runtime
+
+### Benefits of This Architecture
+
+- **No database required**: Static content is version-controlled
+- **Fast builds**: File-based content is quick to process
+- **Type safety**: Branded types prevent slug substitution errors
+- **Easy editing**: Content authors work with familiar Markdown
+- **SEO-friendly**: Static generation with pre-rendered HTML
+- **Scalable**: Easy to add new content files
+- **Cacheable**: In-memory cache improves performance
 
 ## Design Principles
 

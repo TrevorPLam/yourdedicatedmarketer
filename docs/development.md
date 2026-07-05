@@ -334,7 +334,7 @@ Content is stored in `apps/firm-website/src/content/`. To add new content:
    slug: "your-slug"
    description: "Short description"
    ---
-   
+
    Your content here...
    ```
 
@@ -353,6 +353,396 @@ const services = await getAllServices();
 // Get a specific service
 const service = await getService('website-design');
 ```
+
+## Writing and Editing MDX Content
+
+MDX (Markdown + JSX) allows you to write content using Markdown syntax while also using React components directly in your content files. This section provides a comprehensive guide to writing and editing MDX content.
+
+### MDX File Structure
+
+An MDX file consists of two parts:
+
+1. **Frontmatter** (YAML metadata at the top, enclosed in `---`)
+2. **Content body** (Markdown and JSX)
+
+Example:
+```mdx
+---
+title: "Website Design"
+slug: "website-design"
+description: "Professional website design services for small businesses"
+featured: true
+order: 1
+---
+
+# Website Design & Development
+
+We create beautiful, functional websites that help your business grow.
+
+## Our Process
+
+1. Discovery
+2. Design
+3. Development
+4. Launch
+
+<Button variant="default">Get Started</Button>
+```
+
+### Frontmatter Fields
+
+Frontmatter fields vary by content type. Always include required fields:
+
+**Services**:
+- `title` (required) - Display title
+- `slug` (required) - URL-friendly identifier (kebab-case)
+- `description` (required) - Short description for SEO
+- `featured` (optional) - Boolean for prominent display
+- `order` (optional) - Number for sorting
+
+**Industries**:
+- `title` (required) - Display title
+- `slug` (required) - URL-friendly identifier
+- `description` (required) - Short description
+- `icon` (optional) - Emoji or icon identifier
+- `order` (optional) - Number for sorting
+
+**Demos**:
+- `title` (required) - Display title
+- `slug` (required) - URL-friendly identifier
+- `description` (required) - Short description
+- `industry` (required) - Industry slug reference
+
+**FAQs**:
+- `title` (required) - The question
+- `slug` (required) - URL-friendly identifier
+- `description` (required) - Short description
+- `category` (required) - 'general' | 'pricing' | 'process'
+- `order` (optional) - Number for sorting
+
+**Pages**:
+- `title` (required) - Display title
+- `slug` (required) - URL-friendly identifier
+- `description` (required) - Short description
+
+### Markdown Syntax
+
+Use standard Markdown syntax for formatting:
+
+```mdx
+# Heading 1
+## Heading 2
+### Heading 3
+
+**Bold text**
+*Italic text*
+
+- Unordered list item
+- Another item
+
+1. Ordered list item
+2. Another item
+
+[Link text](https://example.com)
+
+![Alt text](/path/to/image.jpg)
+
+> Blockquote
+
+`Inline code`
+
+```
+Code block
+```
+
+---
+
+Horizontal rule
+```
+
+### Using React Components
+
+You can use React components from `@repo/ui` directly in MDX files:
+
+```mdx
+<Button variant="default">Click Me</Button>
+
+<Card>
+  <CardHeader>
+    <CardTitle>Card Title</CardTitle>
+    <CardDescription>Card description</CardDescription>
+  </CardHeader>
+  <CardContent>
+    <p>Card content here</p>
+  </CardContent>
+</Card>
+
+<Container maxWidth="lg">
+  <Section>
+    <h2>Section Content</h2>
+  </Section>
+</Container>
+
+<Accordion>
+  <AccordionItem value="item-1">
+    <AccordionTrigger>Is it accessible?</AccordionTrigger>
+    <AccordionContent>
+      Yes. It adheres to the WAI-ARIA design pattern.
+    </AccordionContent>
+  </AccordionItem>
+</Accordion>
+```
+
+### Available Components
+
+The following components are available in MDX files:
+
+- `Button` - Interactive buttons with variants (default, outline, ghost, etc.)
+- `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `CardFooter` - Card components
+- `Container` - Responsive containers with maxWidth options
+- `Section` - Sectioned content areas with padding
+- `Accordion`, `AccordionItem`, `AccordionTrigger`, `AccordionContent` - Collapsible content
+
+### Best Practices for MDX Content
+
+#### 1. Use Semantic Headings
+
+Start with H1 for the main title, then use H2, H3 for subsections:
+
+```mdx
+# Main Title (H1)
+
+## Section (H2)
+
+### Subsection (H3)
+```
+
+#### 2. Keep Paragraphs Concise
+
+Break long paragraphs into shorter ones for readability:
+
+```mdx
+Good: Short, focused paragraphs are easier to read.
+
+Avoid: Very long paragraphs that cover multiple topics can be difficult to read and may cause readers to lose interest or miss important information.
+```
+
+#### 3. Use Lists for Scannability
+
+Use bullet points or numbered lists to break down complex information:
+
+```mdx
+Our services include:
+- Website design
+- SEO optimization
+- Content marketing
+```
+
+#### 4. Add Links Strategically
+
+Link to related content to improve navigation and SEO:
+
+```mdx
+Learn more about our [website design services](/services/website-design).
+```
+
+#### 5. Use Components for Interactive Elements
+
+Use React components for buttons, cards, and other interactive elements:
+
+```mdx
+<Button variant="default" asChild>
+  <Link href="/contact">Contact Us</Link>
+</Button>
+```
+
+#### 6. Follow AEO Format for FAQs
+
+For FAQ content, start with a direct 40-60 word answer:
+
+```mdx
+---
+title: "How much does a website cost?"
+slug: cost
+category: pricing
+---
+
+A professional website for small businesses in DFW typically costs $3,000-$8,000 depending on complexity, with our Website Design package starting at $3,997 for a complete 5-page site including design, development, and launch.
+
+## What's Included
+
+Our pricing includes...
+```
+
+#### 7. Use Consistent Formatting
+
+Maintain consistent formatting across similar content types:
+- Use the same heading hierarchy
+- Follow the same structure for similar pages
+- Keep frontmatter fields in the same order
+
+#### 8. Write for Your Audience
+
+- Use clear, simple language
+- Avoid jargon unless necessary
+- Focus on benefits, not just features
+- Include calls-to-action
+
+#### 9. Optimize for SEO
+
+- Include relevant keywords naturally
+- Use descriptive titles and descriptions
+- Add internal links to related content
+- Keep content length appropriate (400-1000 words depending on type)
+
+#### 10. Test Your Content
+
+After creating or editing MDX content:
+1. Run the dev server: `pnpm dev`
+2. Navigate to the page to verify rendering
+3. Check that components render correctly
+4. Verify links work properly
+5. Test on mobile devices
+
+### Common MDX Patterns
+
+#### Service Page Pattern
+
+```mdx
+---
+title: "Service Name"
+slug: "service-name"
+description: "Short description"
+featured: true
+order: 1
+---
+
+# Service Name
+
+Brief overview of the service.
+
+## What's Included
+
+- Feature 1
+- Feature 2
+- Feature 3
+
+## Pricing
+
+Pricing information here.
+
+## Process
+
+1. Step 1
+2. Step 2
+3. Step 3
+
+<Button variant="default">Get Started</Button>
+```
+
+#### Industry Page Pattern
+
+```mdx
+---
+title: "Industry Name"
+slug: "industry-name"
+description: "Short description"
+icon: 🔧
+order: 1
+---
+
+# Industry Name
+
+Industry-specific pain points and challenges.
+
+## Why This Industry Needs Specialized Web Design
+
+Explanation of industry-specific needs.
+
+## What's Included
+
+- Industry-specific feature 1
+- Industry-specific feature 2
+
+## See It In Action
+
+<Link href="/demos/related-demo">View Demo</Link>
+```
+
+#### Demo Page Pattern
+
+```mdx
+---
+title: "Demo Name"
+slug: "demo-name"
+description: "Short description"
+industry: "industry-slug"
+---
+
+# Demo Name
+
+## The Situation
+
+Context and background.
+
+## The Challenge
+
+Problems and constraints.
+
+## The Approach
+
+Solutions and design decisions.
+
+## The Outcome
+
+Results and impact.
+
+<Button variant="outline">View Live Demo</Button>
+```
+
+### Troubleshooting MDX Issues
+
+#### Frontmatter Not Parsing
+
+Ensure frontmatter is properly formatted:
+- Must start and end with `---` on separate lines
+- No spaces before the dashes
+- Use spaces after colons in key-value pairs
+
+```mdx
+---
+title: "Correct"
+slug: "correct-slug"
+---
+
+# Content
+```
+
+#### Components Not Rendering
+
+- Ensure components are imported in `mdx-components.tsx`
+- Check component names are capitalized (React convention)
+- Verify component props are correct
+
+#### Links Not Working
+
+- Use relative paths for internal links: `/services/website-design`
+- Use full URLs for external links: `https://example.com`
+- Ensure slugs in frontmatter match the actual file names
+
+#### Content Not Appearing
+
+- Ensure file uses `.mdx` extension
+- Check file is in the correct directory
+- Verify frontmatter has required fields
+- Restart dev server after adding new files
+
+### Resources
+
+- [MDX Documentation](https://mdxjs.com/)
+- [Markdown Guide](https://www.markdownguide.org/)
+- [Content Pipeline Documentation](content.md) - Content structure and API
+- [Architecture Documentation](architecture.md) - Content architecture details
 
 ## Testing
 
