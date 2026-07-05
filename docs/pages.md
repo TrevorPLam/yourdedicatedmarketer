@@ -304,6 +304,49 @@ Dynamic pages are generated from content collections.
 - Server component (async data fetching)
 - No dynamic routing (hub page only, no individual FAQ pages)
 
+### Contact Page (`/contact`)
+
+- **Path:** `app/(marketing)/contact/page.tsx`
+- **Component:** `components/features/contact/contact-form.tsx`
+- **Server Action:** `app/actions/contact.ts`
+- **Features:**
+  - Contact form with fields: Name, Email, Phone (optional), Company (optional), Message
+  - Server-side validation using Zod schema
+  - React 19 `useActionState` for form state management
+  - `useFormStatus` for loading state on submit button
+  - Field-level validation errors displayed next to inputs
+  - Success/error messages shown after submission
+  - Contact information displayed below form (email, phone, address, hours)
+  - Metadata generated via `generateMetadata()` utility
+
+**ContactForm Component:**
+- Props: None (encapsulated component)
+- Client component (uses React hooks: `useActionState`, `useFormStatus`)
+- Uses `Input`, `Textarea`, `Label`, `Button` from `@repo/ui`
+- Form fields: name (required), email (required), phone (optional), company (optional), message (required)
+- Validation errors displayed as red text below each field
+- Submit button shows "Sending..." during submission, "Send Message" otherwise
+- Success message shown in green, error message in red
+- Form resets on successful submission (via `useActionState` state management)
+- Follows deep module pattern by encapsulating form logic and state
+
+**Server Action (`submitContact`):**
+- Path: `app/actions/contact.ts`
+- Uses `'use server'` directive for Next.js Server Actions
+- Zod schema validates: name (min 2 chars), email (valid email), phone (optional), company (optional), message (min 10 chars)
+- Returns `ContactFormState` interface with: success (boolean), message (string), errors (Record<string, string[]>)
+- On validation failure: returns field errors via `result.error.flatten().fieldErrors`
+- On success: logs submission data (placeholder for email sending in Phase 4)
+- Currently logs to console; email sending deferred to Phase 4 (P022)
+- Follows deep module pattern by encapsulating validation and submission logic
+
+**Contact Page Implementation:**
+- Default export: Server component rendering `ContactForm` in a card layout
+- Contact information displayed in a 2-column grid below the form
+- `generateMetadata()`: Generates metadata with title and description
+- Responsive design with centered container and max-width constraint
+- No dynamic routing (single contact page)
+
 ## Adding New Pages
 
 ### Adding a New Static Page

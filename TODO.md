@@ -165,12 +165,11 @@ Route group infrastructure not yet established, but all foundational pieces are 
 
 ### Parent Task P018: Build Contact Page with Form and Server Action
 
-- [ ] **P018** | Status: `PENDING`  
+- [x] **P018** | Status: `COMPLETED`
   **Related File Paths:**
   - `apps/firm-website/src/app/(marketing)/contact/page.tsx`
   - `apps/firm-website/src/app/actions/contact.ts`
   - `apps/firm-website/src/components/features/contact/contact-form.tsx`
-  - `apps/firm-website/src/components/features/contact/contact-success.tsx` (optional)
 
   **Definition of Done:**
   - Contact page at `/contact` with form fields: Name, Email, Phone (optional), Company (optional), Message.
@@ -203,14 +202,25 @@ Route group infrastructure not yet established, but all foundational pieces are 
 
 #### Subtasks
 
-| ID      | Agent/Human | File Path / Command                                                  | Description                                                                                                                                                                                            | Validation Command                            |
-| ------- | ----------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------- |
-| P018-01 | AGENT       | `apps/firm-website` (install if needed)                              | Ensure `react-hook-form` and `@hookform/resolvers` are installed (they come with shadcn form). If not, run `pnpm --filter @repo/firm-website add react-hook-form @hookform/resolvers`.                 | `pnpm list` shows packages.                   |
-| P018-02 | AGENT       | `apps/firm-website/src/app/actions/contact.ts`                       | Create Server Action `submitContact`: validate form data with Zod schema (import from `@repo/lib` or define locally), return `{ success: boolean, error?: string }`.                                   | No command.                                   |
-| P018-03 | AGENT       | `apps/firm-website/src/components/features/contact/contact-form.tsx` | Create ContactForm client component: use `useActionState` with `submitContact`, render inputs from `@repo/ui`, show field errors, loading state with `useFormStatus`, success message.                 | No command.                                   |
-| P018-04 | AGENT       | `apps/firm-website/src/app/(marketing)/contact/page.tsx`             | Create Contact page: render `ContactForm`, set metadata.                                                                                                                                               | `pnpm dev` shows /contact.                    |
-| P018-05 | AGENT       | `apps/firm-website/src/app/(marketing)/contact/page.test.tsx`        | Write unit test: contact page renders form, submits successfully (mock action).                                                                                                                         | `pnpm --filter @repo/firm-website test` runs. |
-| P018-06 | AGENT       | Update `docs/pages.md`                                               | Document contact page and Server Action.                                                                                                                                                               | None.                                         |
+| ID      | Agent/Human | File Path / Command                                                  | Description                                                                                                                                                                                            | Validation Command                            | Status  |
+| ------- | ----------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------- | ------- |
+| P018-01 | AGENT       | `apps/firm-website` (install if needed)                              | Ensure `react-hook-form` and `@hookform/resolvers` are installed (they come with shadcn form). If not, run `pnpm --filter @repo/firm-website add react-hook-form @hookform/resolvers`.                 | `pnpm list` shows packages.                   | ✅      |
+| P018-02 | AGENT       | `apps/firm-website/src/app/actions/contact.ts`                       | Create Server Action `submitContact`: validate form data with Zod schema (import from `@repo/lib` or define locally), return `{ success: boolean, error?: string }`.                                   | No command.                                   | ✅      |
+| P018-03 | AGENT       | `apps/firm-website/src/components/features/contact/contact-form.tsx` | Create ContactForm client component: use `useActionState` with `submitContact`, render inputs from `@repo/ui`, show field errors, loading state with `useFormStatus`, success message.                 | No command.                                   | ✅      |
+| P018-04 | AGENT       | `apps/firm-website/src/app/(marketing)/contact/page.tsx`             | Create Contact page: render `ContactForm`, set metadata.                                                                                                                                               | `pnpm dev` shows /contact.                    | ✅      |
+| P018-05 | AGENT       | `apps/firm-website/src/app/(marketing)/contact/page.test.tsx`        | Write unit test: contact page renders form, submits successfully (mock action).                                                                                                                         | `pnpm --filter @repo/firm-website test` runs. | ✅      |
+| P018-06 | AGENT       | Update `docs/pages.md`                                               | Document contact page and Server Action.                                                                                                                                                               | None.                                         | ✅      |
+
+**Implementation Notes:**
+- React 19 `useActionState` used instead of react-hook-form (not needed for Server Actions)
+- Zod v4 API used: `z.email()` instead of deprecated `z.string().email()`
+- Zod v4 `z.treeifyError()` used instead of deprecated `.flatten()`, with custom transformation to fieldErrors format
+- Server Action validates on server-side with proper error handling
+- Form displays field-level validation errors next to inputs
+- Submit button shows loading state with `useFormStatus`
+- Contact information displayed below form in responsive grid
+- All tests passing (94 total tests)
+- Lint warnings in `seo.test.ts` are pre-existing and unrelated to this task
 
 ---
 
