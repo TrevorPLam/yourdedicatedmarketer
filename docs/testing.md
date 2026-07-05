@@ -694,6 +694,7 @@ Storybook is used for component development and visual testing. Chromatic provid
 - **Framework**: @storybook/nextjs-vite (Storybook 10.4.6)
 - **Stories location**: `packages/ui/src/components/**/*.stories.tsx`
 - **Addons**: Chromatic, Vitest, A11y, Docs, MCP
+- **Theme Provider**: Configured in `.storybook/preview.tsx` with dark/light mode support
 
 ### Commands
 ```bash
@@ -708,11 +709,24 @@ npx vitest --project=storybook
 ```
 
 ### Component Stories
-Stories are written for core UI components:
-- **Button**: All variants (default, destructive, outline, secondary, ghost, link) and sizes
-- **Card**: Various layouts (with/without header/footer, long content)
+Stories are written for all core UI and layout components:
+
+**UI Components:**
+- **Button**: All variants (default, destructive, outline, secondary, ghost, link) and sizes (sm, default, lg, icon)
+- **Card**: Various layouts (with/without header/footer, long content, multiple actions)
+- **Container**: maxWidth variants (sm, md, lg, xl, full) with content examples
+- **Input**: Different types (text, email, password, number), disabled state, error state, with labels
+- **Accordion**: Single and multiple modes, long content, custom content examples
+
+**Layout Components:**
 - **Header**: Navigation items, custom logo, minimal configurations
-- **Footer**: Navigation links, contact info, social links
+- **Footer**: Navigation links, contact info, social links, custom copyright
+
+### Storybook Preview Configuration
+The `.storybook/preview.tsx` file includes:
+- ThemeProvider wrapper for dark/light mode toggle support
+- Accessibility testing configuration (set to 'todo' mode)
+- Control matchers for color and date inputs
 
 ### Chromatic Integration
 Chromatic runs on every pull request to detect visual regressions:
@@ -731,6 +745,7 @@ Chromatic runs on every pull request to detect visual regressions:
 - Avoid including business logic in stories
 - Use autodocs tag for automatic documentation generation
 - Test key components first before expanding coverage
+- Stories are colocated with components (e.g., `button.stories.tsx` next to `button.tsx`)
 
 ## Server Action Testing
 

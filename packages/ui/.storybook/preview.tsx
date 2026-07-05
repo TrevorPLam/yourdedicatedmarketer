@@ -1,4 +1,5 @@
 import type { Preview } from '@storybook/nextjs-vite';
+import { ThemeProvider } from '../src/theme-provider';
 
 const preview: Preview = {
   parameters: {
@@ -16,6 +17,14 @@ const preview: Preview = {
       test: 'todo',
     },
   },
+
+  decorators: [
+    (Story) => (
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <Story />
+      </ThemeProvider>
+    ),
+  ],
 };
 
 export default preview;
