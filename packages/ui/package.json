@@ -20,7 +20,8 @@
   "scripts": {
     "lint": "eslint src",
     "check-types": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
@@ -42,6 +43,7 @@
     "vitest": "^4.1.9"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.4.0",
     "@radix-ui/react-accordion": "^1.2.3",
     "@radix-ui/react-label": "^2.1.2",
     "@radix-ui/react-slot": "^1.1.2",
@@ -49,9 +51,12 @@
     "clsx": "^2.1.1",
     "lucide-react": "^0.468.0",
     "next-themes": "^0.4.6",
+    "radix-ui": "^1.6.1",
     "react": "19",
     "react-dom": "19",
-    "tailwind-merge": "^2.6.0"
+    "react-hook-form": "^7.81.0",
+    "tailwind-merge": "^2.6.0",
+    "zod": "^4.4.3"
   },
   "peerDependencies": {
     "next": "15"

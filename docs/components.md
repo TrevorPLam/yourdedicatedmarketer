@@ -287,6 +287,152 @@ type SocialLink = {
 };
 ```
 
+## Input
+
+A text input component with brand-themed focus states.
+
+### Usage
+
+```tsx
+import { Input } from '@repo/ui';
+
+<Input placeholder="Enter your email" />
+<Input type="email" placeholder="Email address" />
+<Input disabled placeholder="Disabled input" />
+```
+
+### Props
+
+- All standard HTML input attributes are supported
+- `className` - Additional CSS classes
+- `type` - Input type (text, email, password, etc.)
+
+### Features
+
+- **Brand theming** - Focus ring uses brand primary color
+- **Accessible** - Proper ARIA attributes and keyboard navigation
+- **Responsive** - Adapts to different screen sizes
+- **File input support** - Styled file upload with custom classes
+
+## Textarea
+
+A multi-line text input component with brand-themed focus states.
+
+### Usage
+
+```tsx
+import { Textarea } from '@repo/ui';
+
+<Textarea placeholder="Enter your message" />
+<Textarea disabled placeholder="Disabled textarea" />
+```
+
+### Props
+
+- All standard HTML textarea attributes are supported
+- `className` - Additional CSS classes
+- `placeholder` - Placeholder text
+
+### Features
+
+- **Auto-sizing** - Uses `field-sizing-content` for automatic height adjustment
+- **Brand theming** - Focus ring uses brand primary color
+- **Minimum height** - Default minimum height of 4rem (min-h-16)
+- **Accessible** - Proper ARIA attributes and keyboard navigation
+
+## Label
+
+A label component for form inputs with accessible associations.
+
+### Usage
+
+```tsx
+import { Label } from '@repo/ui';
+
+<Label htmlFor="email">Email</Label>
+<Input id="email" />
+```
+
+### Props
+
+- All standard HTML label attributes are supported
+- `className` - Additional CSS classes
+- `htmlFor` - Associates label with input element
+
+### Features
+
+- **Accessible** - Proper association with form inputs via `htmlFor`
+- **Brand theming** - Uses foreground color for consistency
+- **Disabled state** - Automatically styles when parent input is disabled
+- **Error state** - Supports error styling when used with Form components
+
+## Form Components
+
+A set of form components built on React Hook Form for accessible, type-safe form handling.
+
+### Components
+
+- `Form` - Form provider from React Hook Form
+- `FormField` - Connects form fields to React Hook Form
+- `FormItem` - Container for form field layout
+- `FormLabel` - Label component with error state support
+- `FormControl` - Wraps form controls with ARIA attributes
+- `FormDescription` - Helper text for form fields
+- `FormMessage` - Error message display
+- `useFormField` - Hook to access form field context
+
+### Usage
+
+```tsx
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@repo/ui';
+import { Input } from '@repo/ui';
+import { useForm } from 'react-hook-form';
+
+function MyForm() {
+  const form = useForm({
+    defaultValues: {
+      email: '',
+    },
+  });
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter your email" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </form>
+    </Form>
+  );
+}
+```
+
+### Features
+
+- **Type-safe** - Full TypeScript support with React Hook Form
+- **Accessible** - Proper ARIA attributes for screen readers
+- **Error handling** - Automatic error display with FormMessage
+- **Validation** - Integrates with Zod schemas for validation
+- **Deep module pattern** - Form components are pure wrappers around React Hook Form
+
+### Best Practices
+
+1. **Use Controller for controlled components** - FormField uses Controller internally for UI library components
+2. **Always use FormControl** - Ensures proper ARIA attributes are injected
+3. **Don't duplicate error messages** - FormMessage handles error display automatically
+4. **Use onBlur validation mode** - Provides natural, non-intrusive validation experience
+5. **Keep form components pure** - No business logic inside form components
+
 ## Best Practices
 
 1. **Use Server Components by default** - All components are Server Components unless they need interactivity
@@ -294,3 +440,4 @@ type SocialLink = {
 3. **Compose components** - Use Container and Section together for consistent layouts
 4. **Test components** - All components have unit tests using Vitest and React Testing Library
 5. **Navigation components** - Header, NavLink, and MobileMenu are Client Components that use Next.js hooks for routing
+6. **Form components** - Form components are Client Components that use React Hook Form for state management
