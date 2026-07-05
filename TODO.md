@@ -690,7 +690,7 @@ Route group infrastructure not yet established, but all foundational pieces are 
 
 ### Parent Task P011: Set Up Route Group Structure and Marketing Layout
 
-- [ ] **P011** | Status: `PENDING`  
+- [x] **P011** | Status: `COMPLETED`
   **Related File Paths:**
   - `apps/firm-website/src/app/(marketing)/layout.tsx`
   - `apps/firm-website/src/app/(marketing)/page.tsx` (placeholder)
@@ -727,16 +727,26 @@ Route group infrastructure not yet established, but all foundational pieces are 
   - Depends on: `@repo/ui` Header/Footer, navigation utilities (Phase 1).
   - Blocks: all subsequent page tasks (P012–P021).
 
+  **Implementation Notes:**
+  - Created `(marketing)` route group directory in `apps/firm-website/src/app/`
+  - Created marketing layout with Header and Footer from `@repo/ui`, using `getNavItems()` for data-driven navigation
+  - Created placeholder homepage with heading "Your Dedicated Marketer"
+  - Updated root layout to be minimal with only ThemeProvider (removed Header/Footer)
+  - Confirmed global styles already import `@repo/ui/globals.css`
+  - Updated `docs/architecture.md` with layout architecture section documenting route group structure and hierarchy
+  - Quality assurance: lint passed (pre-existing warnings in seo.test.ts unrelated to this task), tests passed (68 tests), dev server runs successfully and shows the page
+  - Pre-existing lint warnings in `seo.test.ts` (11 warnings about `any` type) - not related to this task
+
 #### Subtasks
 
 | ID      | Agent/Human | File Path / Command                                | Description                                                                                                                              | Validation Command         |
 | ------- | ----------- | -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
-| P011-01 | AGENT       | `apps/firm-website/src/app/(marketing)/`           | Create the `(marketing)` route group directory.                                                                                          | Directory exists.          |
-| P011-02 | AGENT       | `apps/firm-website/src/app/(marketing)/layout.tsx` | Create marketing layout that imports `Header` and `Footer` from `@repo/ui`. Pass `navItems` from `getNavItems()` to Header.               | No command.                |
-| P011-03 | AGENT       | `apps/firm-website/src/app/(marketing)/page.tsx`   | Create placeholder homepage with heading "Your Dedicated Marketer".                                                                      | `pnpm dev` shows the page. |
-| P011-04 | AGENT       | `apps/firm-website/src/app/layout.tsx`             | Ensure root layout wraps children with `ThemeProvider` from `@repo/ui`; check `suppressHydrationWarning` on `<html>`.                    | No command.                |
-| P011-05 | AGENT       | `apps/firm-website/src/app/globals.css`            | Confirm global styles import `@repo/ui` styles.                                                                                          | No command.                |
-| P011-06 | AGENT       | Update `docs/architecture.md`                      | Document route group structure and layout hierarchy.                                                                                     | None.                      |
+| P011-01 | AGENT       | `apps/firm-website/src/app/(marketing)/`           | Create the `(marketing)` route group directory.                                                                                          | ✅ Complete                 |
+| P011-02 | AGENT       | `apps/firm-website/src/app/(marketing)/layout.tsx` | Create marketing layout that imports `Header` and `Footer` from `@repo/ui`. Pass `navItems` from `getNavItems()` to Header.               | ✅ Complete                 |
+| P011-03 | AGENT       | `apps/firm-website/src/app/(marketing)/page.tsx`   | Create placeholder homepage with heading "Your Dedicated Marketer".                                                                      | ✅ Complete (dev verified)  |
+| P011-04 | AGENT       | `apps/firm-website/src/app/layout.tsx`             | Ensure root layout wraps children with `ThemeProvider` from `@repo/ui`; check `suppressHydrationWarning` on `<html>`.                    | ✅ Complete                 |
+| P011-05 | AGENT       | `apps/firm-website/src/app/globals.css`            | Confirm global styles import `@repo/ui` styles.                                                                                          | ✅ Complete                 |
+| P011-06 | AGENT       | Update `docs/architecture.md`                      | Document route group structure and layout hierarchy.                                                                                     | ✅ Complete                 |
 
 ---
 

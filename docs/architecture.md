@@ -80,6 +80,59 @@ Applications depend on packages, but packages do not depend on applications. Thi
 - **Zod**: Runtime schema validation for content types
 - **In-memory caching**: Map-based cache to avoid repeated file reads
 
+## Layout Architecture
+
+The Next.js App Router uses a hierarchical layout system with route groups to organize layouts by concern.
+
+### Layout Hierarchy
+
+```
+app/
+├── layout.tsx              # Root layout (global providers only)
+└── (marketing)/            # Route group (no URL path impact)
+    ├── layout.tsx          # Marketing layout (Header + Footer)
+    └── page.tsx            # Homepage
+```
+
+### Root Layout
+
+The root layout (`app/layout.tsx`) is minimal and contains only global providers:
+
+- `<html>` and `<body>` tags with `suppressHydrationWarning`
+- `ThemeProvider` from `@repo/ui` for dark/light theme support
+- Font configuration (Inter)
+- Metadata configuration
+
+**Purpose**: Provides global context and providers that apply to all routes.
+
+### Marketing Route Group
+
+The `(marketing)` route group (`app/(marketing)/`) organizes marketing pages without affecting URL paths:
+
+- **Marketing layout** (`layout.tsx`): Contains `Header` and `Footer` from `@repo/ui`
+- **Navigation**: Uses `getNavItems()` from navigation utilities for data-driven navigation
+- **Footer**: Includes contact info, navigation links, and social links
+- **Pages**: All marketing pages (home, services, industries, etc.) live in this group
+
+**Purpose**: Provides consistent page structure (header/footer) for marketing pages.
+
+### Route Group Benefits
+
+- **No URL impact**: Parentheses in directory names prevent route segments from affecting URL paths
+- **Layout separation**: Different concerns can have different layouts
+- **Code organization**: Related pages are grouped together
+- **Shared layout**: All pages in the group inherit the group layout
+
+### Layout Composition
+
+When a page in the `(marketing)` group is rendered:
+
+1. Root layout wraps with `ThemeProvider`
+2. Marketing layout wraps with `Header` and `Footer`
+3. Page content renders in the middle
+
+This follows the deep module principle: each layout has a single, clear responsibility.
+
 ## Content Architecture
 
 The content architecture follows a file-based approach with static generation, enabling fast build times and easy content management without a database.
