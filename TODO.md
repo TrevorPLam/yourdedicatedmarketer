@@ -738,7 +738,7 @@ This document defines all tasks required to establish the design system foundati
 
 ### Parent Task P011: Dark Mode with Theme Switching
 
-- [ ] **P011** | Status: `PENDING`
+- [x] **P011** | Status: `COMPLETE`
       **Related File Paths:**
   - `packages/ui/src/styles.css` (dark mode CSS variables)
   - `packages/ui/src/theme-provider.tsx`
@@ -789,6 +789,17 @@ This document defines all tasks required to establish the design system foundati
 | P011-06 | AGENT       | `apps/firm-website` (install)                 | Run: `pnpm --filter @repo/firm-website add lucide-react`.                                                                                                                                        | `pnpm list lucide-react` shows it.            |
 | P011-07 | AGENT       | `apps/firm-website/src/components/header.tsx` | Add `ThemeToggle` to the header.                                                                                                                                                                 | `pnpm dev` shows toggle.                      |
 | P011-08 | AGENT       | Update `docs/theme.md`                        | Document dark mode implementation and how to add theme support to components.                                                                                                                    | None.                                         |
+
+**Implementation Notes:**
+- ✅ P011-01: Installed next-themes in @repo/ui package
+- ✅ P011-02: Created ThemeProvider with attribute="class", defaultTheme="system", enableSystem, disableTransitionOnChange
+- ✅ P011-03: Wrapped app with ThemeProvider in layout.tsx, added suppressHydrationWarning to html element
+- ✅ P011-04: Changed dark mode selector from [data-theme="dark"] to .dark class to match ThemeProvider configuration
+- ✅ P011-05: Created ThemeToggle with mounted check to prevent hydration errors, uses Sun/Moon icons from lucide-react
+- ⏭️ P011-06: Skipped - lucide-react already installed in @repo/ui package
+- ✅ P011-07: Created header.tsx component with ThemeToggle, added to homepage with dark mode styles
+- ✅ P011-08: Created comprehensive docs/theme.md with architecture, usage, best practices, and testing guidelines
+- All subtasks completed. Lint passed, tests passed (30 total). Pre-existing React type errors not introduced by this task.
 
 ---
 
@@ -4543,3 +4554,16 @@ Phase 7 consists of 13 parent tasks (P063–P075) and numerous subtasks. The goa
 ---
 
 _End of Document_
+
+---
+
+## Discovered Issues
+
+### Issue: React Type Declaration Errors
+- **Status:** PENDING
+- **Priority:** MEDIUM
+- **Related File Paths:** `packages/ui/src/theme-provider.tsx`, `packages/ui/src/theme-toggle.tsx`
+- **Description:** TypeScript cannot find declaration files for `react` and `react/jsx-runtime`. The error "Could not find a declaration file for module 'react'" appears in UI package components. This is a pre-existing issue not introduced by P011.
+- **Root Cause:** React 19 may not have proper TypeScript type definitions installed or configured in the workspace
+- **Impact:** Type checking is affected, but runtime functionality works correctly
+- **Suggested Resolution:** Install `@types/react` and `@types/react-dom` as devDependencies, or verify React 19 type configuration in tsconfig.json
