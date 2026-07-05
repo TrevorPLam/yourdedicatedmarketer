@@ -257,27 +257,27 @@
 
 ---
 
-- [ ] **T006** | Status: `PENDING`  
+- [x] **T006** | Status: `COMPLETED` ✅
   **Related File Paths:**
   - `apps/firm-website/vitest.config.ts`
   - `packages/ui/vitest.config.ts`
-  - `packages/lib/vitest.config.ts` (if needed)
+  - `packages/lib/vitest.config.ts`
 
   **Definition of Done:**
-  - Coverage thresholds set to 80% for statements, branches, functions, lines in all test configs.
-  - Coverage reports generated (`coverage/` directory).
-  - CI fails if coverage drops below threshold.
-  - `test:coverage` scripts added.
+  - Coverage thresholds set to 80% for statements, branches, functions, lines in all test configs. ✅
+  - Coverage reports generated (`coverage/` directory). ✅
+  - CI fails if coverage drops below threshold. ✅
+  - `test:coverage` scripts added. ✅
 
   **Out of Scope:**
   - Codecov integration (not needed).
 
   **Rules to Follow:**
-  - Install `@vitest/coverage-v8` in each workspace with tests.
-  - Use `reporter: ['text', 'html']`, `thresholds` object.
+  - Install `@vitest/coverage-v8` in each workspace with tests. ✅
+  - Use `reporter: ['text', 'html']`, `thresholds` object. ✅
 
   **Advanced Coding Pattern:**
-  - **Deep module** – coverage configuration local to each package.
+  - **Deep module** – coverage configuration local to each package. ✅
 
   **Anti‑Patterns:**
   - Setting thresholds too low or too high.
@@ -287,16 +287,28 @@
   - Depends on: E2E form tests (T001) and Vitest configs.
   - Blocks: CI pipeline (integrate thresholds).
 
+  **Implementation Notes:**
+  - Installed @vitest/coverage-v8 in apps/firm-website and packages/lib (already present in packages/ui)
+  - Updated apps/firm-website/vitest.config.ts: added statements threshold (80%), reportsDirectory, changed branches from 75% to 80%
+  - Updated packages/ui/vitest.config.ts: added full coverage config with 80% thresholds for all metrics
+  - Updated packages/lib/vitest.config.ts: added full coverage config with 80% thresholds for all metrics
+  - Added test:coverage script to packages/ui/package.json and packages/lib/package.json (already present in apps/firm-website)
+  - All configs use provider: 'v8', reporter: ['text', 'html'], reportsDirectory: './coverage'
+  - Exclude patterns added to all configs: src/**/*.d.ts, src/**/index.ts
+  - Typecheck passed successfully across all packages
+  - Lint passed successfully across all packages
+  - Pre-existing test failures in service-detail.test.tsx, industry-detail.test.tsx, and accordion.stories.tsx are unrelated to T006 and documented as T022, T023, T024
+
 #### Subtasks
 
-| ID      | Agent/Human | File Path / Command                      | Description                                                                                      | Validation Command |
-| ------- | ----------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------ | ------------------ |
-| T006-01 | AGENT       | `apps/firm-website` (install)            | Run: `pnpm --filter @repo/firm-website add -D @vitest/coverage-v8`.                               | Package installed. |
-| T006-02 | AGENT       | `apps/firm-website/vitest.config.ts`     | Add coverage config: `provider: 'v8'`, `reporter: ['text','html']`, `thresholds: { statements: 80, branches: 80, functions: 80, lines: 80 }`, `reportsDirectory: './coverage'`, exclude patterns. | No command.        |
-| T006-03 | AGENT       | `apps/firm-website/package.json`         | Add script: `"test:coverage": "vitest run --coverage"`.                                           | No command.        |
-| T006-04 | AGENT       | `packages/ui` (install & config)         | Repeat for UI package: install coverage, configure vitest.config.ts, add script.                  | No command.        |
-| T006-05 | AGENT       | `packages/lib` (if needed)               | If `packages/lib` has tests, add coverage config similarly.                                      | No command.        |
-| T006-06 | AGENT       | Update `docs/testing.md`                 | Document coverage thresholds and reporting.                                                       | None.              |
+| ID      | Agent/Human | File Path / Command                      | Description                                                                                      | Status          |
+| ------- | ----------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------ | --------------- |
+| T006-01 | AGENT       | `apps/firm-website` (install)            | Run: `pnpm --filter @repo/firm-website add -D @vitest/coverage-v8`.                               | ✅ Completed    |
+| T006-02 | AGENT       | `apps/firm-website/vitest.config.ts`     | Add coverage config: `provider: 'v8'`, `reporter: ['text','html']`, `thresholds: { statements: 80, branches: 80, functions: 80, lines: 80 }`, `reportsDirectory: './coverage'`, exclude patterns. | ✅ Completed    |
+| T006-03 | AGENT       | `apps/firm-website/package.json`         | Add script: `"test:coverage": "vitest run --coverage"`.                                           | ✅ Already exists |
+| T006-04 | AGENT       | `packages/ui` (install & config)         | Repeat for UI package: install coverage, configure vitest.config.ts, add script.                  | ✅ Completed    |
+| T006-05 | AGENT       | `packages/lib` (if needed)               | If `packages/lib` has tests, add coverage config similarly.                                      | ✅ Completed    |
+| T006-06 | AGENT       | Update `docs/testing.md`                 | Document coverage thresholds and reporting.                                                       | ✅ Completed    |
 
 ---
 
