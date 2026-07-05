@@ -69,4 +69,65 @@ describe('Content Utilities', () => {
       expect(contents.every(item => item !== null)).toBe(true);
     });
   });
+
+  describe('Service Content', () => {
+    it('should return all service slugs', async () => {
+      const slugs = await getAllSlugs('services');
+      expect(Array.isArray(slugs)).toBe(true);
+      expect(slugs.length).toBe(6);
+      expect(slugs).toContain('website-design');
+      expect(slugs).toContain('local-seo');
+      expect(slugs).toContain('paid-ads');
+      expect(slugs).toContain('email-sms');
+      expect(slugs).toContain('copywriting-branding');
+      expect(slugs).toContain('hosting-care');
+    });
+
+    it('should return content for each service', async () => {
+      const services = await getAllContent<{ title: string; slug: string; order: number }>('services');
+      
+      expect(services.length).toBe(6);
+      
+      const websiteDesign = services.find(item => item.data.slug === 'website-design');
+      expect(websiteDesign).toBeDefined();
+      expect(websiteDesign?.data.title).toBe('Website Design & Development');
+      expect(websiteDesign?.data.order).toBe(1);
+
+      const localSeo = services.find(item => item.data.slug === 'local-seo');
+      expect(localSeo).toBeDefined();
+      expect(localSeo?.data.title).toBe('Local SEO Services');
+      expect(localSeo?.data.order).toBe(2);
+
+      const paidAds = services.find(item => item.data.slug === 'paid-ads');
+      expect(paidAds).toBeDefined();
+      expect(paidAds?.data.title).toBe('Paid Ads Management');
+      expect(paidAds?.data.order).toBe(3);
+
+      const emailSms = services.find(item => item.data.slug === 'email-sms');
+      expect(emailSms).toBeDefined();
+      expect(emailSms?.data.title).toBe('Email & SMS Marketing');
+      expect(emailSms?.data.order).toBe(4);
+
+      const copywritingBranding = services.find(item => item.data.slug === 'copywriting-branding');
+      expect(copywritingBranding).toBeDefined();
+      expect(copywritingBranding?.data.title).toBe('Copywriting & Branding');
+      expect(copywritingBranding?.data.order).toBe(5);
+
+      const hostingCare = services.find(item => item.data.slug === 'hosting-care');
+      expect(hostingCare).toBeDefined();
+      expect(hostingCare?.data.title).toBe('Hosting & Care Plan');
+      expect(hostingCare?.data.order).toBe(6);
+    });
+
+    it('should parse service content with correct metadata', async () => {
+      const websiteDesign = await getContentBySlug<{ title: string; slug: string; featured: boolean }>('services', 'website-design');
+      
+      expect(websiteDesign).not.toBeNull();
+      expect(websiteDesign?.data.title).toBe('Website Design & Development');
+      expect(websiteDesign?.data.slug).toBe('website-design');
+      expect(websiteDesign?.data.featured).toBe(true);
+      expect(websiteDesign?.content).toBeDefined();
+      expect(websiteDesign?.content.length).toBeGreaterThan(0);
+    });
+  });
 });

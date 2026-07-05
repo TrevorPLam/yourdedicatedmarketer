@@ -12,6 +12,60 @@ All content is stored in `apps/firm-website/src/content/` with the following dir
 - `faq/` - Frequently asked questions
 - `pages/` - Static page content (about, contact, etc.)
 
+## Service Content Structure
+
+Service pages are the core content type for the firm website. Each service is represented as an MDX file with frontmatter metadata and markdown body content.
+
+### Current Services
+
+The following service pages are currently available:
+
+1. **Website Design & Development** (`website-design.mdx`) - Anchor service, 800-1000+ words, order 1, featured
+2. **Local SEO Services** (`local-seo.mdx`) - Local SEO bundle, 400-600 words, order 2
+3. **Paid Ads Management** (`paid-ads.mdx`) - Lead acceleration bundle, 400-600 words, order 3
+4. **Email & SMS Marketing** (`email-sms.mdx`) - Retention starter bundle, 400-600 words, order 4
+5. **Copywriting & Branding** (`copywriting-branding.mdx`) - Build-time add-ons, 400-600 words, order 5
+6. **Hosting & Care Plan** (`hosting-care.mdx`) - Monthly retainer, 400-600 words, order 6
+
+### Service File Format
+
+Each service MDX file includes:
+
+- **Frontmatter fields**:
+  - `title` - Display title of the service
+  - `slug` - URL-friendly identifier
+  - `description` - Short description for SEO and previews
+  - `featured` - Boolean flag for prominent display (optional)
+  - `order` - Display order for sorting (optional)
+
+- **Content sections**:
+  - Service overview and value proposition
+  - Pricing information with market context
+  - Service features and deliverables
+  - Target audience and use cases
+  - Process or methodology
+  - Call-to-action
+
+### Adding New Services
+
+To add a new service:
+
+1. Create a new `.mdx` file in `apps/firm-website/src/content/services/`
+2. Add frontmatter with required fields (`title`, `slug`, `description`)
+3. Include optional fields (`featured`, `order`) as needed
+4. Write the content body following the established structure
+5. Update the service list in this documentation
+6. The content will be automatically available through `getAllServices()` and `getService(slug)`
+
+### Content Guidelines
+
+- **Word count**: Anchor service (website design) should be 800-1000+ words; other services 400-600 words
+- **Tone**: Professional, customer-focused, benefit-oriented
+- **Structure**: Use clear headings, bullet points, and sections for readability
+- **SEO**: Include relevant keywords naturally in headings and body content
+- **Pricing**: Include pricing context and market positioning when applicable
+- **CTA**: End with a clear call-to-action
+
 ## Content File Format
 
 Each content file is an MDX file (`.mdx`) with YAML frontmatter. The frontmatter contains metadata, and the body contains the content in Markdown/MDX format.
