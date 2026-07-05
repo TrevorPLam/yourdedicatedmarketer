@@ -526,9 +526,10 @@
 
 ---
 
-- [ ] **T011** | Status: `PENDING`  
+- [ ] **T011** | Status: `PENDING` (Human tasks remaining)
   **Related File Paths:**
   - Vercel dashboard
+  - `docs/environment.md`
 
   **Definition of Done:**
   - All required environment variables are set in Vercel for production (and preview if needed):
@@ -550,13 +551,21 @@
   - Depends on: Sentry (T010).
   - Blocks: production deployment (T017).
 
+  **Implementation Notes:**
+  - Updated docs/environment.md with comprehensive environment variable documentation
+  - Added all required variables: NEXT_PUBLIC_SITE_URL, NEXT_PUBLIC_GA_MEASUREMENT_ID, NEXT_PUBLIC_SENTRY_DSN, RESEND_API_KEY, CONTACT_EMAIL, FROM_EMAIL
+  - Added Vercel setup instructions for Production and Preview environments
+  - Documented security notes about NEXT_PUBLIC_ prefix usage
+  - Lint passed successfully
+  - Human tasks T011-01 and T011-02 pending (Vercel dashboard setup)
+
 #### Subtasks
 
 | ID      | Agent/Human | File Path / Command          | Description                                                                       | Validation Command |
 | ------- | ----------- | ---------------------------- | --------------------------------------------------------------------------------- | ------------------ |
 | T011-01 | HUMAN       | Vercel dashboard             | Go to Settings → Environment Variables and add all variables for Production.       | Variables saved.   |
 | T011-02 | HUMAN       | Vercel dashboard             | Add same variables for Preview environment if needed.                             | Variables saved.   |
-| T011-03 | AGENT       | `docs/environment.md`        | Document all required environment variables and where they are set.               | None.              |
+| T011-03 | AGENT       | `docs/environment.md`        | Document all required environment variables and where they are set.               | None.              | ✅ Completed    |
 
 ---
 

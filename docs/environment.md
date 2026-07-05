@@ -8,10 +8,15 @@ This document describes how to set up and manage environment variables for the f
 
 - `NEXT_PUBLIC_SITE_URL` - The base URL of the site (default: `http://localhost:3000`)
 - `NEXT_PUBLIC_ANALYTICS_ID` - Analytics tracking ID (optional)
+- `NEXT_PUBLIC_GA_MEASUREMENT_ID` - Google Analytics 4 measurement ID (format: `G-XXXXXXXXXX`)
+- `NEXT_PUBLIC_SENTRY_DSN` - Sentry DSN for error tracking (format: `https://xxxx@xxxx.ingest.sentry.io/xxxx`)
 
 ### Private Variables (Server-Side Only)
 
-- `FORM_API_KEY` - API key for form submissions (optional)
+- `RESEND_API_KEY` - Resend API key for email sending (format: `re_xxxx`)
+- `CONTACT_EMAIL` - Destination email for contact form submissions (e.g., `hello@yourdedicatedmarketer.com`)
+- `FROM_EMAIL` - Sender email for contact form submissions (e.g., `noreply@yourdedicatedmarketer.com`)
+- `FORM_API_KEY` - API key for form submissions (optional, legacy)
 
 ## Setup Instructions
 
@@ -23,14 +28,58 @@ This document describes how to set up and manage environment variables for the f
 2. Edit `apps/firm-website/.env.local` with your actual values:
    ```bash
    NEXT_PUBLIC_SITE_URL=http://localhost:3000
-   NEXT_PUBLIC_ANALYTICS_ID=your-analytics-id
-   FORM_API_KEY=your-api-key
+   NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
+   NEXT_PUBLIC_SENTRY_DSN=https://xxxx@xxxx.ingest.sentry.io/xxxx
+   RESEND_API_KEY=re_xxxx
+   CONTACT_EMAIL=hello@yourdedicatedmarketer.com
+   FROM_EMAIL=noreply@yourdedicatedmarketer.com
    ```
 
 3. Restart the development server to apply changes:
    ```bash
    pnpm dev
    ```
+
+## Vercel Environment Variables Setup
+
+### Production Environment
+
+1. Go to your Vercel project dashboard
+2. Navigate to **Settings** → **Environment Variables**
+3. Add the following variables for **Production**:
+
+   **Public Variables:**
+   - `NEXT_PUBLIC_SITE_URL` - Set to your production URL (e.g., `https://yourdedicatedmarketer.com`)
+   - `NEXT_PUBLIC_GA_MEASUREMENT_ID` - Your Google Analytics 4 measurement ID
+   - `NEXT_PUBLIC_SENTRY_DSN` - Your Sentry DSN from Sentry project setup
+
+   **Private Variables:**
+   - `RESEND_API_KEY` - Your Resend API key (get from Resend dashboard)
+   - `CONTACT_EMAIL` - Destination email for contact form (e.g., `hello@yourdedicatedmarketer.com`)
+   - `FROM_EMAIL` - Sender email for contact form (e.g., `noreply@yourdedicatedmarketer.com`)
+
+4. Click **Save** to apply the changes
+
+### Preview Environment
+
+For preview deployments, you can either:
+
+1. **Inherit from Production** - Use the same values as production for most variables
+2. **Set specific preview values** - Add environment variables specifically for Preview environment
+
+Recommended approach:
+- Set `NEXT_PUBLIC_SITE_URL` to the preview deployment URL (Vercel provides this automatically)
+- Use the same `RESEND_API_KEY`, `CONTACT_EMAIL`, and `FROM_EMAIL` as production for testing
+- Use a separate Google Analytics property or the same one with custom dimensions for preview tracking
+- Use a separate Sentry project or environment to distinguish preview errors
+
+### Important Notes
+
+- **Never** prefix sensitive variables with `NEXT_PUBLIC_` - this exposes them to the browser
+- Only `NEXT_PUBLIC_SENTRY_DSN` is intentionally public because Sentry needs it on the client
+- Environment variables are automatically injected at build time for `NEXT_PUBLIC_` variables
+- Server-only variables are available in Server Components, API routes, and Server Actions
+- Changes to environment variables require a redeployment to take effect
 
 ## Environment Variable Validation
 
