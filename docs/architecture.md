@@ -70,6 +70,9 @@ Applications depend on packages, but packages do not depend on applications. Thi
 - **Vitest**: Fast unit testing with native ESM support
 - **Playwright**: E2E testing with cross-browser support
 - **@testing-library/react**: Component testing utilities
+- **Storybook**: Visual testing and component development
+- **Chromatic**: Automated visual regression testing
+- **@vitest/coverage-v8**: Code coverage reporting with 80% thresholds
 
 ### Content Management
 
@@ -267,6 +270,169 @@ Components are mapped in `apps/firm-website/mdx-components.tsx` for use in MDX f
 - **SEO-friendly**: Static generation with pre-rendered HTML
 - **Scalable**: Easy to add new content files
 - **Cacheable**: In-memory cache improves performance
+
+## Testing Architecture
+
+The testing architecture follows a multi-layered approach with unit, integration, E2E, and visual testing to ensure code quality and reliability across the entire application.
+
+### Testing Pyramid
+
+The project follows a testing pyramid with the following distribution:
+
+```
+        E2E Tests (Playwright)
+       /                     \
+      /                       \
+     /   Visual Tests (Storybook) \
+    /                               \
+   /   Integration Tests              \
+  /                                     \
+ /   Unit Tests (Vitest)                 \
+_________________________________________
+```
+
+- **Unit Tests (Base)**: Fast, isolated tests for utilities, components, and business logic
+- **Integration Tests**: Tests that verify multiple units work together (content utilities with real file system)
+- **Visual Tests**: Component visual regression testing with Storybook and Chromatic
+- **E2E Tests (Top)**: Slow, comprehensive tests that verify critical user flows in a real browser
+
+### Test Organization
+
+#### Unit Tests
+
+**Location**: `apps/firm-website/src/test/`, `packages/ui/src/components/ui/*.test.tsx`, `packages/lib/src/*.test.ts`
+
+**Purpose**: Test individual functions, components, and utilities in isolation
+
+**Tools**: Vitest, @testing-library/react, @testing-library/user-event
+
+**Coverage**:
+- Content utilities (content.ts, navigation.ts)
+- UI components (Button, Card, Input, Accordion, etc.)
+- Layout components (Header, Footer, MobileMenu)
+- Server Actions (contact.ts)
+- SEO utilities (seo.ts)
+
+#### Integration Tests
+
+**Location**: `apps/firm-website/src/lib/content.integration.test.ts`
+
+**Purpose**: Verify that content utilities work correctly with the real file system
+
+**Tools**: Vitest with real file system (no mocking)
+
+**Coverage**:
+- Content reading and parsing with actual MDX files
+- Frontmatter extraction and validation
+- HTML conversion from markdown
+- Caching behavior
+
+#### E2E Tests
+
+**Location**: `apps/firm-website/src/e2e/`
+
+**Purpose**: Verify critical user flows in a real browser environment
+
+**Tools**: Playwright with Chromium, Firefox, WebKit
+
+**Coverage**:
+- Homepage loading and navigation
+- Static pages (About, Pricing, Contact, FAQ)
+- Hub pages (Services, Industries, Demos)
+- Detail pages (dynamic routing)
+- Contact form validation and submission
+- FAQ accordion interactions
+
+**Configuration**: Tests run against production build via `webServer` configuration
+
+#### Visual Tests
+
+**Location**: `packages/ui/src/components/**/*.stories.tsx`
+
+**Purpose**: Detect visual regressions in UI components
+
+**Tools**: Storybook 10.4.6 with Chromatic
+
+**Coverage**:
+- All UI components (Button, Card, Container, Input, Accordion)
+- Layout components (Header, Footer)
+- Component variants and states
+- Dark/light mode support
+
+**CI Integration**: Chromatic runs on PRs to main with `--exit-zero-on-changes` for team review
+
+### Shared Test Utilities
+
+The `@repo/test-utils` package provides common testing utilities to reduce boilerplate:
+
+**Location**: `packages/test-utils/src/index.ts`
+
+**Exports**:
+- `renderWithProviders` - React Testing Library wrapper with ThemeProvider
+- `mockNextNavigation()` - Mocks Next.js App Router hooks
+- `mockResend()` - Mocks Resend email SDK
+- `mockUseActionState()` - Mocks React's useActionState hook
+
+### Coverage Strategy
+
+**Thresholds**: 80% for statements, branches, functions, and lines across all packages
+
+**Configuration**: `@vitest/coverage-v8` in each package's Vitest config
+
+**Enforcement**: Coverage thresholds are checked in CI pipeline
+
+**Reports**: HTML reports generated in `coverage/` directory
+
+**Exclusions**: Test files, type definitions, and barrel exports
+
+### CI/CD Integration
+
+**GitHub Actions Workflow**: `.github/workflows/ci.yml`
+
+**Triggers**: Pull requests to main branch
+
+**Steps**:
+1. Checkout code
+2. Setup pnpm and Node.js
+3. Install dependencies with frozen lockfile
+4. Cache Turborepo outputs
+5. Run lint across all packages
+6. Run type check across all packages
+7. Run unit tests across all packages
+8. Install Playwright browsers
+9. Run E2E tests with Playwright
+
+**Chromatic Workflow**: `.github/workflows/chromatic.yml`
+
+**Triggers**: Pull requests to main branch
+
+**Steps**:
+1. Checkout code
+2. Setup pnpm and Node.js
+3. Install dependencies
+4. Build Storybook
+5. Run Chromatic with `--exit-zero-on-changes`
+
+### Deep Module Pattern
+
+The testing architecture follows deep module principles:
+
+- **Isolated test suites**: Each test type (unit, integration, E2E, visual) is separate
+- **Simple interfaces**: Test utilities provide simple, reusable functions
+- **Information hiding**: Mocking strategies encapsulate external dependencies
+- **High cohesion**: Related tests are grouped together by feature
+- **Low coupling**: Tests don't depend on each other (except integration tests depend on real system)
+
+### Testing Best Practices
+
+- **Test behavior, not implementation**: Focus on what users see and do
+- **Use semantic locators**: Prioritize `getByRole`, `getByText` over CSS selectors
+- **Mock external dependencies**: Isolate units under test from external systems
+- **Test critical paths**: Prioritize testing business logic and user-facing features
+- **Keep tests fast**: Unit tests should run in milliseconds, E2E tests in seconds
+- **Avoid flaky tests**: Use stable selectors and proper waiting strategies
+- **Review coverage reports**: Check HTML reports to identify untested code
+- **Don't chase 100%**: Some code (error handlers, edge cases) may not need full coverage
 
 ## Form Architecture
 

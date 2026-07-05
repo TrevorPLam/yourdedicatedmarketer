@@ -1454,24 +1454,175 @@ slug: "correct-slug"
 
 ## Testing
 
+This guide provides comprehensive instructions for writing different types of tests in the project.
+
+### Testing Overview
+
+The project uses a multi-layered testing approach:
+
+- **Unit Tests**: Fast, isolated tests for utilities and components (Vitest)
+- **Component Tests**: React component testing with React Testing Library
+- **Integration Tests**: Tests that verify multiple units work together
+- **E2E Tests**: End-to-end tests for critical user flows (Playwright)
+- **Visual Tests**: Component visual regression testing (Storybook + Chromatic)
+
 ### Writing Unit Tests
 
-Unit tests are located in `apps/firm-website/src/test/`:
+Unit tests test individual functions, utilities, and business logic in isolation.
+
+#### Location
+
+- `apps/firm-website/src/test/` - App-level utilities
+- `packages/lib/src/*.test.ts` - Shared library utilities
+- `packages/ui/src/components/ui/*.test.tsx` - UI components
+
+#### Basic Structure
 
 ```typescript
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { myFunction } from '@/lib/utils';
 
 describe('myFunction', () => {
   it('should return the expected result', () => {
     expect(myFunction('input')).toBe('output');
   });
+
+  it('should handle edge cases', () => {
+    expect(myFunction(null)).toBe('default');
+  });
 });
 ```
 
+#### Testing Utilities
+
+For content utilities that use the file system, use mocking to avoid real file I/O:
+
+```typescript
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+
+const { mockReaddirSync, mockReadFileSync } = vi.hoisted(() => ({
+  mockReaddirSync: vi.fn(),
+  mockReadFileSync: vi.fn(),
+}));
+
+vi.mock('fs', () => ({
+  default: {
+    readdirSync: mockReaddirSync,
+    readFileSync: mockReadFileSync,
+  },
+}));
+
+describe('Content Utilities', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('should return array of slugs', () => {
+    mockReaddirSync.mockReturnValue(['test1.mdx', 'test2.mdx']);
+    const slugs = await getAllSlugs('test-dir');
+    expect(slugs).toEqual(['test1', 'test2']);
+  });
+});
+```
+
+#### Best Practices
+
+- **Test public APIs**: Test what the function does, not how it does it
+- **Use descriptive names**: Test names should explain the behavior
+- **Follow Arrange-Act-Assert**: Set up data, execute function, verify result
+- **Mock external dependencies**: Isolate the unit under test
+- **Clear mocks in beforeEach**: Reset mock state between tests
+
+### Writing Component Tests
+
+Component tests verify React components render correctly and respond to user interactions.
+
+#### Location
+
+- `packages/ui/src/components/ui/*.test.tsx` - UI components
+- `packages/ui/src/components/layout/*.test.tsx` - Layout components
+
+#### Basic Structure
+
+```typescript
+import { describe, it, expect } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import { Button } from './button';
+
+describe('Button', () => {
+  it('renders with default variant', () => {
+    render(<Button>Click me</Button>);
+    const button = screen.getByRole('button', { name: 'Click me' });
+    expect(button).toBeInTheDocument();
+  });
+
+  it('handles click events', () => {
+    const handleClick = vi.fn();
+    render(<Button onClick={handleClick}>Click me</Button>);
+    const button = screen.getByRole('button', { name: 'Click me' });
+    button.click();
+    expect(handleClick).toHaveBeenCalledTimes(1);
+  });
+});
+```
+
+#### Using Test Utilities
+
+For components that require theme context, use `renderWithProviders`:
+
+```typescript
+import { renderWithProviders } from '@repo/test-utils';
+
+renderWithProviders(<Header navItems={navItems} />);
+```
+
+#### Mocking Next.js Dependencies
+
+Mock Next.js navigation and routing for components that use them:
+
+```typescript
+vi.mock('next/navigation', () => ({
+  usePathname: () => '/',
+  useRouter: () => ({
+    push: vi.fn(),
+    replace: vi.fn(),
+    prefetch: vi.fn(),
+  }),
+}));
+```
+
+#### Testing User Interactions
+
+Use `userEvent` for realistic user interactions:
+
+```typescript
+import { userEvent } from '@testing-library/user-event';
+
+it('expands accordion on click', async () => {
+  const user = userEvent.setup();
+  render(<Accordion>Content</Accordion>);
+  const trigger = screen.getByRole('button');
+  await user.click(trigger);
+  expect(screen.getByText('Content')).toBeVisible();
+});
+```
+
+#### Best Practices
+
+- **Test behavior, not implementation**: Focus on what users see and do
+- **Use accessible queries**: Prioritize `getByRole`, `getByText` over CSS selectors
+- **Test user interactions**: Use `userEvent` for realistic behavior
+- **Mock external dependencies**: Isolate components from Next.js, theme providers, etc.
+
 ### Writing E2E Tests
 
-E2E tests are located in `apps/firm-website/src/e2e/`:
+E2E tests verify critical user flows in a real browser environment.
+
+#### Location
+
+- `apps/firm-website/src/e2e/` - All E2E tests
+
+#### Basic Structure
 
 ```typescript
 import { test, expect } from '@playwright/test';
@@ -1479,10 +1630,160 @@ import { test, expect } from '@playwright/test';
 test('homepage loads correctly', async ({ page }) => {
   await page.goto('/');
   await expect(page).toHaveTitle(/Your Dedicated Marketer/);
+  const heading = page.getByRole('heading', { name: /Professional Marketing Services/i });
+  await expect(heading).toBeVisible();
 });
 ```
 
+#### Testing Navigation
+
+```typescript
+test('CTA button navigates to contact page', async ({ page }) => {
+  await page.goto('/');
+  const contactButton = page.getByRole('link', { name: /Book a Free Consultation/i }).first();
+  await contactButton.click();
+  await expect(page).toHaveURL('/contact');
+});
+```
+
+#### Testing Forms
+
+```typescript
+test('contact form submission shows success toast', async ({ page }) => {
+  await page.goto('/contact');
+  await page.getByLabel('Name *').fill('John Doe');
+  await page.getByLabel('Email *').fill('john@example.com');
+  await page.getByLabel('Message *').fill('This is a test message');
+  await page.getByRole('button', { name: 'Send Message' }).click();
+  await expect(page.getByText('Message sent successfully!')).toBeVisible();
+});
+```
+
+#### Testing Dynamic Content
+
+```typescript
+test('service detail page loads with correct content', async ({ page }) => {
+  await page.goto('/services/website-design');
+  await expect(page.getByText('Website Design & Development')).toBeVisible();
+});
+```
+
+#### Best Practices
+
+- **Test user flows**: Focus on critical paths users take
+- **Use semantic locators**: `getByRole`, `getByText` are more resilient
+- **Wait for content**: Use `waitForLoadState('networkidle')` for dynamic pages
+- **Handle duplicates**: Use `.first()` when multiple elements match
+- **Keep tests focused**: Each test should verify one behavior
+
+### Writing Server Action Tests
+
+Server Actions are server-side functions that need testing with mocked external dependencies.
+
+#### Location
+
+- `apps/firm-website/src/app/actions/*.test.ts` - Server Action tests
+
+#### Basic Structure
+
+```typescript
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { submitContact, initialContactState } from './contact';
+
+const { mockEmailsSend, MockResend } = vi.hoisted(() => {
+  const mockEmailsSend = vi.fn();
+  class MockResend {
+    constructor() {}
+    emails = { send: mockEmailsSend };
+  }
+  return { mockEmailsSend, MockResend };
+});
+
+vi.mock('resend', () => ({ Resend: MockResend }));
+
+describe('submitContact', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    process.env.RESEND_API_KEY = 'test_key';
+    process.env.CONTACT_EMAIL = 'test@example.com';
+  });
+
+  it('validates form data and returns errors for invalid input', async () => {
+    const formData = new FormData();
+    formData.append('email', 'invalid-email');
+    const result = await submitContact(initialContactState, formData);
+    expect(result.success).toBe(false);
+    expect(result.fieldErrors.email).toBeDefined();
+  });
+
+  it('sends email on valid submission', async () => {
+    mockEmailsSend.mockResolvedValue({ data: { id: 'test-id' } });
+    const formData = new FormData();
+    formData.append('name', 'John Doe');
+    formData.append('email', 'john@example.com');
+    formData.append('message', 'Test message');
+    const result = await submitContact(initialContactState, formData);
+    expect(result.success).toBe(true);
+    expect(mockEmailsSend).toHaveBeenCalledTimes(1);
+  });
+});
+```
+
+#### Best Practices
+
+- **Use vi.hoisted()**: Define mocks before vi.mock() to avoid hoisting issues
+- **Clear mocks in beforeEach**: Reset mock state between tests
+- **Set environment variables**: Configure required env vars in beforeEach
+- **Test validation logic**: Verify Zod schema validation
+- **Test error handling**: Ensure external service failures are caught
+
+### Writing Visual Tests
+
+Visual tests detect UI regressions using Storybook stories.
+
+#### Location
+
+- `packages/ui/src/components/**/*.stories.tsx` - Storybook stories
+
+#### Basic Structure
+
+```typescript
+import type { Meta, StoryObj } from '@storybook/react';
+import { Button } from './button';
+
+const meta: Meta<typeof Button> = {
+  title: 'UI/Button',
+  component: Button,
+  tags: ['autodocs'],
+};
+
+export default meta;
+type Story = StoryObj<typeof Button>;
+
+export const Default: Story = {
+  args: {
+    children: 'Click me',
+  },
+};
+
+export const Primary: Story = {
+  args: {
+    variant: 'primary',
+    children: 'Primary Button',
+  },
+};
+```
+
+#### Best Practices
+
+- **Keep stories simple**: Focus on component variants and states
+- **Use autodocs tag**: Enable automatic documentation generation
+- **Test key components**: Prioritize important UI components
+- **Colocate stories**: Place stories next to components
+
 ### Running Tests
+
+#### Unit Tests
 
 ```bash
 # Run all unit tests
@@ -1491,12 +1792,89 @@ pnpm test
 # Run unit tests in watch mode
 pnpm --filter @repo/firm-website test:watch
 
-# Run E2E tests
+# Run unit tests for specific package
+pnpm --filter @repo/ui test
+
+# Run specific test file
+pnpm --filter @repo/firm-website test -- content.test
+```
+
+#### E2E Tests
+
+```bash
+# Run all E2E tests
 pnpm test:e2e
 
-# Run tests with coverage
-pnpm test:coverage
+# Run E2E tests for specific browser
+pnpm --filter @repo/firm-website test:e2e --project=chromium
+
+# Run specific test file
+pnpm --filter @repo/firm-website test:e2e -- homepage
 ```
+
+#### Coverage
+
+```bash
+# Run coverage for all packages
+pnpm test:coverage
+
+# Run coverage for specific package
+pnpm --filter @repo/firm-website test:coverage
+```
+
+#### Visual Tests
+
+```bash
+# Start Storybook for visual testing
+pnpm --filter @repo/ui storybook
+
+# Build Storybook
+pnpm --filter @repo/ui build-storybook
+
+# Run Chromatic locally (requires CHROMATIC_PROJECT_TOKEN)
+pnpm --filter @repo/ui chromatic
+```
+
+### Testing Best Practices
+
+#### General
+
+- **Test behavior, not implementation**: Focus on what the code does
+- **Write descriptive test names**: Test names should explain the behavior
+- **Keep tests fast**: Unit tests should run in milliseconds
+- **Avoid flaky tests**: Use stable selectors and proper waiting
+- **Review coverage reports**: Check HTML reports for untested code
+- **Don't chase 100%**: Some code may not need full coverage
+
+#### Unit Tests
+
+- **Test public APIs**: Test what users of the function see
+- **Mock external dependencies**: Isolate the unit under test
+- **Use vi.hoisted()**: For mocks that reference variables
+- **Clear mocks in beforeEach**: Reset state between tests
+
+#### Component Tests
+
+- **Use accessible queries**: `getByRole`, `getByText` over CSS selectors
+- **Test user interactions**: Use `userEvent` for realistic behavior
+- **Mock Next.js dependencies**: Isolate components from routing
+- **Use renderWithProviders**: For components requiring theme context
+
+#### E2E Tests
+
+- **Test critical paths**: Focus on important user flows
+- **Use semantic locators**: `getByRole`, `getByText` are more resilient
+- **Wait for content**: Use `waitForLoadState('networkidle')` for dynamic pages
+- **Handle duplicates**: Use `.first()` when multiple elements match
+
+#### Server Action Tests
+
+- **Mock external services**: Prevent real API calls during tests
+- **Test validation logic**: Verify Zod schema validation
+- **Test error handling**: Ensure failures are caught and handled
+- **Set environment variables**: Configure required env vars in tests
+
+For more detailed testing information, see [Testing Strategy](testing.md).
 
 ## Linting and Formatting
 

@@ -916,3 +916,59 @@ E2E tests run after unit tests complete since they depend on the build.
 
 #### Test Results
 Test results are visible in the GitHub Actions summary for each PR run. Failed tests will cause the CI to fail, preventing merge to main.
+
+## Coverage Reporting
+
+Coverage thresholds are enforced across all packages to maintain code quality and ensure critical paths are tested.
+
+### Configuration
+
+Coverage is configured in each package's Vitest config using `@vitest/coverage-v8`:
+
+- **apps/firm-website**: `vitest.config.ts`
+- **packages/ui**: `vitest.config.ts`
+- **packages/lib**: `vitest.config.ts`
+
+### Thresholds
+
+All packages enforce 80% coverage thresholds for:
+- **Statements**: 80%
+- **Branches**: 80%
+- **Functions**: 80%
+- **Lines**: 80%
+
+### Running Coverage
+
+```bash
+# Run coverage for all packages
+pnpm test:coverage
+
+# Run coverage for specific package
+pnpm --filter @repo/firm-website test:coverage
+pnpm --filter @repo/ui test:coverage
+pnpm --filter @repo/lib test:coverage
+```
+
+### Coverage Reports
+
+Coverage reports are generated in the `coverage/` directory of each package:
+- **HTML report**: Open `coverage/index.html` in a browser for detailed visualization
+- **Text report**: Summary printed to console
+- **CI enforcement**: Coverage thresholds are checked in CI pipeline
+
+### Exclusions
+
+Test files and type definition files are excluded from coverage:
+- `src/**/*.d.ts` - TypeScript declaration files
+- `src/**/index.ts` - Barrel exports
+- `**/*.test.ts` - Test files
+- `**/*.test.tsx` - Test files
+- `**/*.spec.ts` - Spec files
+
+### Best Practices
+
+- **Aim for 80%+ coverage**: Thresholds are set to 80% to ensure adequate testing
+- **Focus on critical paths**: Prioritize testing business logic and user-facing features
+- **Review coverage reports**: Check HTML reports to identify untested code
+- **Don't chase 100%**: Some code (error handlers, edge cases) may not need full coverage
+- **Test behavior, not implementation**: Focus on what the code does, not how it does it
