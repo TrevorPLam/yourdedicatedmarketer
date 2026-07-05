@@ -433,6 +433,75 @@ function MyForm() {
 4. **Use onBlur validation mode** - Provides natural, non-intrusive validation experience
 5. **Keep form components pure** - No business logic inside form components
 
+## Accordion
+
+A collapsible content component built on Radix UI for organizing content in expandable sections.
+
+### Usage
+
+```tsx
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@repo/ui';
+
+<Accordion type="single" collapsible>
+  <AccordionItem value="item-1">
+    <AccordionTrigger>What is your service?</AccordionTrigger>
+    <AccordionContent>
+      We provide comprehensive marketing solutions tailored to your business needs.
+    </AccordionContent>
+  </AccordionItem>
+  <AccordionItem value="item-2">
+    <AccordionTrigger>How much does it cost?</AccordionTrigger>
+    <AccordionContent>
+      Pricing varies based on the scope of work. Contact us for a custom quote.
+    </AccordionContent>
+  </AccordionItem>
+</Accordion>
+```
+
+### Props
+
+#### Accordion
+
+- `type` - Behavior mode
+  - `single` - Only one item can be open at a time
+  - `multiple` - Multiple items can be open simultaneously
+- `collapsible` - Whether items can be collapsed (required for `type="single"`)
+- `defaultValue` - Default open item(s)
+- `value` - Controlled open item(s)
+- `onValueChange` - Callback when open item(s) change
+- `className` - Additional CSS classes
+
+#### AccordionItem
+
+- `value` - Unique identifier for the item (required)
+- `className` - Additional CSS classes
+
+#### AccordionTrigger
+
+- `className` - Additional CSS classes
+- `children` - Trigger content (typically text)
+
+#### AccordionContent
+
+- `className` - Additional CSS classes
+- `children` - Content to show when expanded
+
+### Features
+
+- **Brand theming** - Uses brand primary color for hover, focus, and active states
+- **Accessibility** - Full keyboard navigation and ARIA attributes from Radix UI
+- **Smooth animations** - Animated expand/collapse transitions
+- **Responsive** - Works on all screen sizes
+- **Single/Multiple mode** - Supports both single and multiple open items
+
+### Best Practices
+
+1. **Use for FAQs** - Perfect for frequently asked questions sections
+2. **Keep content concise** - Accordion content should be scannable
+3. **Use descriptive triggers** - Trigger text should clearly indicate what content will be revealed
+4. **Consider default state** - Set `defaultValue` if one item should be open by default
+5. **Test accessibility** - Ensure keyboard navigation works (Tab, Enter, Space, Arrow keys)
+
 ## Best Practices
 
 1. **Use Server Components by default** - All components are Server Components unless they need interactivity
@@ -441,3 +510,4 @@ function MyForm() {
 4. **Test components** - All components have unit tests using Vitest and React Testing Library
 5. **Navigation components** - Header, NavLink, and MobileMenu are Client Components that use Next.js hooks for routing
 6. **Form components** - Form components are Client Components that use React Hook Form for state management
+7. **Accordion components** - Accordion is a Client Component that uses Radix UI for accessibility and state management

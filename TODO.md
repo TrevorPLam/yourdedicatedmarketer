@@ -942,7 +942,7 @@ This document defines all tasks required to establish the design system foundati
 
 ### Parent Task P016: Build Accordion/FAQ Component
 
-- [ ] **P016** | Status: `PENDING`
+- [x] **P016** | Status: `COMPLETE`
       **Related File Paths:**
   - `packages/ui/src/components/ui/accordion.tsx` (from shadcn)
   - `packages/ui/src/index.ts` (exports)
@@ -973,15 +973,23 @@ This document defines all tasks required to establish the design system foundati
   - Depends on: P009 (shadcn/ui setup).
   - Blocks: FAQ page (Phase 4).
 
+  **Implementation Notes:**
+  - Accordion was already installed from shadcn/ui (P016-01 already complete)
+  - Customized styling with brand primary color for hover, focus, and active states
+  - Added focus ring with brand color for better accessibility
+  - Chevron icon uses muted-foreground color for visual hierarchy
+  - All 7 unit tests passing (render, expand, collapse, single/multiple modes, className, accessibility)
+  - Documentation added to docs/components.md with usage examples and best practices
+
 #### Subtasks
 
 | ID      | Agent/Human | File Path / Command                                | Description                                             | Validation Command                   |
 | ------- | ----------- | -------------------------------------------------- | ------------------------------------------------------- | ------------------------------------ |
-| P016-01 | AGENT       | `packages/ui` (install components)                 | Run `npx shadcn@latest add accordion`.                  | Files exist in `src/components/ui/`. |
-| P016-02 | AGENT       | `packages/ui/src/components/ui/accordion.tsx`      | Customize styling.                                      | No command.                          |
-| P016-03 | AGENT       | `packages/ui/src/index.ts`                         | Add exports for accordion components.                   | No command.                          |
-| P016-04 | AGENT       | `packages/ui/src/components/ui/accordion.test.tsx` | Write unit test: accordion renders, expands, collapses. | `pnpm --filter @repo/ui test` runs.  |
-| P016-05 | AGENT       | Update `docs/components.md`                        | Document accordion usage.                               | None.                                |
+| P016-01 | AGENT       | `packages/ui` (install components)                 | Run `npx shadcn@latest add accordion`.                  | Files exist in `src/components/ui/`. ✅ |
+| P016-02 | AGENT       | `packages/ui/src/components/ui/accordion.tsx`      | Customize styling.                                      | No command. ✅                          |
+| P016-03 | AGENT       | `packages/ui/src/index.ts`                         | Add exports for accordion components.                   | No command. ✅                          |
+| P016-04 | AGENT       | `packages/ui/src/components/ui/accordion.test.tsx` | Write unit test: accordion renders, expands, collapses. | `pnpm --filter @repo/ui test` runs. ✅  |
+| P016-05 | AGENT       | Update `docs/components.md`                        | Document accordion usage.                               | None. ✅                                |
 
 ---
 
