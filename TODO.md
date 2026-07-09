@@ -85,7 +85,13 @@ pnpm turbo test
 
 ## INF-007 — Verify Next.js patched for CVE-2025-66478
 
-- [ ] `INF-007` — `[PENDING]`
+- [x] `INF-007` — `[DONE]`
+
+**Implementation notes**
+- Current Next.js version: 15.5.20 (from pnpm-lock.yaml)
+- Minimum patched version for 15.5.x: 15.5.7
+- Status: Already patched (15.5.20 > 15.5.7)
+- No upgrade required
 
 **Related file paths**
 
