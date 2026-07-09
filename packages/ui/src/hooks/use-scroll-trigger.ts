@@ -9,11 +9,11 @@ export interface UseScrollTriggerOptions {
   triggerOnce?: boolean
 }
 
-export interface UseScrollTriggerReturn {
+export interface UseScrollTriggerReturn<T extends HTMLElement> {
   /** Whether the element is in view */
   isInView: boolean
   /** Ref to attach to the element */
-  ref: React.RefObject<HTMLElement | null>
+  ref: React.RefObject<T | null>
 }
 
 /**
@@ -25,26 +25,26 @@ export interface UseScrollTriggerReturn {
  *
  * @example
  * ```tsx
- * const { isInView, ref } = useScrollTrigger({ threshold: 0.1, triggerOnce: true })
+ * const { isInView, ref } = useScrollTrigger<HTMLDivElement>({ threshold: 0.1, triggerOnce: true })
  * return <div ref={ref} className={isInView ? 'animate-fade-in-up' : ''}>Content</div>
  * ```
  */
-export function useScrollTrigger(
+export function useScrollTrigger<T extends HTMLElement = HTMLElement>(
   options: UseScrollTriggerOptions = {}
-): UseScrollTriggerReturn {
+): UseScrollTriggerReturn<T> {
   const { threshold = 0.1, rootMargin = '0px', triggerOnce = false } = options
 
   const [isInView, setIsInView] = useState(false)
-  const ref = useRef<HTMLElement>(null)
+  const ref = useRef<T>(null)
 
   useEffect(() => {
     const element = ref.current
     if (!element) return
 
     // Check for reduced motion preference
-    const prefersReducedMotion = window.matchMedia(
-      '(prefers-reduced-motion: reduce)'
-    ).matches
+    const prefersReducedMotion = typeof window !== 'undefined' && 
+      window.matchMedia && 
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
     if (prefersReducedMotion) {
       setIsInView(true)

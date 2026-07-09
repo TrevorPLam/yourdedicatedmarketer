@@ -1,6 +1,30 @@
 import { render, screen } from '@testing-library/react';
 import { Hero } from './hero';
 
+// Mock IntersectionObserver
+global.IntersectionObserver = class IntersectionObserver {
+  constructor() {}
+  disconnect() {}
+  observe() {}
+  takeRecords() { return []; }
+  unobserve() {}
+} as any;
+
+// Mock window.matchMedia
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: (query: string) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: () => {},
+    removeListener: () => {},
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    dispatchEvent: () => {},
+  }),
+});
+
 describe('Hero', () => {
   it('renders headline with primary text', () => {
     render(<Hero />);
@@ -36,5 +60,13 @@ describe('Hero', () => {
       button.textContent?.includes('Book') || button.textContent?.includes('See a Demo')
     );
     expect(ctaButtons).toHaveLength(2);
+  });
+
+  it('renders feature statistics', () => {
+    render(<Hero />);
+    expect(screen.getByText('500+')).toBeInTheDocument();
+    expect(screen.getByText('Local Businesses Served')).toBeInTheDocument();
+    expect(screen.getByText('98%')).toBeInTheDocument();
+    expect(screen.getByText('Client Satisfaction Rate')).toBeInTheDocument();
   });
 });
