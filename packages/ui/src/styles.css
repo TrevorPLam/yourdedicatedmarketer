@@ -116,6 +116,23 @@
   --animate-slide-in-right: slide-in-right 0.5s ease-out;
   --animate-slide-in-left: slide-in-left 0.5s ease-out;
   --animate-bounce-subtle: bounce-subtle 0.6s ease-in-out;
+
+  /* Glassmorphism Tokens */
+  --glass-blur: 12px;
+  --glass-blur-strong: 16px;
+  --glass-blur-subtle: 8px;
+  --glass-bg-light: rgba(255, 255, 255, 0.12);
+  --glass-bg-light-strong: rgba(255, 255, 255, 0.18);
+  --glass-bg-light-subtle: rgba(255, 255, 255, 0.08);
+  --glass-bg-dark: rgba(17, 25, 40, 0.75);
+  --glass-bg-dark-strong: rgba(17, 25, 40, 0.85);
+  --glass-bg-dark-subtle: rgba(17, 25, 40, 0.65);
+  --glass-border-light: rgba(255, 255, 255, 0.2);
+  --glass-border-light-subtle: rgba(255, 255, 255, 0.12);
+  --glass-border-dark: rgba(255, 255, 255, 0.125);
+  --glass-border-dark-subtle: rgba(255, 255, 255, 0.08);
+  --glass-shadow-light: 0 8px 32px rgba(0, 0, 0, 0.12);
+  --glass-shadow-dark: 0 8px 32px rgba(0, 0, 0, 0.5);
 }
 
 /* Animation Keyframes */
@@ -329,5 +346,118 @@ body {
       font-size: clamp(1.5rem, 3cqi, 2rem);
       line-height: 2rem;
     }
+  }
+}
+
+/* Glassmorphism Utility Classes */
+.glass {
+  /* Fallback for browsers without backdrop-filter */
+  background: var(--glass-bg-light-strong);
+  border: 1px solid var(--glass-border-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--glass-shadow-light);
+}
+
+@supports (backdrop-filter: blur(1px)) {
+  .glass {
+    background: var(--glass-bg-light);
+    backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+    will-change: transform;
+    contain: layout style paint;
+  }
+}
+
+.glass-strong {
+  background: var(--glass-bg-light-strong);
+  border: 1px solid var(--glass-border-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--glass-shadow-light);
+}
+
+@supports (backdrop-filter: blur(1px)) {
+  .glass-strong {
+    background: var(--glass-bg-light-strong);
+    backdrop-filter: blur(var(--glass-blur-strong)) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--glass-blur-strong)) saturate(180%);
+    will-change: transform;
+    contain: layout style paint;
+  }
+}
+
+.glass-subtle {
+  background: var(--glass-bg-light-subtle);
+  border: 1px solid var(--glass-border-light-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--glass-shadow-light);
+}
+
+@supports (backdrop-filter: blur(1px)) {
+  .glass-subtle {
+    background: var(--glass-bg-light-subtle);
+    backdrop-filter: blur(var(--glass-blur-subtle)) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--glass-blur-subtle)) saturate(180%);
+    will-change: transform;
+    contain: layout style paint;
+  }
+}
+
+/* Dark mode glassmorphism */
+.dark .glass {
+  background: var(--glass-bg-dark-strong);
+  border: 1px solid var(--glass-border-dark);
+  box-shadow: var(--glass-shadow-dark);
+}
+
+@supports (backdrop-filter: blur(1px)) {
+  .dark .glass {
+    background: var(--glass-bg-dark);
+    backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  }
+}
+
+.dark .glass-strong {
+  background: var(--glass-bg-dark-strong);
+  border: 1px solid var(--glass-border-dark);
+  box-shadow: var(--glass-shadow-dark);
+}
+
+@supports (backdrop-filter: blur(1px)) {
+  .dark .glass-strong {
+    background: var(--glass-bg-dark-strong);
+    backdrop-filter: blur(var(--glass-blur-strong)) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--glass-blur-strong)) saturate(180%);
+  }
+}
+
+.dark .glass-subtle {
+  background: var(--glass-bg-dark-subtle);
+  border: 1px solid var(--glass-border-dark-subtle);
+  box-shadow: var(--glass-shadow-dark);
+}
+
+@supports (backdrop-filter: blur(1px)) {
+  .dark .glass-subtle {
+    background: var(--glass-bg-dark-subtle);
+    backdrop-filter: blur(var(--glass-blur-subtle)) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--glass-blur-subtle)) saturate(180%);
+  }
+}
+
+/* Reduced motion support for glassmorphism */
+@media (prefers-reduced-motion: reduce) {
+  .glass,
+  .glass-strong,
+  .glass-subtle {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .dark .glass,
+  .dark .glass-strong,
+  .dark .glass-subtle {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
 }

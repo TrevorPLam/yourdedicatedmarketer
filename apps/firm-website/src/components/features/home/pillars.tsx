@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { Route } from 'next';
 import { Container, Section } from '@repo/ui';
-import { Card, CardContent, CardHeader, CardTitle } from '@repo/ui';
+import { GlassCard, GlassCardContent, GlassCardHeader, GlassCardTitle } from '@repo/ui';
 import { Globe, Building2, BarChart3 } from 'lucide-react';
 
 export function Pillars() {
@@ -38,17 +38,17 @@ export function Pillars() {
         <div className="grid md:grid-cols-3 gap-8">
           {pillars.map((pillar) => (
             <Link key={pillar.title} href={pillar.link as Route} className="group">
-              <Card className="h-full transition-all hover:shadow-lg hover:border-primary/50">
-                <CardHeader>
+              <GlassCard className="h-full transition-all hover:shadow-lg hover:border-primary/50">
+                <GlassCardHeader>
                   <div className="mb-4">{pillar.icon}</div>
-                  <CardTitle className="group-hover:text-primary transition-colors">
+                  <GlassCardTitle className="group-hover:text-primary transition-colors">
                     {pillar.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
+                  </GlassCardTitle>
+                </GlassCardHeader>
+                <GlassCardContent>
                   <p className="text-muted-foreground">{pillar.description}</p>
-                </CardContent>
-              </Card>
+                </GlassCardContent>
+              </GlassCard>
             </Link>
           ))}
         </div>

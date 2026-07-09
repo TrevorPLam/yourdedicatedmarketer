@@ -806,7 +806,20 @@ cd apps/firm-website && pnpm storybook
 
 ### UI-005: Implement Glassmorphism Effects
 
-**Status:** [PENDING]
+**Status:** [DONE]
+
+**Implementation Notes:**
+- Added glassmorphism tokens to @theme block: blur values (8px, 12px, 16px), background opacities for light/dark modes, border opacities, and shadows
+- Created glass utility classes (.glass, .glass-strong, .glass-subtle) with @supports fallback for browsers without backdrop-filter
+- Implemented performance optimizations: will-change: transform, contain: layout style paint, GPU acceleration hints
+- Added dark mode glassmorphism variants with appropriate opacity adjustments
+- Implemented reduced motion support to disable backdrop-filter for users who prefer reduced motion
+- Created GlassCard component with variant prop (default, strong, subtle) matching utility classes
+- Updated pillars component to use GlassCard instead of Card for service cards
+- Updated demo-preview component to use GlassCard instead of Card for demo cards
+- All changes follow best practices from research: blur radius 8-16px, proper fallbacks, accessibility considerations
+- Linting passed with pre-existing warning (unrelated to changes)
+- All tests passed (179 tests, 31 test files)
 
 **Related File Paths:**
 - `packages/ui/src/styles.css`
@@ -860,6 +873,7 @@ cd apps/firm-website && pnpm storybook
 #### UI-005-01: Define Glassmorphism Tokens
 
 **Actor:** [AGENT]
+**Status:** ✅
 
 **Target File Path:** `packages/ui/src/styles.css`
 
@@ -888,6 +902,7 @@ cd apps/firm-website && pnpm dev
 #### UI-005-02: Create Glass Card Component
 
 **Actor:** [AGENT]
+**Status:** ✅
 
 **Target File Path:** `packages/ui/src/components/ui/glass-card.tsx` (new)
 
@@ -916,6 +931,7 @@ cd packages/ui && pnpm build
 #### UI-005-03: Update Pillars Component with Glassmorphism
 
 **Actor:** [AGENT]
+**Status:** ✅
 
 **Target File Path:** `apps/firm-website/src/components/features/home/pillars.tsx`
 
@@ -944,6 +960,7 @@ cd apps/firm-website && pnpm build
 #### UI-005-04: Update Demo Preview with Glassmorphism
 
 **Actor:** [AGENT]
+**Status:** ✅
 
 **Target File Path:** `apps/firm-website/src/components/features/home/demo-preview.tsx`
 

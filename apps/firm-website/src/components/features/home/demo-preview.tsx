@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { Route } from 'next';
 import { Container, Section } from '@repo/ui';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@repo/ui';
+import { GlassCard, GlassCardContent, GlassCardHeader, GlassCardTitle, GlassCardDescription } from '@repo/ui';
 import { Button } from '@repo/ui';
 import { getAllDemos } from '@/lib/content';
 
@@ -30,17 +30,17 @@ export async function DemoPreview() {
         </div>
         <div className="grid md:grid-cols-3 gap-8 mb-8">
           {featuredDemos.map((demo) => (
-            <Card key={demo.data.slug} className="h-full flex flex-col">
-              <CardHeader>
-                <CardTitle>{demo.data.title}</CardTitle>
-                <CardDescription>{demo.data.description}</CardDescription>
-              </CardHeader>
-              <CardContent className="flex-1">
+            <GlassCard key={demo.data.slug} className="h-full flex flex-col">
+              <GlassCardHeader>
+                <GlassCardTitle>{demo.data.title}</GlassCardTitle>
+                <GlassCardDescription>{demo.data.description}</GlassCardDescription>
+              </GlassCardHeader>
+              <GlassCardContent className="flex-1">
                 <p className="text-sm text-muted-foreground line-clamp-3">
                   {demo.content.replace(/<[^>]*>/g, '').slice(0, 150)}...
                 </p>
-              </CardContent>
-            </Card>
+              </GlassCardContent>
+            </GlassCard>
           ))}
         </div>
         <div className="text-center">
