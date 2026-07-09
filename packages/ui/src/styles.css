@@ -108,6 +108,175 @@
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
   --radius-xl: 1rem;
+
+  /* Animation Keyframes */
+  --animate-fade-in-up: fade-in-up 0.5s ease-out;
+  --animate-fade-in: fade-in 0.3s ease-out;
+  --animate-scale-in: scale-in 0.4s ease-out;
+  --animate-slide-in-right: slide-in-right 0.5s ease-out;
+  --animate-slide-in-left: slide-in-left 0.5s ease-out;
+  --animate-bounce-subtle: bounce-subtle 0.6s ease-in-out;
+}
+
+/* Animation Keyframes */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes bounce-subtle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Entry Animations with @starting-style */
+@starting-style {
+  .fade-in-up-on-entry {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+.fade-in-up-on-entry {
+  animation: fade-in-up 0.5s ease-out;
+}
+
+@starting-style {
+  .scale-in-on-entry {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+.scale-in-on-entry {
+  animation: scale-in 0.4s ease-out;
+}
+
+@starting-style {
+  .slide-in-right-on-entry {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+}
+
+.slide-in-right-on-entry {
+  animation: slide-in-right 0.5s ease-out;
+}
+
+@starting-style {
+  .slide-in-left-on-entry {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+}
+
+.slide-in-left-on-entry {
+  animation: slide-in-left 0.5s ease-out;
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  @keyframes fade-in-up {
+    from, to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fade-in {
+    from, to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes scale-in {
+    from, to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes slide-in-right {
+    from, to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slide-in-left {
+    from, to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes bounce-subtle {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(0);
+    }
+  }
+
+  .fade-in-up-on-entry,
+  .scale-in-on-entry,
+  .slide-in-right-on-entry,
+  .slide-in-left-on-entry {
+    animation: none;
+  }
 }
 
 /* Dark Mode Variables */

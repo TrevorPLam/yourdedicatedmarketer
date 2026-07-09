@@ -391,12 +391,22 @@ cd packages/ui && pnpm storybook
 
 ### UI-003: Implement Animation System
 
-**Status:** [PENDING]
+**Status:** [DONE]
+
+**Implementation Notes:**
+- Added base animation keyframes (fade-in-up, fade-in, scale-in, slide-in-right, slide-in-left, bounce-subtle) using only transform and opacity for GPU acceleration
+- Created animation tokens in @theme block (--animate-fade-in-up, --animate-fade-in, etc.)
+- Implemented useScrollTrigger hook with Intersection Observer API, TypeScript types, and reduced motion support
+- Added entry animation utility classes using @starting-style for smooth element appearances (fade-in-up-on-entry, scale-in-on-entry, slide-in-right-on-entry, slide-in-left-on-entry)
+- Wrapped all animations in @media (prefers-reduced-motion: reduce) to disable animations for users who prefer reduced motion
+- Hook respects prefers-reduced-motion and returns immediately without triggering animations
+- All animations under 500ms for UI elements as per best practices
+- Linting and tests passed successfully
 
 **Related File Paths:**
 - `packages/ui/src/styles.css`
-- `packages/ui/src/lib/utils.ts`
-- `apps/firm-website/src/app/globals.css`
+- `packages/ui/src/hooks/use-scroll-trigger.ts` (new)
+- `packages/ui/src/index.ts`
 
 **Definition of Done:**
 - Base animation system with CSS keyframes defined
@@ -447,6 +457,7 @@ cd packages/ui && pnpm storybook
 #### UI-003-01: Define Base Animation Keyframes
 
 **Actor:** [AGENT]
+**Status:** ✅
 
 **Target File Path:** `packages/ui/src/styles.css`
 
@@ -474,6 +485,7 @@ cd apps/firm-website && pnpm dev
 #### UI-003-02: Create Scroll Trigger Hook
 
 **Actor:** [AGENT]
+**Status:** ✅
 
 **Target File Path:** `packages/ui/src/hooks/use-scroll-trigger.ts`
 
@@ -502,6 +514,7 @@ cd packages/ui && pnpm build
 #### UI-003-03: Implement Entry Animations with @starting-style
 
 **Actor:** [AGENT]
+**Status:** ✅
 
 **Target File Path:** `packages/ui/src/styles.css`
 
@@ -529,6 +542,7 @@ cd apps/firm-website && pnpm dev
 #### UI-003-04: Add Reduced Motion Support
 
 **Actor:** [AGENT]
+**Status:** ✅
 
 **Target File Path:** `packages/ui/src/styles.css`
 
