@@ -23,6 +23,7 @@
     "@repo/eslint-config": "workspace:*",
     "@vitest/coverage-v8": "4.1.9",
     "@vitest/ui": "^4.1.9",
+    "eslint": "^9.18.0",
     "typescript": "6",
     "vitest": "^4.1.9"
   }

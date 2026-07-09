@@ -1470,31 +1470,101 @@ pnpm turbo build --filter=@repo/firm-website
 
 ---
 
+## INF-006 — Fix missing eslint dependencies in packages
+
+- [x] `INF-006` — `[DONE]`
+
+**Implementation notes**
+- Added `eslint: "^9.18.0"` to devDependencies in `packages/lib/package.json`
+- Added `eslint: "^9.18.0"` to devDependencies in `packages/ui/package.json`
+- Added `eslint: "^9.18.0"` to devDependencies in `packages/test-utils/package.json`
+- Ran `pnpm install` to update lockfile
+- Lint command now passes across all packages
+- Root cause: pnpm does not hoist binaries from transitive dependencies, so packages that run eslint must have it as a direct devDependency
+
+**Related file paths**
+
+- `packages/lib/package.json`
+- `packages/ui/package.json`
+- `packages/test-utils/package.json`
+- `pnpm-lock.yaml`
+
+**Definition of done**
+
+- `eslint` is present in devDependencies of all packages that have a lint script.
+- `pnpm run lint` passes across all workspace packages.
+- Lockfile is updated with `pnpm install`.
+
+**Out of scope**
+
+- Changing the lint configuration or rules.
+- Removing the lint script from any package.
+
+**Rules to follow**
+
+- Each package with a lint script must have eslint as a direct devDependency.
+- Use the same eslint version across packages (currently ^9.18.0).
+
+**Advanced coding pattern**
+
+- In pnpm workspaces, binaries from transitive dependencies are not hoisted. Tools must be direct dependencies of the packages that use them.
+
+**Anti-patterns**
+
+- Relying on transitive dependencies for CLI tools in pnpm.
+- Inconsistent eslint versions across packages.
+
+**Imports/exports**
+
+- No code imports/exports affected.
+
+**Depends on / blocks**
+
+- Depends on: none.
+- Blocks: none.
+
+**Subtasks**
+
+- `[AGENT]` `INF-006-01` — `packages/lib/package.json` — Add `eslint: "^9.18.0"` to devDependencies.
+- `[AGENT]` `INF-006-02` — `packages/ui/package.json` — Add `eslint: "^9.18.0"` to devDependencies.
+- `[AGENT]` `INF-006-03` — `packages/test-utils/package.json` — Add `eslint: "^9.18.0"` to devDependencies.
+- `[AGENT]` `INF-006-04` — workspace root — Run `pnpm install` to update lockfile.
+- `[AGENT]` `INF-006-05` — workspace root — Run `pnpm run lint` to verify fix.
+
+**Validation commands**
+
+```powershell
+pnpm install
+pnpm run lint
+```
+
+---
+
 ## Task Priority Summary
 
 | ID | Priority | Status |
 |---|---|---|
-| `INF-006` | Critical | `[PENDING]` |
-| `INF-007` | Critical | `[PENDING]` |
-| `FIX-001` | Critical | `[PENDING]` |
-| `INF-001` | Critical | `[PENDING]` |
-| `FIX-002` | Critical | `[PENDING]` |
-| `CT-001` | Critical | `[PENDING]` |
-| `DOC-001` | Critical | `[PENDING]` |
-| `ENV-001` | High | `[PENDING]` |
-| `FIX-003` | High | `[PENDING]` |
-| `INF-002` | High | `[PENDING]` |
-| `INF-003` | High | `[PENDING]` |
-| `CT-002` | High | `[PENDING]` |
-| `TS-001` | High | `[PENDING]` |
-| `SEN-001` | High | `[PENDING]` |
-| `CT-003` | Medium | `[PENDING]` |
-| `CT-004` | Medium | `[PENDING]` |
-| `UI-001` | Medium | `[PENDING]` |
-| `UI-002` | Medium | `[PENDING]` |
-| `UI-003` | Medium | `[PENDING]` |
+| `INF-006` | Critical | `[DONE]` |
+| `INF-007` | Critical | `[DONE]` |
+| `FIX-001` | Critical | `[DONE]` |
+| `INF-001` | Critical | `[DONE]` |
+| `FIX-002` | Critical | `[DONE]` |
+| `CT-001` | Critical | `[DONE]` |
+| `DOC-001` | Critical | `[DONE]` |
+| `ENV-001` | High | `[DONE]` |
+| `FIX-003` | High | `[BLOCKED]` |
+| `INF-002` | High | `[DONE]` |
+| `INF-003` | High | `[DONE]` |
+| `CT-002` | High | `[DONE]` |
+| `TS-001` | High | `[DONE]` |
+| `SEN-001` | High | `[DONE]` |
+| `CT-003` | Medium | `[DONE]` |
+| `CT-004` | Medium | `[DONE]` |
+| `UI-001` | Medium | `[DONE]` |
+| `UI-002` | Medium | `[DONE]` |
+| `UI-003` | Medium | `[DONE]` |
 | `INF-004` | Medium | `[DONE]` |
-| `INF-005` | Medium | `[PENDING]` |
+| `INF-005` | Medium | `[DONE]` |
 
 ---
 

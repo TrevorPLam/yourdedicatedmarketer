@@ -47,6 +47,7 @@
     "@vitest/browser-playwright": "4.1.9",
     "@vitest/coverage-v8": "4.1.9",
     "autoprefixer": "^10.5.2",
+    "eslint": "^9.18.0",
     "eslint-plugin-storybook": "^10.4.6",
     "jsdom": "^29.1.1",
     "next": "15",
