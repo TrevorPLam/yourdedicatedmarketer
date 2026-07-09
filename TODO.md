@@ -189,7 +189,13 @@ pnpm turbo build --filter=@repo/firm-website
 
 ## FIX-001 — Fix `contact.test.ts` type-check failure
 
-- [ ] `FIX-001` — `[PENDING]`
+- [x] `FIX-001` — `[DONE]`
+
+**Implementation notes**
+- Replaced `import { submitContact, initialContactState } from './contact'` with `import { submitContact, type ContactFormState } from './contact'`
+- Defined `initialContactState` locally in the test file using the imported `ContactFormState` type
+- This resolves the type-check failure since `'use server'` files cannot export non-function values
+- All 10 tests pass, type check passes
 
 **Related file paths**
 

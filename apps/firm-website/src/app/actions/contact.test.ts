@@ -1,5 +1,12 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { submitContact, initialContactState } from './contact';
+import { submitContact, type ContactFormState } from './contact';
+
+// Initial state for the contact form (defined locally since 'use server' files cannot export non-function values)
+const initialContactState: ContactFormState = {
+  success: false,
+  message: '',
+  errors: {},
+};
 
 // Mock Resend before importing the action
 const { mockEmailsSend, MockResend } = vi.hoisted(() => {
