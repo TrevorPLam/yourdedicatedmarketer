@@ -3,6 +3,14 @@
 import { useEffect } from 'react';
 import { Button } from '@repo/ui';
 
+function logError(error: Error & { digest?: string }) {
+  if (process.env.NODE_ENV === 'development') {
+    console.error('Error boundary caught:', error);
+    console.error('Error message:', error.message);
+    console.error('Error stack:', error.stack);
+  }
+}
+
 export default function Error({
   error,
   reset,
@@ -11,10 +19,7 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Log error to console for debugging
-    console.error('Error boundary caught:', error);
-    console.error('Error message:', error.message);
-    console.error('Error stack:', error.stack);
+    logError(error);
   }, [error]);
 
   return (

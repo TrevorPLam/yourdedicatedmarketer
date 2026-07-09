@@ -1260,12 +1260,23 @@ pnpm turbo test --filter=@repo/firm-website -- src/components/features/faq/faq-a
 
 ## UI-003 — Guard error boundary console logging
 
-- [ ] `UI-003` — `[PENDING]`
+- [x] `UI-003` — `[DONE]`
+
+**Implementation notes**
+- Created `logError` helper function that wraps console.error calls in `process.env.NODE_ENV === 'development'` guard
+- All console.error calls now only execute in development environment
+- Created comprehensive test suite in error.test.tsx with 5 tests:
+  - Logs error to console in development
+  - Does not log error to console in production
+  - Displays error details in development
+  - Hides error details in production
+  - Calls reset function when Try again button is clicked
+- All 5 tests pass, type check passes
 
 **Related file paths**
 
 - `apps/firm-website/src/app/(marketing)/error.tsx`
-- `apps/firm-website/src/app/(marketing)/error.test.ts` (create)
+- `apps/firm-website/src/app/(marketing)/error.test.tsx` (created)
 
 **Definition of done**
 
@@ -1303,15 +1314,15 @@ pnpm turbo test --filter=@repo/firm-website -- src/components/features/faq/faq-a
 
 **Subtasks**
 
-- `[AGENT]` `UI-003-01` — `apps/firm-website/src/app/(marketing)/error.tsx` — Wrap `console.error(error.stack)` and `console.error(error.message)` in dev-only guards.
-- `[AGENT]` `UI-003-02` — `apps/firm-website/src/app/(marketing)/error.tsx` — Extract `logError` helper if it improves readability.
-- `[AGENT]` `UI-003-03` — `apps/firm-website/src/app/(marketing)/error.test.ts` — Create test asserting `console.error` is not called when `NODE_ENV` is `production`.
-- `[AGENT]` `UI-003-04` — workspace root — Run `pnpm turbo test --filter=@repo/firm-website -- src/app/(marketing)/error.test.ts`.
+- ✅ `[AGENT]` `UI-003-01` — `apps/firm-website/src/app/(marketing)/error.tsx` — Wrap `console.error(error.stack)` and `console.error(error.message)` in dev-only guards.
+- ✅ `[AGENT]` `UI-003-02` — `apps/firm-website/src/app/(marketing)/error.tsx` — Extract `logError` helper if it improves readability.
+- ✅ `[AGENT]` `UI-003-03` — `apps/firm-website/src/app/(marketing)/error.test.tsx` — Create test asserting `console.error` is not called when `NODE_ENV` is `production`.
+- ✅ `[AGENT]` `UI-003-04` — workspace root — Run `pnpm turbo test --filter=@repo/firm-website -- src/app/(marketing)/error.test.tsx`.
 
 **Validation commands**
 
 ```powershell
-pnpm turbo test --filter=@repo/firm-website -- src/app/(marketing)/error.test.ts
+pnpm turbo test --filter=@repo/firm-website -- src/app/(marketing)/error.test.tsx
 ```
 
 ---
