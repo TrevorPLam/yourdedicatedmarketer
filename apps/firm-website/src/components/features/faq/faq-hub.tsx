@@ -17,8 +17,9 @@ export interface FAQHubProps {
  * FAQ metadata interface for type safety.
  */
 interface FAQMetadata {
-  question: string;
-  answer: string;
+  title: string;
+  slug: string;
+  description: string;
   category: string;
   order?: number;
 }
@@ -47,7 +48,7 @@ export async function FAQHub({ title, description }: FAQHubProps) {
       }
       
       acc[category].push({
-        question: metadata.question,
+        question: metadata.title,
         answer: faq.content,
       });
       
@@ -61,8 +62,8 @@ export async function FAQHub({ title, description }: FAQHubProps) {
     const categoryFAQs = groupedFAQs[category];
     if (categoryFAQs) {
       categoryFAQs.sort((a, b) => {
-        const faqA = faqs.find((f) => (f.data as FAQMetadata).question === a.question);
-        const faqB = faqs.find((f) => (f.data as FAQMetadata).question === b.question);
+        const faqA = faqs.find((f) => (f.data as FAQMetadata).title === a.question);
+        const faqB = faqs.find((f) => (f.data as FAQMetadata).title === b.question);
         const orderA = (faqA?.data as FAQMetadata).order ?? 0;
         const orderB = (faqB?.data as FAQMetadata).order ?? 0;
         return orderA - orderB;
@@ -72,7 +73,7 @@ export async function FAQHub({ title, description }: FAQHubProps) {
 
   // Flatten all FAQs for JSON-LD schema
   const allFAQs = Object.values(groupedFAQs).flat();
-  const jsonLd = generateFAQSchema(allFAQs);
+  const jsonLd = generateFAQSchema(allFAQs.map(faq => ({ title: faq.question, content: faq.answer })));
 
   // Category display names mapping
   const categoryNames: Record<string, string> = {

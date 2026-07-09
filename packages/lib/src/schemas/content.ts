@@ -35,10 +35,10 @@ export const DemoSchema = z.strictObject({
 });
 
 export const FAQSchema = z.strictObject({
-  question: z.string(),
+  title: z.string(),
   slug: z.string(),
-  answer: z.string(),
-  category: z.string().optional(),
+  description: z.string(),
+  category: z.enum(['general', 'pricing', 'process']),
   order: z.number().optional(),
 });
 

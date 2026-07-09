@@ -7,12 +7,13 @@ const SITE_URL = 'https://yourdedicatedmarketer.com';
 
 /**
  * FAQ item interface for JSON-LD generation.
+ * Matches the new FAQ shape with title/description/content.
  */
 export interface FAQItem {
-  /** The question text */
-  question: string;
-  /** The answer text */
-  answer: string;
+  /** The question text (title field) */
+  title: string;
+  /** The answer text (content field) */
+  content: string;
 }
 
 /**
@@ -38,10 +39,10 @@ export function generateFAQSchema(faqs: FAQItem[]): string {
     '@type': 'FAQPage',
     mainEntity: faqs.map((faq) => ({
       '@type': 'Question',
-      name: faq.question,
+      name: faq.title,
       acceptedAnswer: {
         '@type': 'Answer',
-        text: faq.answer,
+        text: faq.content,
       },
     })),
   };

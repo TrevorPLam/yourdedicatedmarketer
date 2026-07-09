@@ -6,8 +6,9 @@ import { Button } from '@repo/ui';
 import { getAllFAQs } from '@/lib/content';
 
 interface FAQMetadata {
-  question: string;
-  answer: string;
+  title: string;
+  slug: string;
+  description: string;
   category: string;
   order?: number;
 }
@@ -30,13 +31,13 @@ export async function FAQSnippet() {
         </div>
         <div className="grid md:grid-cols-3 gap-8 mb-8">
           {featuredFAQs.map((faq) => (
-            <Card key={faq.data.question}>
+            <Card key={faq.data.title}>
               <CardHeader>
-                <CardTitle className="text-lg">{faq.data.question}</CardTitle>
+                <CardTitle className="text-lg">{faq.data.title}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground line-clamp-3">
-                  {faq.data.answer}
+                  {faq.content}
                 </p>
               </CardContent>
             </Card>

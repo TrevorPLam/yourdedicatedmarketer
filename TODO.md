@@ -407,7 +407,20 @@ pnpm turbo check-types --filter=@repo/firm-website
 
 ## CT-001 — Fix FAQ schema, type, frontmatter, and component divergence
 
-- [ ] `CT-001` — `[PENDING]`
+- [x] `CT-001` — `[DONE]`
+
+**Implementation notes**
+- Updated FAQSchema to match MDX frontmatter: `title`, `slug`, `description`, `category` (required enum), `order` (optional)
+- Replaced hand-written FAQ interface with `export type FAQ = z.infer<typeof FAQSchema>`
+- Added runtime validation using FAQSchema.safeParse in getAllFAQs() and getFAQ()
+- Updated faq-hub.tsx to use `title` instead of `metadata.question` and `content` instead of `faq.content`
+- Updated faq-snippet.tsx to use `title` and `content` instead of `question` and `answer`
+- Updated generateFAQSchema in json-ld.ts to accept new FAQ shape (title/content)
+- Removed individual FAQ detail URLs from sitemap.ts (will be restored by CT-004)
+- Created comprehensive schema tests in packages/lib/src/__tests__/content-schemas.test.ts
+- Updated existing schema tests in packages/lib/src/schemas/content.test.ts to match new shape
+- Fixed seo.test.ts to use new FAQ shape
+- All type checks pass, all tests pass (26 tests in lib, 165 tests in firm-website)
 
 **Related file paths**
 

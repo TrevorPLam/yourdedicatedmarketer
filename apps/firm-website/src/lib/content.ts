@@ -3,6 +3,7 @@ import path from 'path';
 import matter from 'gray-matter';
 import { remark } from 'remark';
 import html from 'remark-html';
+import { FAQSchema } from '@repo/lib';
 
 const CONTENT_DIR = path.join(process.cwd(), 'src', 'content');
 
@@ -111,11 +112,26 @@ export async function getDemo(slug: string) {
 }
 
 export async function getAllFAQs() {
-  return getAllContent('faq');
+  const faqs = await getAllContent('faq');
+  return faqs.filter((faq) => {
+    const result = FAQSchema.safeParse(faq.data);
+    if (!result.success) {
+      console.error(`Invalid FAQ frontmatter for ${(faq.data as { slug?: string }).slug || 'unknown'}:`, result.error);
+      return false;
+    }
+    return true;
+  });
 }
 
 export async function getFAQ(slug: string) {
-  return getContentBySlug('faq', slug);
+  const faq = await getContentBySlug('faq', slug);
+  if (!faq) return null;
+  const result = FAQSchema.safeParse(faq.data);
+  if (!result.success) {
+    console.error(`Invalid FAQ frontmatter for ${slug}:`, result.error);
+    return null;
+  }
+  return faq;
 }
 
 export async function getAllPages() {

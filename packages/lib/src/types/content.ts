@@ -1,7 +1,10 @@
 /**
  * Content type definitions for the firm website.
- * These interfaces define the structure of all content entities.
+ * These types are derived from Zod schemas to ensure single source of truth.
  */
+
+import { z } from 'zod';
+import { FAQSchema, ServiceSchema, IndustrySchema, DemoSchema, PageSchema } from '../schemas/content';
 
 /**
  * A branded type for URL-friendly slugs.
@@ -76,19 +79,11 @@ export interface Demo {
 }
 
 /**
- * FAQ content interface.
+ * FAQ content type.
  * Represents a frequently asked question.
+ * Derived from FAQSchema to ensure single source of truth.
  */
-export interface FAQ {
-  /** The question text */
-  question: string;
-  /** Short answer (40-60 words) */
-  answer: string;
-  /** Category for grouping FAQs */
-  category: FAQCategory;
-  /** Display order for sorting */
-  order?: number;
-}
+export type FAQ = z.infer<typeof FAQSchema>;
 
 /**
  * Page content interface.

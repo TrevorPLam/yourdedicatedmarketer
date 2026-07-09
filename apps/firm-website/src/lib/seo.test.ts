@@ -155,8 +155,8 @@ describe('JSON-LD Utilities', () => {
   describe('generateFAQSchema', () => {
     it('should generate valid FAQPage schema', () => {
       const faqs = [
-        { question: 'What is SEO?', answer: 'SEO stands for Search Engine Optimization.' },
-        { question: 'How much does it cost?', answer: 'Pricing varies based on services needed.' },
+        { title: 'What is SEO?', content: 'SEO stands for Search Engine Optimization.' },
+        { title: 'How much does it cost?', content: 'Pricing varies based on services needed.' },
       ];
 
       const schema = generateFAQSchema(faqs);

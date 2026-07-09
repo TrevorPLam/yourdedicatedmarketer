@@ -146,9 +146,10 @@ describe('DemoSchema', () => {
 describe('FAQSchema', () => {
   it('should accept valid FAQ data', () => {
     const validFAQ = {
-      question: 'What services do you offer?',
+      title: 'What services do you offer?',
       slug: 'what-services-do-you-offer',
-      answer: 'We offer web development, mobile apps, and consulting.',
+      description: 'We offer web development, mobile apps, and consulting.',
+      category: 'general' as const,
     };
     const result = FAQSchema.parse(validFAQ);
     expect(result).toEqual(validFAQ);
@@ -156,10 +157,10 @@ describe('FAQSchema', () => {
 
   it('should accept FAQ data with optional fields', () => {
     const faqWithOptionals = {
-      question: 'What services do you offer?',
+      title: 'What services do you offer?',
       slug: 'what-services-do-you-offer',
-      answer: 'We offer web development, mobile apps, and consulting.',
-      category: 'General',
+      description: 'We offer web development, mobile apps, and consulting.',
+      category: 'general' as const,
       order: 1,
     };
     const result = FAQSchema.parse(faqWithOptionals);
@@ -168,16 +169,17 @@ describe('FAQSchema', () => {
 
   it('should reject FAQ data with missing required fields', () => {
     const invalidFAQ = {
-      question: 'What services do you offer?',
+      title: 'What services do you offer?',
     };
     expect(() => FAQSchema.parse(invalidFAQ)).toThrow();
   });
 
   it('should reject FAQ data with extra fields', () => {
     const faqWithExtra = {
-      question: 'What services do you offer?',
+      title: 'What services do you offer?',
       slug: 'what-services-do-you-offer',
-      answer: 'We offer web development, mobile apps, and consulting.',
+      description: 'We offer web development, mobile apps, and consulting.',
+      category: 'general' as const,
       extraField: 'should not be here',
     };
     expect(() => FAQSchema.parse(faqWithExtra)).toThrow();
