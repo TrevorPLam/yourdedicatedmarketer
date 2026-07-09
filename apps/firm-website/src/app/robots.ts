@@ -4,8 +4,7 @@
  */
 
 import type { MetadataRoute } from 'next';
-
-const SITE_URL = 'https://yourdedicatedmarketer.com';
+import { env } from '@/lib/env';
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -16,6 +15,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/', '/admin/', '/dashboard/'],
       },
     ],
-    sitemap: `${SITE_URL}/sitemap.xml`,
+    sitemap: `${env.NEXT_PUBLIC_SITE_URL}/sitemap.xml`,
   };
 }

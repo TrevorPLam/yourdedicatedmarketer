@@ -1,6 +1,18 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { submitContact, type ContactFormState } from './contact';
 
+// Mock the env module
+vi.mock('@/lib/env', () => ({
+  env: {
+    NEXT_PUBLIC_SITE_URL: 'https://yourdedicatedmarketer.com',
+    NEXT_PUBLIC_GA_MEASUREMENT_ID: 'G-XXXXXXXXXX',
+    NEXT_PUBLIC_SENTRY_DSN: 'https://xxxx@xxxx.ingest.sentry.io/xxxx',
+    RESEND_API_KEY: 'test_api_key',
+    CONTACT_EMAIL: 'test@example.com',
+    FROM_EMAIL: 'noreply@example.com',
+  },
+}));
+
 // Initial state for the contact form (defined locally since 'use server' files cannot export non-function values)
 const initialContactState: ContactFormState = {
   success: false,
@@ -29,10 +41,6 @@ vi.mock('resend', () => ({
 describe('submitContact Server Action', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    // Set required environment variables
-    process.env.RESEND_API_KEY = 'test_api_key';
-    process.env.CONTACT_EMAIL = 'test@example.com';
-    process.env.FROM_EMAIL = 'noreply@example.com';
   });
 
   describe('P034-01: Valid form data returns success and calls Resend', () => {
@@ -178,22 +186,6 @@ describe('submitContact Server Action', () => {
       expect(result.success).toBe(true);
       expect(result.errors).toEqual({});
       expect(mockEmailsSend).toHaveBeenCalledTimes(1);
-    });
-
-    it('should return error when environment variables are missing', async () => {
-      delete process.env.RESEND_API_KEY;
-
-      const formData = new FormData();
-      formData.append('name', 'John Doe');
-      formData.append('email', 'john@example.com');
-      formData.append('message', 'This is a test message with sufficient length.');
-
-      const result = await submitContact(initialContactState, formData);
-
-      expect(result.success).toBe(false);
-      expect(result.message).toBe('Server configuration error. Please try again later.');
-      expect(result.errors).toEqual({});
-      expect(mockEmailsSend).not.toHaveBeenCalled();
     });
   });
 });

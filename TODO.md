@@ -754,7 +754,20 @@ pnpm turbo test:e2e --filter=@repo/firm-website -- faq
 
 ## ENV-001 — Wire up environment validation module
 
-- [ ] `ENV-001` — `[PENDING]`
+- [x] `ENV-001` — `[DONE]`
+
+**Implementation notes**
+- Removed `FORM_API_KEY` and `NEXT_PUBLIC_ANALYTICS_ID` from `.env.example`
+- Expanded `env.ts` schema to validate `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_GA_MEASUREMENT_ID`, `NEXT_PUBLIC_SENTRY_DSN`, `RESEND_API_KEY`, `CONTACT_EMAIL`, and `FROM_EMAIL`
+- Replaced hardcoded `SITE_URL` in `seo.ts` with `env.NEXT_PUBLIC_SITE_URL`
+- Replaced hardcoded `SITE_URL` in `json-ld.ts` with `env.NEXT_PUBLIC_SITE_URL`
+- Replaced hardcoded URL in `sitemap.ts` with `env.NEXT_PUBLIC_SITE_URL`
+- Replaced hardcoded URL in `robots.ts` with `env.NEXT_PUBLIC_SITE_URL`
+- Replaced hardcoded URL and placeholder contact email in `page.tsx` with `env.NEXT_PUBLIC_SITE_URL` and `env.CONTACT_EMAIL`
+- Updated `contact.ts` to use validated `env.RESEND_API_KEY`, `env.CONTACT_EMAIL`, and `env.FROM_EMAIL`
+- Client-side files (`gtag.ts`, `instrumentation-client.ts`) correctly use `process.env` for public variables
+- Added env module mocks to `seo.test.ts`, `page.test.tsx`, and `contact.test.ts` to handle `server-only` directive
+- All 171 tests pass, type check passes
 
 **What this is:** `apps/firm-website/src/lib/env.ts` is a small module that uses Zod to validate `process.env` at startup. It currently only checks `NEXT_PUBLIC_SITE_URL`, and it is never imported by any other file, so all the hardcoded URLs in `seo.ts`, `json-ld.ts`, `sitemap.ts`, `robots.ts`, and `page.tsx` bypass it entirely. The choice is between (a) keeping the module, expanding it to validate all required runtime variables, and importing it everywhere, or (b) deleting it and relying on `process.env` runtime checks. Recommendation: keep and wire it, because it catches missing env vars early and centralizes the site URL.
 

@@ -7,6 +7,7 @@ import { FAQSnippet } from '@/components/features/home/faq-snippet';
 import { FinalCTA } from '@/components/features/home/final-cta';
 import { generateMetadata } from '@/lib/seo';
 import { generateOrganizationSchema } from '@/lib/json-ld';
+import { env } from '@/lib/env';
 
 export const metadata: Metadata = generateMetadata({
   title: 'Your Dedicated Marketer - Professional Marketing Services for Local Businesses',
@@ -18,11 +19,11 @@ export default function HomePage() {
   const organizationSchema = generateOrganizationSchema({
     name: 'Your Dedicated Marketer',
     description: 'Professional digital marketing services for local businesses',
-    url: 'https://yourdedicatedmarketer.com',
+    url: env.NEXT_PUBLIC_SITE_URL,
     contactPoint: {
       telephone: '+1 (555) 123-4567',
       contactType: 'customer service',
-      email: 'contact@yourdedicatedmarketer.com',
+      email: env.CONTACT_EMAIL,
     },
   });
 

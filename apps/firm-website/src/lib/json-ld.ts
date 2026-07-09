@@ -3,7 +3,7 @@
  * Provides schema.org markup for Google AEO (Answer Engine Optimization).
  */
 
-const SITE_URL = 'https://yourdedicatedmarketer.com';
+import { env } from './env';
 
 /**
  * FAQ item interface for JSON-LD generation.
@@ -79,8 +79,8 @@ export function generateOrganizationSchema(options: {
   const {
     name = 'Your Dedicated Marketer',
     description = 'Professional digital marketing services for local businesses',
-    url = SITE_URL,
-    logo = `${SITE_URL}/logo.png`,
+    url = env.NEXT_PUBLIC_SITE_URL,
+    logo = `${env.NEXT_PUBLIC_SITE_URL}/logo.png`,
     sameAs = [],
     address,
     contactPoint,

@@ -2,6 +2,7 @@
 
 import { z } from 'zod';
 import { Resend } from 'resend';
+import { env } from '@/lib/env';
 
 /**
  * Zod schema for contact form validation.
@@ -71,22 +72,8 @@ export async function submitContact(
   // Validation passed - send email via Resend
   const { name, email, phone, company, message } = result.data;
 
-  // Validate environment variables
-  const resendApiKey = process.env.RESEND_API_KEY;
-  const contactEmail = process.env.CONTACT_EMAIL;
-  const fromEmail = process.env.FROM_EMAIL;
-
-  if (!resendApiKey || !contactEmail || !fromEmail) {
-    console.error('Missing required environment variables for Resend');
-    return {
-      success: false,
-      message: 'Server configuration error. Please try again later.',
-      errors: {},
-    };
-  }
-
   try {
-    const resend = new Resend(resendApiKey);
+    const resend = new Resend(env.RESEND_API_KEY);
 
     // Build email text content
     const emailText = `
@@ -101,8 +88,8 @@ ${message}
 
     // Send email via Resend
     await resend.emails.send({
-      from: fromEmail,
-      to: contactEmail,
+      from: env.FROM_EMAIL,
+      to: env.CONTACT_EMAIL,
       subject: `New Contact Form Submission from ${name}`,
       text: emailText,
       replyTo: email,

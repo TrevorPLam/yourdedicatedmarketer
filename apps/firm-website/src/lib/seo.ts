@@ -4,8 +4,7 @@
  */
 
 import type { Metadata } from 'next';
-
-const SITE_URL = 'https://yourdedicatedmarketer.com';
+import { env } from './env';
 
 /**
  * Options for generating metadata.
@@ -40,8 +39,8 @@ export interface MetadataOptions {
  */
 export function generateMetadata(options: MetadataOptions): Metadata {
   const { title, description, path, image, publishedTime, modifiedTime, authors, section, tags } = options;
-  const canonicalUrl = `${SITE_URL}${path}`;
-  const ogImage = image || `${SITE_URL}/og-image.png`;
+  const canonicalUrl = `${env.NEXT_PUBLIC_SITE_URL}${path}`;
+  const ogImage = image || `${env.NEXT_PUBLIC_SITE_URL}/og-image.png`;
 
   const openGraph: Record<string, unknown> = {
     type: 'website',
@@ -73,7 +72,7 @@ export function generateMetadata(options: MetadataOptions): Metadata {
   return {
     title,
     description,
-    metadataBase: new URL(SITE_URL),
+    metadataBase: new URL(env.NEXT_PUBLIC_SITE_URL),
     alternates: {
       canonical: canonicalUrl,
     },
@@ -107,7 +106,7 @@ export function getOpenGraphTags(options: {
   tags?: string[];
 }) {
   const { title, description, url, image, type = 'website', publishedTime, modifiedTime, authors, section, tags } = options;
-  const ogImage = image || `${SITE_URL}/og-image.png`;
+  const ogImage = image || `${env.NEXT_PUBLIC_SITE_URL}/og-image.png`;
 
   return {
     type,

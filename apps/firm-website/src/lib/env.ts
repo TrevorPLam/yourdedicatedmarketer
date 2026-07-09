@@ -5,6 +5,11 @@ const envSchema = z.strictObject({
   NEXT_PUBLIC_SITE_URL: z
     .url({ message: 'NEXT_PUBLIC_SITE_URL must be a valid URL' })
     .default('http://localhost:3000'),
+  NEXT_PUBLIC_GA_MEASUREMENT_ID: z.string().optional(),
+  NEXT_PUBLIC_SENTRY_DSN: z.string().optional(),
+  RESEND_API_KEY: z.string().min(1, 'RESEND_API_KEY is required'),
+  CONTACT_EMAIL: z.string().email('CONTACT_EMAIL must be a valid email'),
+  FROM_EMAIL: z.string().email('FROM_EMAIL must be a valid email'),
 });
 
 type Env = z.infer<typeof envSchema>;

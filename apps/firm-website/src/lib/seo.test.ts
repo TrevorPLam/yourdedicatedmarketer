@@ -2,9 +2,21 @@
  * Unit tests for SEO utilities.
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { generateMetadata, getOpenGraphTags } from './seo';
 import { generateFAQSchema, generateOrganizationSchema, generateBreadcrumbSchema } from './json-ld';
+
+// Mock the env module
+vi.mock('./env', () => ({
+  env: {
+    NEXT_PUBLIC_SITE_URL: 'https://yourdedicatedmarketer.com',
+    NEXT_PUBLIC_GA_MEASUREMENT_ID: 'G-XXXXXXXXXX',
+    NEXT_PUBLIC_SENTRY_DSN: 'https://xxxx@xxxx.ingest.sentry.io/xxxx',
+    RESEND_API_KEY: 're_test',
+    CONTACT_EMAIL: 'hello@yourdedicatedmarketer.com',
+    FROM_EMAIL: 'noreply@yourdedicatedmarketer.com',
+  },
+}));
 
 // Type definitions for test assertions
 interface TwitterMetadata {
