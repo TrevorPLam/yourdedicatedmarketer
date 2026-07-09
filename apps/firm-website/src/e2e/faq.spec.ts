@@ -34,3 +34,25 @@ test('faq accordion expands', async ({ page }) => {
   // Verify that the accordion trigger is now pressed/active
   await expect(firstFaqTrigger).toHaveAttribute('data-state', 'open')
 })
+
+test('faq detail page loads', async ({ page }) => {
+  await page.goto('/faq/cost')
+
+  // Verify page loads successfully
+  await expect(page).toHaveURL('/faq/cost')
+})
+
+test('faq detail displays content', async ({ page }) => {
+  await page.goto('/faq/cost')
+
+  // Wait for content to load
+  await page.waitForLoadState('networkidle')
+
+  // Check that the title is present
+  const title = page.locator('h1')
+  await expect(title).toBeVisible()
+
+  // Check that content is present
+  const content = page.locator('.max-w-none')
+  await expect(content).toBeVisible()
+})

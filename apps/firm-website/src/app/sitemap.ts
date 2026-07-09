@@ -4,8 +4,8 @@
  */
 
 import type { MetadataRoute } from 'next';
-import { getAllServices, getAllIndustries, getAllDemos, getAllPages } from '@/lib/content';
-import type { Service, Industry, Demo, Page } from '@repo/lib';
+import { getAllServices, getAllIndustries, getAllDemos, getAllFAQs, getAllPages } from '@/lib/content';
+import type { Service, Industry, Demo, FAQ, Page } from '@repo/lib';
 
 const SITE_URL = 'https://yourdedicatedmarketer.com';
 
@@ -59,6 +59,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const services = await getAllServices();
   const industries = await getAllIndustries();
   const demos = await getAllDemos();
+  const faqs = await getAllFAQs();
   const pages = await getAllPages();
 
   // Generate service URLs
@@ -85,6 +86,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
+  // Generate FAQ URLs
+  const faqUrls = faqs.map((faq) => ({
+    url: `${SITE_URL}/faq/${(faq.data as FAQ).slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.6,
+  }));
+
   // Generate static page URLs (about, pricing, etc.)
   const pageUrls = pages.map((page) => ({
     url: `${SITE_URL}/${(page.data as Page).slug}`,
@@ -98,6 +107,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...serviceUrls,
     ...industryUrls,
     ...demoUrls,
+    ...faqUrls,
     ...pageUrls,
   ];
 }

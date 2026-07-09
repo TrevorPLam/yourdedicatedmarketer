@@ -685,7 +685,15 @@ pnpm turbo build --filter=@repo/firm-website
 
 ## CT-004 — Add individual FAQ detail pages
 
-- [ ] `CT-004` — `[PENDING]`
+- [x] `CT-004` — `[DONE]`
+
+**Implementation notes**
+- Created `apps/firm-website/src/app/(marketing)/faq/[slug]/page.tsx` with `generateStaticParams` and `dynamicParams = false`
+- Page uses existing `getFAQ` helper and `ContentPage` component for consistent layout
+- Restored individual FAQ URLs in `apps/firm-website/src/app/sitemap.ts` by importing `getAllFAQs` and generating FAQ URLs
+- Added E2E tests for FAQ detail page: `faq detail page loads` and `faq detail displays content` (both passed)
+- Build successfully generated 10 static FAQ detail pages
+- Note: Pre-existing E2E test failure in `faq accordion expands` (webkit) is unrelated to CT-004 changes
 
 **Related file paths**
 
@@ -1148,6 +1156,11 @@ pnpm turbo test --filter=@repo/firm-website
 ## UI-002 — Fix FAQ accordion React keys
 
 - [ ] `UI-002` — `[PENDING]`
+
+**Context**
+- E2E test `faq accordion expands` fails in webkit with data-state remaining "closed" after click
+- This is a pre-existing issue unrelated to CT-004 changes
+- Task exists to address this accordion behavior
 
 **Related file paths**
 
