@@ -48,13 +48,14 @@ export async function FAQHub({ title, description }: FAQHubProps) {
       }
       
       acc[category].push({
+        slug: metadata.slug,
         question: metadata.title,
         answer: faq.content,
       });
       
       return acc;
     },
-    {} as Record<string, Array<{ question: string; answer: string }>>
+    {} as Record<string, Array<{ slug: string; question: string; answer: string }>>
   );
 
   // Sort FAQs within each category by order if available

@@ -4,8 +4,9 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@r
  * Props for the FAQAccordion component.
  */
 export interface FAQAccordionProps {
-  /** Array of FAQ items with question and answer */
+  /** Array of FAQ items with slug, question, and answer */
   faqs: Array<{
+    slug: string;
     question: string;
     answer: string;
   }>;
@@ -22,8 +23,8 @@ export interface FAQAccordionProps {
 export function FAQAccordion({ faqs }: FAQAccordionProps) {
   return (
     <Accordion type="single" collapsible className="w-full">
-      {faqs.map((faq, index) => (
-        <AccordionItem key={index} value={`item-${index}`} data-testid="faq-item">
+      {faqs.map((faq) => (
+        <AccordionItem key={faq.slug} value={faq.slug} data-testid="faq-item">
           <AccordionTrigger className="text-left">
             {faq.question}
           </AccordionTrigger>

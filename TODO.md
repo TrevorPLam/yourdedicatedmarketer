@@ -1193,17 +1193,22 @@ pnpm turbo test --filter=@repo/firm-website
 
 ## UI-002 — Fix FAQ accordion React keys
 
-- [ ] `UI-002` — `[PENDING]`
+- [x] `UI-002` — `[DONE]`
 
-**Context**
-- E2E test `faq accordion expands` fails in webkit with data-state remaining "closed" after click
-- This is a pre-existing issue unrelated to CT-004 changes
-- Task exists to address this accordion behavior
+**Implementation notes**
+- Updated FAQAccordionProps to include `slug` field in FAQ items
+- Changed React key from `index` to `faq.slug` for stable identity
+- Updated AccordionItem value prop to use `faq.slug` instead of `item-${index}`
+- Updated faq-hub.tsx to pass slug when building grouped FAQ arrays
+- Created comprehensive unit tests in faq-accordion.test.tsx
+- Tests verify stable keys across renders and reordering
+- All type checks pass, all lint checks pass, all tests pass
 
 **Related file paths**
 
 - `apps/firm-website/src/components/features/faq/faq-accordion.tsx`
-- `apps/firm-website/src/components/features/faq/faq-accordion.test.ts` (create or update)
+- `apps/firm-website/src/components/features/faq/faq-hub.tsx`
+- `apps/firm-website/src/components/features/faq/faq-accordion.test.tsx` (created)
 
 **Definition of done**
 
@@ -1241,9 +1246,9 @@ pnpm turbo test --filter=@repo/firm-website
 
 **Subtasks**
 
-- `[AGENT]` `UI-002-01` — `apps/firm-website/src/components/features/faq/faq-accordion.tsx` — Update `key` to use stable identifier.
-- `[AGENT]` `UI-002-02` — `apps/firm-website/src/components/features/faq/faq-accordion.test.ts` — Create or update test to assert stable keys and reorder behavior.
-- `[AGENT]` `UI-002-03` — workspace root — Run `pnpm turbo test --filter=@repo/firm-website -- src/components/features/faq/faq-accordion.test.ts`.
+- ✅ `[AGENT]` `UI-002-01` — `apps/firm-website/src/components/features/faq/faq-accordion.tsx` — Update `key` to use stable identifier.
+- ✅ `[AGENT]` `UI-002-02` — `apps/firm-website/src/components/features/faq/faq-accordion.test.ts` — Create or update test to assert stable keys and reorder behavior.
+- ✅ `[AGENT]` `UI-002-03` — workspace root — Run `pnpm turbo test --filter=@repo/firm-website -- src/components/features/faq/faq-accordion.test.ts`.
 
 **Validation commands**
 
