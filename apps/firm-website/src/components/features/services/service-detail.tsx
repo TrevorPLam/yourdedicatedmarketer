@@ -1,5 +1,6 @@
 import { ContentPage } from '@/components/features/content-page';
 import { getBreadcrumbs } from '@/lib/navigation';
+import Link from 'next/link';
 
 /**
  * Props for the ServiceDetail component.
@@ -34,12 +35,13 @@ export async function ServiceDetail({ content, title, slug }: ServiceDetailProps
               <li key={index} className="flex items-center">
                 {index > 0 && <span className="mx-2 text-muted-foreground">/</span>}
                 {crumb.href ? (
-                  <a
-                    href={crumb.href}
+                  <Link
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    href={crumb.href as any}
                     className="text-muted-foreground hover:text-primary transition-colors"
                   >
                     {crumb.label}
-                  </a>
+                  </Link>
                 ) : (
                   <span className="text-foreground font-medium">{crumb.label}</span>
                 )}

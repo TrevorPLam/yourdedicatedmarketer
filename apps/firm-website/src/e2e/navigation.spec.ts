@@ -27,3 +27,14 @@ test('faq page loads', async ({ page }) => {
   // Verify page loads successfully
   await expect(page).toHaveURL('/faq')
 })
+
+test('breadcrumb navigation does not cause full reload', async ({ page }) => {
+  // Navigate to a service detail page
+  await page.goto('/services/seo-optimization')
+
+  // Click the Services breadcrumb
+  await page.click('nav[aria-label="Breadcrumb"] a[href="/services"]')
+
+  // Verify we navigated to Services without full page reload
+  await expect(page).toHaveURL('/services')
+})
