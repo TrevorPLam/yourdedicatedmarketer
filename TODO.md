@@ -1367,11 +1367,25 @@ cd packages/ui && pnpm storybook
 
 ### UI-008: Implement Header Glassmorphism
 
-**Status:** [PENDING]
+**Status:** [DONE]
+
+**Implementation Notes:**
+- Replaced inline Tailwind glassmorphism classes with dedicated .header-glass CSS class using glassmorphism tokens from UI-005
+- Added header-specific glassmorphism styles in styles.css with fallbacks for browsers without backdrop-filter support
+- Implemented dark mode glassmorphism using --glass-bg-dark and --glass-border-dark tokens
+- Added CSS containment (layout style paint) and will-change: transform for GPU-accelerated performance
+- Included reduced motion support to disable backdrop-filter for users who prefer reduced motion
+- Header uses strong glass effect (--glass-bg-light-strong) for better readability with text content
+- No border-radius applied (full-width header design)
+- Updated header tests to verify glassmorphism class is applied (6 tests passing)
+- All UI package tests passed (167/167 tests)
+- Linting passed with pre-existing Tailwind v4 warnings (unrelated to changes)
+- Storybook documentation task (UI-008-03) remains as HUMAN task
 
 **Related File Paths:**
 - `packages/ui/src/components/layout/header.tsx`
 - `packages/ui/src/components/layout/header.test.tsx`
+- `packages/ui/src/styles.css`
 
 **Definition of Done:**
 - Header updated with glassmorphism effect
@@ -1380,7 +1394,7 @@ cd packages/ui && pnpm storybook
 - Performance optimized
 - Mobile menu maintained
 - Accessibility maintained
-- Header documented in Storybook
+- Header documented in Storybook (HUMAN task pending)
 
 **Out of Scope:**
 - Complete header redesign (glassmorphism only)
@@ -1420,6 +1434,7 @@ cd packages/ui && pnpm storybook
 #### UI-008-01: Apply Glassmorphism to Header
 
 **Actor:** [AGENT]
+**Status:** ✅
 
 **Target File Path:** `packages/ui/src/components/layout/header.tsx`
 
@@ -1448,6 +1463,7 @@ cd packages/ui && pnpm build
 #### UI-008-02: Optimize Header Performance
 
 **Actor:** [AGENT]
+**Status:** ✅
 
 **Target File Path:** `packages/ui/src/components/layout/header.tsx`
 

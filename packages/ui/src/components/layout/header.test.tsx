@@ -60,9 +60,15 @@ describe('Header', () => {
 
   it('renders theme toggle button', () => {
     render(<Header navItems={mockNavItems} />);
-    
+
     // Theme toggle renders but may not have label in test environment
     const themeToggleButton = screen.getByRole('button', { name: /toggle theme/i });
     expect(themeToggleButton).toBeInTheDocument();
+  });
+
+  it('applies glassmorphism class to header', () => {
+    const { container } = render(<Header navItems={mockNavItems} />);
+    const header = container.querySelector('header');
+    expect(header).toHaveClass('header-glass');
   });
 });
