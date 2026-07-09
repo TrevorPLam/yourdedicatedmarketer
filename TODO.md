@@ -1329,9 +1329,16 @@ pnpm turbo test --filter=@repo/firm-website -- src/app/(marketing)/error.test.ts
 
 ## INF-004 — Remove unused dependencies and empty package
 
-- [ ] `INF-004` — `[PENDING]`
+- [x] `INF-004` — `[DONE]`
 
-**What this is:** `packages/tailwind-config/` is an empty directory in the workspace. It has no `package.json` and no files, so pnpm silently ignores it. The intent was probably to share Tailwind theme tokens across future apps, but it currently does nothing and creates confusion. Recommendation: delete the empty directory now. If a shared Tailwind config is needed later, it can be created properly with a `package.json` and exported config. The `@hookform/resolvers` package in `packages/ui` is also unused (only `react-hook-form` is used).
+**Implementation notes**
+- Verified `@hookform/resolvers` has no imports in the codebase (grep search confirmed)
+- Removed `@hookform/resolvers` from `packages/ui/package.json` dependencies
+- Deleted empty `packages/tailwind-config/` directory
+- Ran `pnpm install` to update lockfile (packages: +3 -5)
+- All type checks pass (5 packages)
+- All tests pass (323 total: 42 in lib, 178 in firm-website, 145 in ui)
+- Pre-existing peer dependency warnings (typescript, valibot) are unrelated to INF-004 changes
 
 **Related file paths**
 
@@ -1479,7 +1486,7 @@ pnpm turbo build --filter=@repo/firm-website
 | `UI-001` | Medium | `[PENDING]` |
 | `UI-002` | Medium | `[PENDING]` |
 | `UI-003` | Medium | `[PENDING]` |
-| `INF-004` | Medium | `[PENDING]` |
+| `INF-004` | Medium | `[DONE]` |
 | `INF-005` | Medium | `[PENDING]` |
 
 ---
