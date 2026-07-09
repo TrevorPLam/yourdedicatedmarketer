@@ -121,7 +121,13 @@ pnpm turbo check-types --filter=@repo/firm-website
 
 ## TS-001 — Update TypeScript configuration for TS 6.0
 
-- [ ] `TS-001` — `[PENDING]`
+- [x] `TS-001` — `[DONE]`
+
+**Implementation notes**
+- Added explicit `"types": []` to `packages/typescript-config/base.json`
+- `strict`, `module`, and `target` were already explicitly set in base.json
+- No `baseUrl` existed in any config (already compliant with TS 6.0 deprecation)
+- Note: `pnpm turbo check-types` fails due to pre-existing FIX-001 issue (contact.test.ts), not TS-001 changes
 
 **Related file paths**
 
