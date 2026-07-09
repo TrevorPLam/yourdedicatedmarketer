@@ -335,14 +335,20 @@ git status --short
 
 ## FIX-002 — Remove dead code and public test routes
 
-- [ ] `FIX-002` — `[PENDING]`
+- [x] `FIX-002` — `[DONE]`
+
+**Implementation notes**
+- Task was already complete: `header.tsx`, `test-mdx/`, and `sample.mdx` did not exist in the codebase
+- Sitemap.ts at `apps/firm-website/src/app/sitemap.ts` contains no hardcoded test routes
+- Build and typecheck pass successfully
+- No code changes were required
 
 **Related file paths**
 
-- `apps/firm-website/src/components/header.tsx`
-- `apps/firm-website/src/app/test-mdx/page.tsx`
-- `apps/firm-website/src/content/pages/sample.mdx`
-- `apps/firm-website/src/lib/sitemap.ts`
+- `apps/firm-website/src/components/header.tsx` (already deleted)
+- `apps/firm-website/src/app/test-mdx/page.tsx` (already deleted)
+- `apps/firm-website/src/content/pages/sample.mdx` (already deleted)
+- `apps/firm-website/src/app/sitemap.ts` (verified clean)
 
 **Definition of done**
 
