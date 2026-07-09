@@ -55,6 +55,7 @@ describe('IndustryPage', () => {
       const mockIndustry = {
         data: {
           title: 'Home Services',
+          slug: 'home-services',
           description: 'Professional website design for home service businesses',
         },
         content: '<p>Test content</p>',
@@ -95,6 +96,7 @@ describe('IndustryPage', () => {
       const mockIndustry = {
         data: {
           title: 'Home Services',
+          slug: 'home-services',
           description: 'Test description',
         },
         content: '<p>Industry content</p>',

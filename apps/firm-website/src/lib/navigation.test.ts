@@ -78,7 +78,7 @@ describe('Navigation Utilities - Unit Tests with Mocked Content', () => {
 
     it('should return correct breadcrumbs for service pages', async () => {
       vi.mocked(getAllServices).mockResolvedValue([
-        { data: { title: 'Website Design', slug: 'website-design' }, content: '' },
+        { data: { title: 'Website Design', slug: 'website-design', description: 'Web design services' }, content: '' },
       ]);
       
       const breadcrumbs = await getBreadcrumbs('website-design');
@@ -90,7 +90,7 @@ describe('Navigation Utilities - Unit Tests with Mocked Content', () => {
 
     it('should return correct breadcrumbs for industry pages', async () => {
       vi.mocked(getAllIndustries).mockResolvedValue([
-        { data: { title: 'Home Services', slug: 'home-services' }, content: '' },
+        { data: { title: 'Home Services', slug: 'home-services', description: 'Home services' }, content: '' },
       ]);
       
       const breadcrumbs = await getBreadcrumbs('home-services');
@@ -102,7 +102,7 @@ describe('Navigation Utilities - Unit Tests with Mocked Content', () => {
 
     it('should return correct breadcrumbs for demo pages', async () => {
       vi.mocked(getAllDemos).mockResolvedValue([
-        { data: { title: 'Plumbing Demo', slug: 'plumbing' }, content: '' },
+        { data: { title: 'Plumbing Demo', slug: 'plumbing', description: 'Plumbing demo' }, content: '' },
       ]);
       
       const breadcrumbs = await getBreadcrumbs('plumbing');
@@ -145,7 +145,7 @@ describe('Navigation Utilities - Unit Tests with Mocked Content', () => {
   describe('getRelatedContent', () => {
     it('should return an array of related content items', async () => {
       vi.mocked(getAllDemos).mockResolvedValue([
-        { data: { title: 'Plumbing', slug: 'plumbing', industry: 'home-services' }, content: '' },
+        { data: { title: 'Plumbing', slug: 'plumbing', industry: 'home-services', description: 'Plumbing demo' }, content: '' },
       ]);
       
       const related = await getRelatedContent('plumbing', 'demo');
@@ -155,8 +155,8 @@ describe('Navigation Utilities - Unit Tests with Mocked Content', () => {
 
     it('should return related demos in the same industry', async () => {
       vi.mocked(getAllDemos).mockResolvedValue([
-        { data: { title: 'Plumbing', slug: 'plumbing', industry: 'home-services' }, content: '' },
-        { data: { title: 'HVAC', slug: 'hvac', industry: 'home-services' }, content: '' },
+        { data: { title: 'Plumbing', slug: 'plumbing', industry: 'home-services', description: 'Plumbing demo' }, content: '' },
+        { data: { title: 'HVAC', slug: 'hvac', industry: 'home-services', description: 'HVAC demo' }, content: '' },
       ]);
       
       const related = await getRelatedContent('plumbing', 'demo');
@@ -171,8 +171,8 @@ describe('Navigation Utilities - Unit Tests with Mocked Content', () => {
 
     it('should return related industries', async () => {
       vi.mocked(getAllIndustries).mockResolvedValue([
-        { data: { title: 'Home Services', slug: 'home-services', order: 1 }, content: '' },
-        { data: { title: 'Medical', slug: 'medical', order: 2 }, content: '' },
+        { data: { title: 'Home Services', slug: 'home-services', order: 1, description: 'Home services' }, content: '' },
+        { data: { title: 'Medical', slug: 'medical', order: 2, description: 'Medical' }, content: '' },
       ]);
       
       const related = await getRelatedContent('home-services', 'industry');
@@ -185,8 +185,8 @@ describe('Navigation Utilities - Unit Tests with Mocked Content', () => {
 
     it('should return related services', async () => {
       vi.mocked(getAllServices).mockResolvedValue([
-        { data: { title: 'Website Design', slug: 'website-design', order: 1 }, content: '' },
-        { data: { title: 'Local SEO', slug: 'local-seo', order: 2 }, content: '' },
+        { data: { title: 'Website Design', slug: 'website-design', order: 1, description: 'Web design services' }, content: '' },
+        { data: { title: 'Local SEO', slug: 'local-seo', order: 2, description: 'Local SEO services' }, content: '' },
       ]);
       
       const related = await getRelatedContent('website-design', 'service');
@@ -199,8 +199,8 @@ describe('Navigation Utilities - Unit Tests with Mocked Content', () => {
 
     it('should return related FAQs in the same category', async () => {
       vi.mocked(getAllFAQs).mockResolvedValue([
-        { data: { title: 'Cost FAQ', slug: 'cost', category: 'pricing', order: 1, question: 'How much?' }, content: '' },
-        { data: { title: 'Timeline FAQ', slug: 'timeline', category: 'pricing', order: 2, question: 'How long?' }, content: '' },
+        { data: { title: 'Cost FAQ', slug: 'cost', category: 'pricing', order: 1, description: 'How much?' }, content: '' },
+        { data: { title: 'Timeline FAQ', slug: 'timeline', category: 'pricing', order: 2, description: 'How long?' }, content: '' },
       ]);
       
       const related = await getRelatedContent('cost', 'faq');
@@ -213,10 +213,10 @@ describe('Navigation Utilities - Unit Tests with Mocked Content', () => {
 
     it('should limit related content to 3 items', async () => {
       vi.mocked(getAllIndustries).mockResolvedValue([
-        { data: { title: 'Home Services', slug: 'home-services', order: 1 }, content: '' },
-        { data: { title: 'Medical', slug: 'medical', order: 2 }, content: '' },
-        { data: { title: 'Personal Services', slug: 'personal-services', order: 3 }, content: '' },
-        { data: { title: 'Professional Services', slug: 'professional-services', order: 4 }, content: '' },
+        { data: { title: 'Home Services', slug: 'home-services', order: 1, description: 'Home services' }, content: '' },
+        { data: { title: 'Medical', slug: 'medical', order: 2, description: 'Medical' }, content: '' },
+        { data: { title: 'Personal Services', slug: 'personal-services', order: 3, description: 'Personal services' }, content: '' },
+        { data: { title: 'Professional Services', slug: 'professional-services', order: 4, description: 'Professional services' }, content: '' },
       ]);
       
       const related = await getRelatedContent('home-services', 'industry');

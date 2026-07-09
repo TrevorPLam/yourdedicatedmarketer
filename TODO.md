@@ -602,14 +602,30 @@ pnpm turbo build --filter=@repo/firm-website
 
 ## CT-003 — Validate all MDX content at runtime
 
-- [ ] `CT-003` — `[PENDING]`
+- [x] `CT-003` — `[DONE]`
+
+**Implementation notes**
+- Implemented `parseFrontmatter` helper function using Zod schemas for runtime validation
+- Updated `getContentBySlug` and `getAllContent` to accept optional schema parameter
+- Applied validation in all type-specific helpers (getAllServices, getAllIndustries, getAllDemos, getAllFAQs, getAllPages)
+- Added `clearContentCache` export for test isolation
+- Added comprehensive unit tests for schema validation with valid and invalid frontmatter
+- Fixed test mock data across multiple test files to match schema requirements
+- Used `z.treeifyError()` instead of deprecated `.format()` for Zod v4 compatibility
+- All 172 tests pass, type check passes, build succeeds
 
 **Related file paths**
 
 - `apps/firm-website/src/lib/content.ts`
 - `packages/lib/src/schemas/content.ts`
 - `packages/lib/src/index.ts`
-- `apps/firm-website/src/lib/__tests__/content.test.ts` (create or update)
+- `apps/firm-website/src/lib/content.test.ts`
+- `apps/firm-website/src/lib/navigation.test.ts`
+- `apps/firm-website/src/app/(marketing)/services/[slug]/page.test.tsx`
+- `apps/firm-website/src/app/(marketing)/demos/[slug]/page.test.tsx`
+- `apps/firm-website/src/app/(marketing)/industries/[slug]/page.test.tsx`
+- `apps/firm-website/src/components/features/demos/demo-detail.test.tsx`
+- `apps/firm-website/src/components/features/industries/industry-detail.test.tsx`
 
 **Definition of done**
 
@@ -653,10 +669,10 @@ pnpm turbo build --filter=@repo/firm-website
 
 **Subtasks**
 
-- `[AGENT]` `CT-003-01` — `apps/firm-website/src/lib/content.ts` — Implement `parseFrontmatter` helper using `z.infer` schemas.
-- `[AGENT]` `CT-003-02` — `apps/firm-website/src/lib/content.ts` — Apply validation in `getContentBySlug` and `getAllContent`.
-- `[AGENT]` `CT-003-03` — `apps/firm-website/src/lib/__tests__/content.test.ts` — Add tests for valid and invalid content parsing.
-- `[AGENT]` `CT-003-04` — workspace root — Run targeted tests and build.
+- ✅ `[AGENT]` `CT-003-01` — `apps/firm-website/src/lib/content.ts` — Implement `parseFrontmatter` helper using `z.infer` schemas.
+- ✅ `[AGENT]` `CT-003-02` — `apps/firm-website/src/lib/content.ts` — Apply validation in `getContentBySlug` and `getAllContent`.
+- ✅ `[AGENT]` `CT-003-03` — `apps/firm-website/src/lib/content.test.ts` — Add tests for valid and invalid content parsing.
+- ✅ `[AGENT]` `CT-003-04` — workspace root — Run targeted tests and build.
 
 **Validation commands**
 

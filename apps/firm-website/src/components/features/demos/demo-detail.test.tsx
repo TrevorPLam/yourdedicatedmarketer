@@ -94,6 +94,7 @@ describe('DemoDetail', () => {
         data: {
           title: 'Retail',
           slug: 'retail',
+          description: 'Retail industry',
         },
         content: '<p>Industry content</p>',
       },
@@ -120,6 +121,7 @@ describe('DemoDetail', () => {
         data: {
           title: 'Healthcare',
           slug: 'healthcare',
+          description: 'Healthcare industry',
         },
         content: '<p>Industry content</p>',
       },
@@ -145,6 +147,7 @@ describe('DemoDetail', () => {
         data: {
           title: 'Retail',
           slug: 'retail',
+          description: 'Retail industry',
         },
         content: '<p>Industry content</p>',
       },

@@ -37,6 +37,7 @@ describe('ServicePage', () => {
     vi.mocked(getService).mockResolvedValue({
       data: {
         title: 'Website Design',
+        slug: 'website-design',
         description: 'Professional website design services',
       },
       content: '<p>Test content</p>',

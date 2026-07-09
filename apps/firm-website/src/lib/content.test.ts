@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { z } from 'zod';
 
 // Create mock functions using vi.hoisted
 const { mockReaddirSync, mockReadFileSync, mockExistsSync } = vi.hoisted(() => ({
@@ -23,11 +24,19 @@ vi.mock('path', () => ({
   },
 }));
 
-import { getAllContent, getAllSlugs, getContentBySlug } from './content';
+import { getAllContent, getAllSlugs, getContentBySlug, clearContentCache } from './content';
+
+// Define a test schema for validation tests
+const TestSchema = z.strictObject({
+  title: z.string(),
+  slug: z.string(),
+  description: z.string(),
+});
 
 describe('Content Utilities - Unit Tests with Mocked File System', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    clearContentCache();
   });
 
   describe('getAllSlugs', () => {
@@ -132,10 +141,89 @@ describe('Content Utilities - Unit Tests with Mocked File System', () => {
       mockReadFileSync.mockImplementation(() => {
         throw new Error('Invalid format');
       });
-      
+
       const contents = await getAllContent<{ title: string }>('test-dir-7');
-      
+
       expect(contents).toEqual([]);
+    });
+  });
+
+  describe('getContentBySlug with schema validation', () => {
+    it('should return content when frontmatter matches schema', async () => {
+      mockExistsSync.mockReturnValue(true);
+      mockReadFileSync.mockReturnValue('---\ntitle: Test Title\nslug: test-slug\ndescription: Test description\n---\n\nTest content');
+
+      const content = await getContentBySlug('test-dir', 'test-slug', TestSchema);
+
+      expect(content).not.toBeNull();
+      expect(content?.data.title).toBe('Test Title');
+      expect(content?.data.slug).toBe('test-slug');
+      expect(content?.data.description).toBe('Test description');
+      expect(content?.content).toBeDefined();
+    });
+
+    it('should return null when frontmatter does not match schema', async () => {
+      mockExistsSync.mockReturnValue(true);
+      mockReadFileSync.mockReturnValue('---\ntitle: Test Title\nslug: invalid-missing-desc\n---\n\nTest content'); // Missing required 'description' field
+
+      const content = await getContentBySlug('test-dir', 'invalid-missing-desc', TestSchema);
+
+      expect(content).toBeNull();
+    });
+
+    it('should return null when frontmatter has extra fields (strict validation)', async () => {
+      mockExistsSync.mockReturnValue(true);
+      mockReadFileSync.mockReturnValue('---\ntitle: Test Title\nslug: invalid-extra-field\ndescription: Test description\nextraField: extra value\n---\n\nTest content');
+
+      const content = await getContentBySlug('test-dir', 'invalid-extra-field', TestSchema);
+
+      expect(content).toBeNull();
+    });
+
+    it('should return content without schema validation when schema is not provided', async () => {
+      mockExistsSync.mockReturnValue(true);
+      mockReadFileSync.mockReturnValue('---\ntitle: Test Title\nslug: test-slug\n---\n\nTest content');
+
+      const content = await getContentBySlug<{ title: string; slug: string }>('test-dir', 'test-slug');
+
+      expect(content).not.toBeNull();
+      expect(content?.data.title).toBe('Test Title');
+      expect(content?.data.slug).toBe('test-slug');
+    });
+  });
+
+  describe('getAllContent with schema validation', () => {
+    it('should return only items that match the schema', async () => {
+      mockReaddirSync.mockReturnValue(['valid.mdx', 'invalid.mdx']);
+      mockExistsSync.mockReturnValue(true);
+      mockReadFileSync
+        .mockReturnValueOnce('---\ntitle: Valid Title\nslug: valid-slug\ndescription: Valid description\n---\n\nValid content')
+        .mockReturnValueOnce('---\ntitle: Invalid Title\nslug: invalid-slug\n---\n\nInvalid content'); // Missing description
+
+      const contents = await getAllContent('test-dir', TestSchema);
+
+      expect(contents.length).toBe(1);
+      expect(contents[0]!.data.title).toBe('Valid Title');
+    });
+
+    it('should return empty array when no items match the schema', async () => {
+      mockReaddirSync.mockReturnValue(['invalid1.mdx', 'invalid2.mdx']);
+      mockExistsSync.mockReturnValue(true);
+      mockReadFileSync.mockReturnValue('---\ntitle: Invalid\nslug: invalid\n---\n\nContent'); // Missing description
+
+      const contents = await getAllContent('test-dir', TestSchema);
+
+      expect(contents).toEqual([]);
+    });
+
+    it('should return all items when schema is not provided', async () => {
+      mockReaddirSync.mockReturnValue(['item1.mdx', 'item2.mdx']);
+      mockExistsSync.mockReturnValue(true);
+      mockReadFileSync.mockReturnValue('---\ntitle: Test\nslug: test\n---\n\nContent');
+
+      const contents = await getAllContent<{ title: string; slug: string }>('test-dir');
+
+      expect(contents.length).toBe(2);
     });
   });
 });

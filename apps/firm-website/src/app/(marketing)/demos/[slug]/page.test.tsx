@@ -55,6 +55,7 @@ describe('DemoPage', () => {
       const mockDemo = {
         data: {
           title: 'Plumbing Business Website',
+          slug: 'plumbing',
           description: 'A mobile-first website for a DFW plumbing business optimized for emergency searches',
         },
         content: '<p>Test content</p>',
@@ -95,7 +96,9 @@ describe('DemoPage', () => {
       const mockDemo = {
         data: {
           title: 'Plumbing Business Website',
+          slug: 'plumbing',
           industry: 'home-services',
+          description: 'A plumbing business website',
         },
         content: '<p>Demo content</p>',
       };
