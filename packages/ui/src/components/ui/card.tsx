@@ -2,19 +2,70 @@ import * as React from "react"
 
 import { cn } from "#lib/utils"
 
-const Card = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(
-      "rounded-lg border bg-card text-card-foreground shadow-sm",
-      className
-    )}
-    {...props}
-  />
-))
+interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
+  lift?: boolean
+  variant?: "default" | "gradient-primary" | "gradient-accent"
+  innerShadow?: boolean
+}
+
+const Card = React.forwardRef<HTMLDivElement, CardProps>(
+  ({ className, lift = false, variant = "default", innerShadow = false, children, ...props }, ref) => {
+    const gradientStyles: Record<string, React.CSSProperties> = {
+      "gradient-primary": {
+        background: "linear-gradient(135deg, oklch(0.65 0.24 264), oklch(0.68 0.25 320))",
+      },
+      "gradient-accent": {
+        background: "linear-gradient(135deg, oklch(0.68 0.25 320), oklch(0.70 0.22 200))",
+      },
+    }
+
+    const innerShadowStyle: React.CSSProperties = {
+      boxShadow: innerShadow ? "inset 0 2px 4px rgba(0, 0, 0, 0.06)" : undefined,
+    }
+
+    const isGradient = variant !== "default"
+
+    if (isGradient) {
+      return (
+        <div
+          ref={ref}
+          className={cn(
+            "rounded-lg p-[1px] transition-all duration-300 ease-out",
+            lift && "hover:-translate-y-1 hover:shadow-lg",
+            className
+          )}
+          style={gradientStyles[variant]}
+          {...props}
+        >
+          <div
+            className={cn(
+              "rounded-lg border bg-card text-card-foreground shadow-sm h-full w-full",
+              "border-transparent"
+            )}
+            style={innerShadowStyle}
+          >
+            {children}
+          </div>
+        </div>
+      )
+    }
+
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          "rounded-lg border bg-card text-card-foreground shadow-sm transition-all duration-300 ease-out",
+          lift && "hover:-translate-y-1 hover:shadow-lg",
+          className
+        )}
+        style={innerShadowStyle}
+        {...props}
+      >
+        {children}
+      </div>
+    )
+  }
+)
 Card.displayName = "Card"
 
 const CardHeader = React.forwardRef<

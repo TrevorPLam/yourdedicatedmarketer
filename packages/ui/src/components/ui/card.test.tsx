@@ -88,4 +88,47 @@ describe('Card', () => {
     render(<Card ref={ref}>Card content</Card>);
     expect(ref.current).not.toBeNull();
   });
+
+  it('applies lift effect when lift prop is true', () => {
+    render(<Card lift>Card content</Card>);
+    const card = screen.getByText('Card content').closest('div');
+    expect(card).toHaveClass('hover:-translate-y-1', 'hover:shadow-lg');
+  });
+
+  it('does not apply lift effect when lift prop is false', () => {
+    render(<Card lift={false}>Card content</Card>);
+    const card = screen.getByText('Card content').closest('div');
+    expect(card).not.toHaveClass('hover:-translate-y-1', 'hover:shadow-lg');
+  });
+
+  it('renders with gradient-primary variant', () => {
+    render(<Card variant="gradient-primary">Card content</Card>);
+    const card = screen.getByText('Card content').closest('div');
+    expect(card).toBeInTheDocument();
+  });
+
+  it('renders with gradient-accent variant', () => {
+    render(<Card variant="gradient-accent">Card content</Card>);
+    const card = screen.getByText('Card content').closest('div');
+    expect(card).toBeInTheDocument();
+  });
+
+  it('applies inner shadow when innerShadow prop is true', () => {
+    render(<Card innerShadow>Card content</Card>);
+    const card = screen.getByText('Card content').closest('div');
+    expect(card).toHaveStyle({ boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.06)' });
+  });
+
+  it('does not apply inner shadow when innerShadow prop is false', () => {
+    render(<Card innerShadow={false}>Card content</Card>);
+    const card = screen.getByText('Card content').closest('div');
+    expect(card).not.toHaveStyle({ boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.06)' });
+  });
+
+  it('combines lift and innerShadow props', () => {
+    render(<Card lift innerShadow>Card content</Card>);
+    const card = screen.getByText('Card content').closest('div');
+    expect(card).toHaveClass('hover:-translate-y-1', 'hover:shadow-lg');
+    expect(card).toHaveStyle({ boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.06)' });
+  });
 });

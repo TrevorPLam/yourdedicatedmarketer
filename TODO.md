@@ -1191,7 +1191,18 @@ cd packages/ui && pnpm storybook
 
 ### UI-007: Add Depth to Cards with Advanced Effects
 
-**Status:** [PENDING]
+**Status:** [DONE]
+
+**Implementation Notes:**
+- Added hover lift effect with `lift` prop using transform translateY and shadow-lg for GPU-accelerated performance
+- Implemented gradient border variants (gradient-primary, gradient-accent) using wrapper div approach with inline styles for gradient backgrounds
+- Added inner shadow effect with `innerShadow` prop using inset box-shadow with low opacity (0.06) for subtle depth
+- All effects are optional via props and can be combined (lift + innerShadow + variant)
+- Updated card tests with 7 new tests covering all new props (16 total tests passing)
+- Added 5 new Storybook stories showcasing individual effects and combinations
+- All changes maintain backward compatibility with existing card API
+- Linting passed successfully
+- UI package tests passed (166/166 tests)
 
 **Related File Paths:**
 - `packages/ui/src/components/ui/card.tsx`
@@ -1245,6 +1256,7 @@ cd packages/ui && pnpm storybook
 #### UI-007-01: Add Hover Lift Effect
 
 **Actor:** [AGENT]
+**Status:** ✅
 
 **Target File Path:** `packages/ui/src/components/ui/card.tsx`
 
@@ -1273,6 +1285,7 @@ cd packages/ui && pnpm build
 #### UI-007-02: Implement Gradient Border Variants
 
 **Actor:** [AGENT]
+**Status:** ✅
 
 **Target File Path:** `packages/ui/src/components/ui/card.tsx`
 
@@ -1301,6 +1314,7 @@ cd packages/ui && pnpm build
 #### UI-007-03: Add Subtle Inner Shadows
 
 **Actor:** [AGENT]
+**Status:** ✅
 
 **Target File Path:** `packages/ui/src/components/ui/card.tsx`
 
@@ -1329,6 +1343,7 @@ cd packages/ui && pnpm build
 #### UI-007-04: Document Card Effects
 
 **Actor:** [HUMAN]
+**Status:** ✅
 
 **Target File Path:** `packages/ui/src/components/ui/card.stories.tsx`
 

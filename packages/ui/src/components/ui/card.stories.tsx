@@ -113,3 +113,88 @@ export const LongContent: Story = {
     </Card>
   ),
 };
+
+export const WithHoverLift: Story = {
+  render: () => (
+    <Card className="w-[350px]" lift>
+      <CardHeader>
+        <CardTitle>Hover Lift Effect</CardTitle>
+        <CardDescription>Hover over this card to see the lift effect</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <p>This card has a hover lift effect that subtly raises it when you hover over it.</p>
+      </CardContent>
+      <CardFooter>
+        <Button>Action</Button>
+      </CardFooter>
+    </Card>
+  ),
+};
+
+export const GradientPrimary: Story = {
+  render: () => (
+    <Card className="w-[350px]" variant="gradient-primary">
+      <CardHeader>
+        <CardTitle>Gradient Primary Border</CardTitle>
+        <CardDescription>Card with primary gradient border</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <p>This card features a gradient border using the primary color palette.</p>
+      </CardContent>
+      <CardFooter>
+        <Button>Action</Button>
+      </CardFooter>
+    </Card>
+  ),
+};
+
+export const GradientAccent: Story = {
+  render: () => (
+    <Card className="w-[350px]" variant="gradient-accent">
+      <CardHeader>
+        <CardTitle>Gradient Accent Border</CardTitle>
+        <CardDescription>Card with accent gradient border</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <p>This card features a gradient border using the accent color palette.</p>
+      </CardContent>
+      <CardFooter>
+        <Button>Action</Button>
+      </CardFooter>
+    </Card>
+  ),
+};
+
+export const WithInnerShadow: Story = {
+  render: () => (
+    <Card className="w-[350px]" innerShadow>
+      <CardHeader>
+        <CardTitle>Inner Shadow Effect</CardTitle>
+        <CardDescription>Card with subtle inner shadow</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <p>This card has a subtle inner shadow for added depth and visual interest.</p>
+      </CardContent>
+      <CardFooter>
+        <Button>Action</Button>
+      </CardFooter>
+    </Card>
+  ),
+};
+
+export const CombinedEffects: Story = {
+  render: () => (
+    <Card className="w-[350px]" lift innerShadow variant="gradient-primary">
+      <CardHeader>
+        <CardTitle>Combined Effects</CardTitle>
+        <CardDescription>Lift, inner shadow, and gradient border</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <p>This card combines all three effects: hover lift, inner shadow, and gradient border.</p>
+      </CardContent>
+      <CardFooter>
+        <Button>Action</Button>
+      </CardFooter>
+    </Card>
+  ),
+};
