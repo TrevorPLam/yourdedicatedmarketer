@@ -1401,9 +1401,16 @@ pnpm turbo test
 
 ## INF-005 — Document Content Security Policy limitation
 
-- [ ] `INF-005` — `[PENDING]`
+- [x] `INF-005` — `[DONE]`
 
-**Decision:** Keep the current CSP configuration unchanged. The `'unsafe-inline'` and `'unsafe-eval'` directives in `script-src` are required by the current Next.js setup (including Sentry scripts and the MDX/JSON-LD pipeline). Implementing strict nonces/hashes at this time risks breaking GA4, Sentry, or inline JSON-LD. The pragmatic best path is to document the limitation and the future hardening plan rather than change runtime behavior.
+**Implementation notes**
+- Added code comment in `next.config.ts` above CSP block explaining why `'unsafe-inline'` and `'unsafe-eval'` are required
+- Created `.company/security-notes.md` with comprehensive documentation of CSP limitations, security implications, and future hardening plan
+- Documented that `'unsafe-eval'` is required by React in development for enhanced debugging (server-side error stack reconstruction)
+- Documented that `'unsafe-inline'` is required for Sentry scripts, GA4, and inline JSON-LD/MDX rendering
+- Provided future hardening plan using CSP nonces via middleware with example implementation pattern
+- Fixed pre-existing ESLint errors in error.test.tsx (replaced @ts-ignore with @ts-expect-error)
+- Build succeeds with no regressions
 
 **Related file paths**
 

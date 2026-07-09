@@ -55,6 +55,10 @@ const nextConfig: NextConfig = {
             key: 'Content-Security-Policy',
             value:
               "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' https:; connect-src 'self' https:; frame-ancestors 'none'; upgrade-insecure-requests;",
+            // NOTE: 'unsafe-inline' and 'unsafe-eval' are currently required in script-src:
+            // - 'unsafe-eval': React uses eval() in development for enhanced debugging (server-side error stack reconstruction)
+            // - 'unsafe-inline': Required for Sentry scripts, GA4, and inline JSON-LD/MDX rendering
+            // Future hardening: Implement CSP nonces via middleware to selectively allow inline scripts without 'unsafe-inline'
           },
         ],
       },

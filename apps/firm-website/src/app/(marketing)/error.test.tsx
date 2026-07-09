@@ -14,7 +14,7 @@ describe('Error Boundary', () => {
 
   it('logs error to console in development', () => {
     const originalNodeEnv = process.env.NODE_ENV;
-    // @ts-ignore - NODE_ENV is read-only in some environments
+    // @ts-expect-error - NODE_ENV is read-only in some environments
     process.env.NODE_ENV = 'development';
 
     const consoleErrorSpy = vi.spyOn(console, 'error');
@@ -26,13 +26,13 @@ describe('Error Boundary', () => {
     expect(consoleErrorSpy).toHaveBeenCalledWith('Error stack:', 'Test stack trace');
 
     consoleErrorSpy.mockRestore();
-    // @ts-ignore
+    // @ts-expect-error - NODE_ENV is read-only in some environments
     process.env.NODE_ENV = originalNodeEnv;
   });
 
   it('does not log error to console in production', () => {
     const originalNodeEnv = process.env.NODE_ENV;
-    // @ts-ignore - NODE_ENV is read-only in some environments
+    // @ts-expect-error - NODE_ENV is read-only in some environments
     process.env.NODE_ENV = 'production';
 
     const consoleErrorSpy = vi.spyOn(console, 'error');
@@ -42,13 +42,13 @@ describe('Error Boundary', () => {
     expect(consoleErrorSpy).not.toHaveBeenCalled();
 
     consoleErrorSpy.mockRestore();
-    // @ts-ignore
+    // @ts-expect-error - NODE_ENV is read-only in some environments
     process.env.NODE_ENV = originalNodeEnv;
   });
 
   it('displays error details in development', () => {
     const originalNodeEnv = process.env.NODE_ENV;
-    // @ts-ignore - NODE_ENV is read-only in some environments
+    // @ts-expect-error - NODE_ENV is read-only in some environments
     process.env.NODE_ENV = 'development';
 
     render(<ErrorBoundary error={mockError} reset={mockReset} />);
@@ -57,13 +57,13 @@ describe('Error Boundary', () => {
     expect(screen.getByText((content) => content.includes('Test error'))).toBeInTheDocument();
     expect(screen.getByText((content) => content.includes('Test stack trace'))).toBeInTheDocument();
 
-    // @ts-ignore
+    // @ts-expect-error - NODE_ENV is read-only in some environments
     process.env.NODE_ENV = originalNodeEnv;
   });
 
   it('hides error details in production', () => {
     const originalNodeEnv = process.env.NODE_ENV;
-    // @ts-ignore - NODE_ENV is read-only in some environments
+    // @ts-expect-error - NODE_ENV is read-only in some environments
     process.env.NODE_ENV = 'production';
 
     render(<ErrorBoundary error={mockError} reset={mockReset} />);
@@ -72,7 +72,7 @@ describe('Error Boundary', () => {
     expect(screen.queryByText('Test error')).not.toBeInTheDocument();
     expect(screen.queryByText('Test stack trace')).not.toBeInTheDocument();
 
-    // @ts-ignore
+    // @ts-expect-error - NODE_ENV is read-only in some environments
     process.env.NODE_ENV = originalNodeEnv;
   });
 
