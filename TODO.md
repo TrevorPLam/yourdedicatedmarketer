@@ -273,7 +273,12 @@ pnpm turbo test --filter=@repo/firm-website -- src/app/actions/contact.test.ts
 
 ## INF-001 — Ignore TypeScript build info files
 
-- [ ] `INF-001` — `[PENDING]`
+- [x] `INF-001` — `[DONE]`
+
+**Implementation notes**
+- Added `*.tsbuildinfo` to `.gitignore` in the Build outputs section
+- Removed `apps/firm-website/tsconfig.tsbuildinfo` from git tracking with `git rm --cached`
+- File remains on disk but is no longer tracked by git
 
 **Related file paths**
 
