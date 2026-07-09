@@ -11,11 +11,14 @@ const meta: Meta<typeof Button> = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['default', 'destructive', 'outline', 'secondary', 'ghost', 'link'],
+      options: ['default', 'destructive', 'outline', 'secondary', 'ghost', 'link', 'gradient', 'gradient-accent', 'gradient-secondary', 'glow'],
     },
     size: {
       control: 'select',
       options: ['default', 'sm', 'lg', 'icon'],
+    },
+    loading: {
+      control: 'boolean',
     },
   },
 };
@@ -94,6 +97,10 @@ export const AllVariants: Story = {
       <Button variant="secondary">Secondary</Button>
       <Button variant="ghost">Ghost</Button>
       <Button variant="link">Link</Button>
+      <Button variant="gradient">Gradient</Button>
+      <Button variant="gradient-accent">Gradient Accent</Button>
+      <Button variant="gradient-secondary">Gradient Secondary</Button>
+      <Button variant="glow">Glow</Button>
     </div>
   ),
 };
@@ -107,4 +114,19 @@ export const AllSizes: Story = {
       <Button size="icon">🔔</Button>
     </div>
   ),
+};
+
+export const Loading: Story = {
+  args: {
+    loading: true,
+    children: 'Loading...',
+  },
+};
+
+export const LoadingWithGradient: Story = {
+  args: {
+    variant: 'gradient',
+    loading: true,
+    children: 'Submitting...',
+  },
 };

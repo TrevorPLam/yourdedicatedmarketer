@@ -29,4 +29,50 @@ describe('Button', () => {
     button.click();
     expect(handleClick).toHaveBeenCalledTimes(1);
   });
+
+  it('renders gradient variant', () => {
+    render(<Button variant="gradient">Gradient</Button>);
+    const button = screen.getByRole('button', { name: 'Gradient' });
+    expect(button).toHaveClass('bg-gradient-primary');
+  });
+
+  it('renders gradient-accent variant', () => {
+    render(<Button variant="gradient-accent">Gradient Accent</Button>);
+    const button = screen.getByRole('button', { name: 'Gradient Accent' });
+    expect(button).toHaveClass('bg-gradient-accent');
+  });
+
+  it('renders gradient-secondary variant', () => {
+    render(<Button variant="gradient-secondary">Gradient Secondary</Button>);
+    const button = screen.getByRole('button', { name: 'Gradient Secondary' });
+    expect(button).toHaveClass('bg-gradient-secondary');
+  });
+
+  it('renders glow variant', () => {
+    render(<Button variant="glow">Glow</Button>);
+    const button = screen.getByRole('button', { name: 'Glow' });
+    expect(button).toHaveClass('hover:shadow-lg');
+  });
+
+  it('shows loading spinner when loading is true', () => {
+    render(<Button loading>Loading</Button>);
+    const button = screen.getByRole('button', { name: 'Loading' });
+    expect(button).toBeDisabled();
+    expect(button).toHaveAttribute('aria-busy', 'true');
+    expect(button.querySelector('.animate-spin')).toBeInTheDocument();
+  });
+
+  it('does not show loading spinner when loading is false', () => {
+    render(<Button loading={false}>Not Loading</Button>);
+    const button = screen.getByRole('button', { name: 'Not Loading' });
+    expect(button).not.toBeDisabled();
+    expect(button).not.toHaveAttribute('aria-busy', 'true');
+    expect(button.querySelector('.animate-spin')).not.toBeInTheDocument();
+  });
+
+  it('disables button when loading and disabled are both true', () => {
+    render(<Button loading disabled>Double Disabled</Button>);
+    const button = screen.getByRole('button', { name: 'Double Disabled' });
+    expect(button).toBeDisabled();
+  });
 });
