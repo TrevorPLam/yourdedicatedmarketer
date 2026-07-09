@@ -15,1577 +15,1923 @@ This document follows Specification-Driven Development (SDD), Domain-Driven Desi
 - **Actor labels:** `[AGENT]` = executable by the coding agent, `[HUMAN]` = requires human decision or input.
 - **No emojis.** Use plain text markers only.
 - **Validation commands** are targeted; prefer single test files or filtered checks over full suite runs.
-- **Repository management documents** that still exist (`TODO.md`, `.devin/workflows/`, `.company/`) are updated as part of each task when the change affects onboarding, architecture, or deployment. The `docs/` directory and old `README.md` have been permanently deleted and must not be restored.
+- **Repository management documents** that still exist (`TODO.md`, `.devin/workflows/`, `.company/`) are updated as part of each task when the change affects onboarding, architecture, or deployment. The `docs/` directory and old `README.md` have been permanently deleted and must not be restore
 
 ---
 
 ## Domains
 
-- `FIX` — Critical fixes blocking CI or production.
-- `ENV` — Environment variable validation and configuration.
-- `CT` — Content domain (schemas, types, MDX frontmatter, rendering).
-- `UI` — Component-level quality and behavior.
-- `INF` — Infrastructure, CI/CD, and tooling.
-- `DOC` — Documentation and repository management.
+### UI-001: Redesign Color System with Vibrant Palette
+
+**Status:** [DONE]
+
+**Implementation Notes:**
+- Updated primary color palette with higher chroma values (0.22-0.25) and lightness (0.65-0.75) for vibrant modern look
+- Changed primary hue from 264 to maintain blue while increasing visual impact
+- Updated accent colors to pink/purple (320) and cyan (200) for complementary vibrant palette
+- Added gradient tokens: --gradient-primary, --gradient-accent, --gradient-secondary using CSS linear-gradient with OKLCH colors
+- Optimized dark mode colors with subtle chroma (0.01-0.02) and adjusted lightness for better contrast with vibrant colors
+- All changes maintain OKLCH format and semantic token naming
+- Linting and type checking passed successfully
+
+**Related File Paths:**
+- `packages/ui/src/styles.css`
+- `apps/firm-website/src/app/globals.css`
+
+**Definition of Done:**
+- Color system updated from basic electric blue to vibrant, modern palette
+- OKLCH color space maintained with improved chroma and lightness values
+- Gradient color tokens added for depth and visual interest
+- Dark mode colors adjusted for better contrast and visual harmony
+- All components using semantic color tokens update automatically
+- Storybook stories updated to reflect new color system
+- Color contrast ratios meet WCAG AA standards (4.5:1)
+
+**Out of Scope:**
+- Complete component redesign (colors only)
+- Brand identity work (logo, brand guidelines)
+- Color accessibility audit beyond contrast ratios
+
+**Rules to Follow:**
+- Use OKLCH color space for perceptual uniformity
+- Maintain semantic token naming (primary, secondary, accent, etc.)
+- Ensure all colors have corresponding -foreground tokens
+- Test color combinations in both light and dark modes
+- Document color usage guidelines in component stories
+
+**Advanced Coding Pattern:**
+- CSS custom properties with OKLCH values for theming
+- Tailwind v4 @theme directive for CSS-first configuration
+- color-mix() function for dynamic color variations
+- Semantic token layering (base -> semantic -> component)
+
+**Anti-Patterns:**
+- Hardcoded hex values in component files
+- Using raw Tailwind colors (text-blue-500) instead of semantic tokens
+- Manual dark mode color overrides in components
+- Inconsistent color naming conventions
+
+**Imports/Exports:**
+- No imports/exports changed (CSS variables only)
+
+**Depends On:**
+- None
+
+**Blocks:**
+- UI-002 (Typography Overhaul)
+- UI-003 (Animation System)
 
 ---
 
-## Critical Path (must be completed in order)
+#### UI-001-01: Update Primary Color Palette
 
-1. `INF-006` upgrades pnpm to a supported, patched version (10.34.4+).
-2. `INF-007` confirms Next.js is patched for CVE-2025-66478.
-3. `FIX-001` unblocks `check-types`.
-4. `INF-001` prevents future git noise.
-5. `FIX-002` removes public test routes.
-6. `CT-001` fixes the live FAQ rendering bug.
-7. `DOC-001` commits the documentation deletion decision.
+**Actor:** [AGENT]
 
----
+**Target File Path:** `packages/ui/src/styles.css`
 
-## INF-006 — Upgrade pnpm to 10.34.4+
+**Description:**
+Replace the current electric blue primary color with a more vibrant palette. Update the --color-primary, --color-primary-light, and --color-primary-dark tokens in the @theme block to use higher chroma values for better visual impact. Add --color-accent and --color-accent-secondary tokens for complementary colors (pink/purple and cyan ranges). Ensure all colors maintain OKLCH format with appropriate lightness (0.65-0.75 range) and chroma (0.20-0.25 range) values.
 
-- [x] `INF-006` — `[DONE]`
-
-**Implementation notes**
-- Updated `packageManager` to `pnpm@10.34.4` in package.json
-- Updated `devEngines.packageManager.version` to `10.34.4` in package.json
-- Updated CI workflow to use pnpm 10.34.4 in .github/workflows/ci.yml
-- Regenerated lockfile with `pnpm install` (lockfileVersion updated to 9.0)
-- All workspace scripts pass: check-types, test
-- Security patches applied: GHSA-qrv3-253h-g69c, GHSA-fr4h-3cph-29xv
-
-**Related file paths**
-
-- `package.json`
-- `pnpm-lock.yaml`
-- `.github/workflows/ci.yml`
-
-**Definition of done**
-
-- `packageManager` is updated to `pnpm@10.34.4` (or latest supported 10.x patch).
-- `devEngines.pnpm` is updated to match the new `packageManager` version.
-- Lockfile is regenerated with `pnpm install` and all workspace scripts still pass.
-- CI workflow uses the same pnpm version.
-
-**Out of scope**
-
-- Migrating to pnpm 11.x.
-- Changing package manager.
-
-**Validation commands**
-
-```powershell
-pnpm --version
-pnpm install
-pnpm turbo check-types
-pnpm turbo test
+**Validation Commands:**
+```bash
+# Build UI package to verify no CSS errors
+cd packages/ui && pnpm build
+# Run Storybook to visually verify colors
+cd packages/ui && pnpm storybook
 ```
 
+**Testing/Validation:**
+- Update button.stories.tsx to showcase new color variants
+- Add color contrast test in button.test.tsx
+- Create visual regression test for color changes
+
+**Repository Management:**
+- Update .company/4-Services-And-Pages.md if color changes affect service descriptions
+
 ---
 
-## INF-007 — Verify Next.js patched for CVE-2025-66478
+#### UI-001-02: Add Gradient Color Tokens
 
-- [x] `INF-007` — `[DONE]`
+**Actor:** [AGENT]
 
-**Implementation notes**
-- Current Next.js version: 15.5.20 (from pnpm-lock.yaml)
-- Minimum patched version for 15.5.x: 15.5.7
-- Status: Already patched (15.5.20 > 15.5.7)
-- No upgrade required
+**Target File Path:** `packages/ui/src/styles.css`
 
-**Related file paths**
+**Description:**
+Add gradient color tokens to the @theme block for modern gradient effects. Define --gradient-primary, --gradient-accent, and --gradient-secondary tokens using CSS gradient syntax with the new vibrant colors. These should be usable as background gradients for cards, buttons, and hero sections. Ensure gradients work in both light and dark modes by using semantic color tokens.
 
-- `apps/firm-website/package.json`
-- `pnpm-lock.yaml`
-
-**Definition of done**
-
-- `pnpm list next` reports a patched version (`15.5.7+` or the latest `15.5.x` / `16.x` patch).
-- If not patched, upgrade to the latest patched version in the current release line and regenerate the lockfile.
-- Build and type checks pass after any upgrade.
-
-**Out of scope**
-
-- Major Next.js feature migrations.
-- React version changes outside the chosen Next.js patch.
-
-**Validation commands**
-
-```powershell
-pnpm list next
-pnpm turbo build --filter=@repo/firm-website
-pnpm turbo check-types --filter=@repo/firm-website
+**Validation Commands:**
+```bash
+# Build UI package
+cd packages/ui && pnpm build
+# Test gradient usage in development
+cd apps/firm-website && pnpm dev
 ```
 
+**Testing/Validation:**
+- Add gradient variant to button component
+- Create card.stories.tsx story showcasing gradient backgrounds
+- Test gradient rendering across browsers
+
+**Repository Management:**
+- No documentation updates needed
+
 ---
 
-## TS-001 — Update TypeScript configuration for TS 6.0
+#### UI-001-03: Optimize Dark Mode Colors
 
-- [x] `TS-001` — `[DONE]`
+**Actor:** [AGENT]
 
-**Implementation notes**
-- Added explicit `"types": []` to `packages/typescript-config/base.json`
-- `strict`, `module`, and `target` were already explicitly set in base.json
-- No `baseUrl` existed in any config (already compliant with TS 6.0 deprecation)
-- Note: `pnpm turbo check-types` fails due to pre-existing FIX-001 issue (contact.test.ts), not TS-001 changes
+**Target File Path:** `packages/ui/src/styles.css`
 
-**Related file paths**
+**Description:**
+Refine the dark mode color palette in the .dark class to improve contrast and visual harmony. Adjust background, foreground, card, and muted colors to ensure they work well with the new vibrant primary colors. Test that text remains readable and that the vibrant colors don't overwhelm in dark mode. Maintain the OKLCH format and ensure proper chroma reduction for dark mode contexts.
 
-- `packages/typescript-config/base.json`
-- `packages/typescript-config/nextjs.json`
-- `apps/firm-website/tsconfig.json`
-- `packages/lib/tsconfig.json`
-- `packages/ui/tsconfig.json`
-
-**Definition of done**
-
-- `strict`, `module`, `target`, and `types` are explicitly set to desired values in the shared base config.
-- `baseUrl` is removed from all configs (prepend the prefix into `paths` entries where needed).
-- `pnpm turbo check-types` passes across all packages.
-
-**Out of scope**
-
-- Adopting TypeScript 7.0 features.
-- Rewriting source code for new compiler defaults.
-
-**Validation commands**
-
-```powershell
-pnpm turbo check-types
+**Validation Commands:**
+```bash
+# Build UI package
+cd packages/ui && pnpm build
+# Test theme toggle in development
+cd apps/firm-website && pnpm dev
 ```
 
+**Testing/Validation:**
+- Add dark mode tests to theme-toggle.test.tsx
+- Verify color contrast ratios in dark mode using axe-core
+- Create Storybook story for dark mode color palette
+
+**Repository Management:**
+- No documentation updates needed
+
 ---
 
-## SEN-001 — Migrate Sentry client config to `instrumentation-client.ts`
+#### UI-001-04: Document Color Usage Guidelines
 
-- [x] `SEN-001` — `[DONE]`
+**Actor:** [HUMAN]
 
-**Implementation notes**
-- Created `apps/firm-website/instrumentation-client.ts` with client-side Sentry configuration
-- Added `export const onRouterTransitionStart = Sentry.captureRouterTransitionStart` to instrument router navigations
-- Deleted `apps/firm-website/sentry.client.config.ts` (deprecated file)
-- Added `SENTRY_AUTH_TOKEN` and `NEXT_PUBLIC_SENTRY_DSN` to `turbo.json` `globalPassThroughEnv`
-- Added `SENTRY_AUTH_TOKEN` and `NEXT_PUBLIC_SENTRY_DSN` to `turbo.json` build task `passThroughEnv`
-- Updated `next.config.ts` to use `webpack.autoInstrumentServerFunctions` instead of deprecated `autoInstrumentServerFunctions`
-- Added `authToken: process.env.SENTRY_AUTH_TOKEN` and `silent: !process.env.CI` to `sentryOptions` in `next.config.ts`
-- Server Sentry config remains in `instrumentation.ts` under `register()`
-- Build succeeds without Turborepo pass-through warnings (silent mode suppresses auth token warnings in non-CI)
-- Type checking passes
+**Target File Path:** `packages/ui/src/stories/colors.stories.tsx`
 
-**Related file paths**
+**Description:**
+Create a comprehensive color system documentation story in Storybook that showcases all color tokens, their usage guidelines, and accessibility information. Include examples of when to use primary vs accent colors, gradient usage patterns, and dark mode considerations. This serves as living documentation for the color system.
 
-- `apps/firm-website/sentry.client.config.ts` (deleted)
-- `apps/firm-website/instrumentation-client.ts` (created)
-- `apps/firm-website/instrumentation.ts`
-- `turbo.json`
-- `apps/firm-website/next.config.ts`
-
-**Definition of done**
-
-- `sentry.client.config.ts` content is moved to `instrumentation-client.ts` per `@sentry/nextjs` Next.js 15 guidance.
-- Server Sentry config remains in `instrumentation.ts` under `register()`.
-- `SENTRY_AUTH_TOKEN` and `NEXT_PUBLIC_SENTRY_DSN` are declared in `turbo.json` `globalPassThroughEnv` (or per-task `passThroughEnv`).
-- Build no longer emits Turborepo pass-through or missing auth-token warnings.
-
-**Out of scope**
-
-- Configuring actual Sentry secrets in CI/Vercel.
-- Adding Sentry to additional apps.
-
-**Validation commands**
-
-```powershell
-pnpm turbo build --filter=@repo/firm-website
+**Validation Commands:**
+```bash
+# View color documentation in Storybook
+cd packages/ui && pnpm storybook
 ```
 
+**Testing/Validation:**
+- No automated tests needed (documentation only)
+- Manual review of color examples and guidelines
+
+**Repository Management:**
+- No documentation updates needed
+
 ---
 
-## FIX-001 — Fix `contact.test.ts` type-check failure
+### UI-002: Implement Typography Overhaul
 
-- [x] `FIX-001` — `[DONE]`
+**Status:** [PENDING]
 
-**Implementation notes**
-- Replaced `import { submitContact, initialContactState } from './contact'` with `import { submitContact, type ContactFormState } from './contact'`
-- Defined `initialContactState` locally in the test file using the imported `ContactFormState` type
-- This resolves the type-check failure since `'use server'` files cannot export non-function values
-- All 10 tests pass, type check passes
+**Related File Paths:**
+- `packages/ui/src/styles.css`
+- `apps/firm-website/src/app/layout.tsx`
+- `apps/firm-website/src/components/features/home/hero.tsx`
 
-**Related file paths**
+**Definition of Done:**
+- Display font added for hero sections and headings
+- Typography scale expanded with larger sizes (text-7xl to text-9xl)
+- Font weights and line heights optimized for readability
+- Responsive typography implemented using container queries
+- Font loading strategy optimized for performance
+- All typography components updated to use new scale
+- Typography documented in Storybook
 
-- `apps/firm-website/src/app/actions/contact.ts`
-- `apps/firm-website/src/app/actions/contact.test.ts`
-- `apps/firm-website/src/components/features/contact/contact-form.tsx`
+**Out of Scope:**
+- Custom font file hosting (use Google Fonts or similar)
+- Complete redesign of all content (typography only)
+- Icon font systems
 
-**Definition of done**
+**Rules to Follow:**
+- Use system font stack as fallback
+- Implement font-display: swap for performance
+- Maintain vertical rhythm with consistent line heights
+- Use clamp() for fluid typography
+- Test typography at all viewport sizes
 
-- `pnpm turbo check-types --filter=@repo/firm-website` passes.
-- `pnpm turbo test --filter=@repo/firm-website -- src/app/actions/contact.test.ts` passes.
-- `initialContactState` is no longer exported from `contact.ts` (`'use server'` files cannot export non-function values).
-- The test file constructs its own initial state from the exported `ContactFormState` interface.
+**Advanced Coding Pattern:**
+- CSS container queries for responsive typography
+- Variable font usage if available
+- Font size clamp() for fluid scaling
+- CSS custom properties for typography tokens
 
-**Out of scope**
+**Anti-Patterns:**
+- Fixed font sizes without responsiveness
+- Missing font loading states (FOIT/FOUT)
+- Inconsistent line heights across components
+- Using px units instead of rem/em
 
-- Changing the contact form UI behavior.
-- Adding or removing contact form fields.
-- Refactoring the Resend mock strategy.
+**Imports/Exports:**
+- May need to add font import to layout.tsx
 
-**Rules to follow**
+**Depends On:**
+- UI-001 (Color System)
 
-- Preserve the existing `'use server'` directive in `contact.ts`.
-- Keep `ContactFormState` exported from `contact.ts` so `contact-form.tsx` and tests can import it.
-- Do not re-introduce a non-function export from `contact.ts`.
+**Blocks:**
+- UI-004 (Hero Section Redesign)
 
-**Advanced coding pattern**
+---
 
-- Use the existing `ContactFormState` interface as a type contract and construct a literal object in the test to satisfy it. This keeps the server action surface minimal while preserving type safety and testability.
+#### UI-002-01: Add Display Font Family
 
-**Anti-patterns**
+**Actor:** [AGENT]
 
-- Exporting values from a `'use server'` file.
-- Duplicating the state shape definition in the test file instead of importing the type.
-- Running the full test suite when a single test file is sufficient.
+**Target File Path:** `packages/ui/src/styles.css`
 
-**Imports/exports**
+**Description:**
+Add a display font family to the @theme block for use in hero sections and large headings. Choose a modern, bold font (e.g., Space Grotesk, Cal Sans, or similar) that pairs well with the existing sans-serif font. Define --font-display token and add it to the font family list. Ensure the font is loaded via Google Fonts or similar CDN with proper font-display: swap strategy.
 
-- `contact.ts`: keep `export interface ContactFormState`, keep `export async function submitContact`.
-- `contact.test.ts`: import `{ submitContact, type ContactFormState } from './contact'`; define `const initialContactState: ContactFormState = { ... }` locally.
-
-**Depends on / blocks**
-
-- Depends on: none.
-- Blocks: any task that requires a green `check-types` result.
-
-**Subtasks**
-
-- `[AGENT]` `FIX-001-01` — `apps/firm-website/src/app/actions/contact.test.ts` — Replace `import { submitContact, initialContactState } from './contact'` with `import { submitContact, type ContactFormState } from './contact'` and define `initialContactState` locally using the imported type.
-- `[AGENT]` `FIX-001-02` — `apps/firm-website/src/app/actions/contact.test.ts` — Verify all test cases still reference the local `initialContactState` and no other imports are broken.
-- `[AGENT]` `FIX-001-03` — workspace root — Run `pnpm turbo check-types --filter=@repo/firm-website` and `pnpm turbo test --filter=@repo/firm-website -- src/app/actions/contact.test.ts`; fix any remaining issues.
-- `[AGENT]` `FIX-001-04` — `.devin/workflows/execute-todo.md` — Update any referenced workflow notes that mention the old `initialContactState` export.
-
-**Validation commands**
-
-```powershell
-pnpm turbo check-types --filter=@repo/firm-website
-pnpm turbo test --filter=@repo/firm-website -- src/app/actions/contact.test.ts
+**Validation Commands:**
+```bash
+# Build UI package
+cd packages/ui && pnpm build
+# Verify font loading in development
+cd apps/firm-website && pnpm dev
 ```
 
+**Testing/Validation:**
+- Add font loading test to layout.test.tsx
+- Verify no layout shift from font loading (CLS metric)
+- Test font rendering across browsers
+
+**Repository Management:**
+- No documentation updates needed
+
 ---
 
-## INF-001 — Ignore TypeScript build info files
+#### UI-002-02: Expand Typography Scale
 
-- [x] `INF-001` — `[DONE]`
+**Actor:** [AGENT]
 
-**Implementation notes**
-- Added `*.tsbuildinfo` to `.gitignore` in the Build outputs section
-- Removed `apps/firm-website/tsconfig.tsbuildinfo` from git tracking with `git rm --cached`
-- File remains on disk but is no longer tracked by git
+**Target File Path:** `packages/ui/src/styles.css`
 
-**Related file paths**
+**Description:**
+Expand the typography scale in the @theme block to include larger sizes for massive typography. Add --text-5xl, --text-6xl, --text-7xl, --text-8xl, and --text-9xl tokens with appropriate line heights. Update existing text sizes to ensure proper scaling. Use clamp() functions for fluid typography that responds to viewport width. Ensure line heights scale appropriately with font size.
 
-- `.gitignore`
-- `apps/firm-website/tsconfig.tsbuildinfo`
-
-**Definition of done**
-
-- `*.tsbuildinfo` is present in `.gitignore`.
-- `apps/firm-website/tsconfig.tsbuildinfo` is untracked by git (removed from index, file may remain on disk).
-- `git status --short` no longer shows `M apps/firm-website/tsconfig.tsbuildinfo`.
-
-**Out of scope**
-
-- Deleting the `tsconfig.tsbuildinfo` file from disk; only remove it from git tracking.
-- Changing `tsconfig.json` settings.
-
-**Rules to follow**
-
-- Use a glob pattern so future `.tsbuildinfo` files are also ignored.
-- Do not commit the file again after untracking.
-
-**Advanced coding pattern**
-
-- Treat generated artifacts as ephemeral. Ignoring them at the workspace root keeps all apps and packages covered by the same rule.
-
-**Anti-patterns**
-
-- Tracking generated build metadata in version control.
-- Adding one ignore rule per file instead of a glob.
-
-**Imports/exports**
-
-- No code imports/exports affected.
-
-**Depends on / blocks**
-
-- Depends on: none.
-- Blocks: none.
-
-**Subtasks**
-
-- `[AGENT]` `INF-001-01` — `.gitignore` — Append `*.tsbuildinfo` to the file in an appropriate section (near build outputs).
-- `[AGENT]` `INF-001-02` — workspace root — Run `git rm --cached apps/firm-website/tsconfig.tsbuildinfo`.
-- `[AGENT]` `INF-001-03` — workspace root — Run `git status --short` to confirm the file is no longer tracked as modified.
-
-**Validation commands**
-
-```powershell
-git status --short
+**Validation Commands:**
+```bash
+# Build UI package
+cd packages/ui && pnpm build
+# Test typography rendering
+cd apps/firm-website && pnpm dev
 ```
 
+**Testing/Validation:**
+- Create typography.stories.tsx to showcase all sizes
+- Test fluid typography at different viewport widths
+- Verify line heights maintain vertical rhythm
+
+**Repository Management:**
+- No documentation updates needed
+
 ---
 
-## FIX-002 — Remove dead code and public test routes
+#### UI-002-03: Update Hero Component Typography
 
-- [x] `FIX-002` — `[DONE]`
+**Actor:** [AGENT]
 
-**Implementation notes**
-- Task was already complete: `header.tsx`, `test-mdx/`, and `sample.mdx` did not exist in the codebase
-- Sitemap.ts at `apps/firm-website/src/app/sitemap.ts` contains no hardcoded test routes
-- Build and typecheck pass successfully
-- No code changes were required
+**Target File Path:** `apps/firm-website/src/components/features/home/hero.tsx`
 
-**Related file paths**
+**Description:**
+Update the hero component to use the new display font and expanded typography scale. Change the h1 from text-4xl md:text-6xl to text-5xl md:text-7xl lg:text-8xl for more impact. Apply the display font family to the heading. Update the subheading to use appropriate size from the new scale. Ensure text remains readable and responsive at all screen sizes.
 
-- `apps/firm-website/src/components/header.tsx` (already deleted)
-- `apps/firm-website/src/app/test-mdx/page.tsx` (already deleted)
-- `apps/firm-website/src/content/pages/sample.mdx` (already deleted)
-- `apps/firm-website/src/app/sitemap.ts` (verified clean)
-
-**Definition of done**
-
-- `header.tsx`, `test-mdx/page.tsx`, and `sample.mdx` are deleted.
-- The sitemap no longer emits `/sample-mdx` or `/test-mdx` URLs.
-- `pnpm turbo build --filter=@repo/firm-website` succeeds.
-- `pnpm turbo check-types --filter=@repo/firm-website` still passes.
-
-**Out of scope**
-
-- Refactoring the marketing layout header (it uses `@repo/ui` `Header`).
-- Adding a new sample page.
-
-**Rules to follow**
-
-- Delete files; do not leave empty placeholder files.
-- Verify no imports reference the deleted files.
-- Update `sitemap.ts` if it iterates over pages content.
-
-**Advanced coding pattern**
-
-- Treat the public URL surface as part of the deployment contract. Removing test artifacts is a domain boundary cleanup.
-
-**Anti-patterns**
-
-- Leaving test routes behind with a robots disallow rule instead of removing them.
-- Hardcoding route exclusions in multiple places.
-
-**Imports/exports**
-
-- No new imports/exports.
-- Any imports of `header.tsx` must be removed (verify with search).
-
-**Depends on / blocks**
-
-- Depends on: `FIX-001` (green type check before further deletion).
-- Blocks: `CT-002` (page schema alignment may touch the same files).
-
-**Subtasks**
-
-- `[AGENT]` `FIX-002-01` — workspace root — Search for all imports of `src/components/header.tsx` and remove them.
-- `[AGENT]` `FIX-002-02` — `apps/firm-website/src/components/header.tsx` — Delete the file.
-- `[AGENT]` `FIX-002-03` — `apps/firm-website/src/app/test-mdx/` — Delete the directory and its contents.
-- `[AGENT]` `FIX-002-04` — `apps/firm-website/src/content/pages/sample.mdx` — Delete the file.
-- `[AGENT]` `FIX-002-05` — `apps/firm-website/src/lib/sitemap.ts` — Confirm `/sample-mdx` and `/test-mdx` are no longer emitted; if hardcoded, remove the entries.
-- `[AGENT]` `FIX-002-06` — workspace root — Run `pnpm turbo build --filter=@repo/firm-website` and `pnpm turbo check-types --filter=@repo/firm-website`.
-
-**Validation commands**
-
-```powershell
-pnpm turbo build --filter=@repo/firm-website
-pnpm turbo check-types --filter=@repo/firm-website
+**Validation Commands:**
+```bash
+# Run hero component tests
+cd apps/firm-website && pnpm test src/components/features/home/hero.test.tsx
+# Build app to verify no errors
+cd apps/firm-website && pnpm build
 ```
 
+**Testing/Validation:**
+- Update hero.test.tsx to test new typography classes
+- Add visual regression test for hero component
+- Test hero rendering at mobile, tablet, and desktop sizes
+
+**Repository Management:**
+- No documentation updates needed
+
 ---
 
-## CT-001 — Fix FAQ schema, type, frontmatter, and component divergence
+#### UI-002-04: Implement Container Query Typography
 
-- [x] `CT-001` — `[DONE]`
+**Actor:** [AGENT]
 
-**Implementation notes**
-- Updated FAQSchema to match MDX frontmatter: `title`, `slug`, `description`, `category` (required enum), `order` (optional)
-- Replaced hand-written FAQ interface with `export type FAQ = z.infer<typeof FAQSchema>`
-- Added runtime validation using FAQSchema.safeParse in getAllFAQs() and getFAQ()
-- Updated faq-hub.tsx to use `title` instead of `metadata.question` and `content` instead of `faq.content`
-- Updated faq-snippet.tsx to use `title` and `content` instead of `question` and `answer`
-- Updated generateFAQSchema in json-ld.ts to accept new FAQ shape (title/content)
-- Removed individual FAQ detail URLs from sitemap.ts (will be restored by CT-004)
-- Created comprehensive schema tests in packages/lib/src/__tests__/content-schemas.test.ts
-- Updated existing schema tests in packages/lib/src/schemas/content.test.ts to match new shape
-- Fixed seo.test.ts to use new FAQ shape
-- All type checks pass, all tests pass (26 tests in lib, 165 tests in firm-website)
+**Target File Path:** `packages/ui/src/styles.css`
 
-**Related file paths**
+**Description:**
+Implement container query-based typography for components that should respond to their container size rather than viewport. Add @container rules and define typography tokens that scale based on container width. This allows components like cards and sections to have responsive typography independent of the viewport. Document which components should use container query typography.
 
-- `packages/lib/src/schemas/content.ts`
-- `packages/lib/src/types/content.ts`
-- `packages/lib/src/index.ts`
-- `apps/firm-website/src/content/faq/*.mdx`
-- `apps/firm-website/src/lib/content.ts`
-- `apps/firm-website/src/components/features/faq/faq-hub.tsx`
-- `apps/firm-website/src/components/features/faq/faq-snippet.tsx`
-- `apps/firm-website/src/components/features/faq/faq-accordion.tsx`
-- `apps/firm-website/src/lib/json-ld.ts`
-- `apps/firm-website/src/lib/sitemap.ts`
-- `packages/lib/src/__tests__/content-schemas.test.ts` (create or update)
-
-**Definition of done**
-
-- FAQ MDX frontmatter (`title`, `slug`, `description`, `category`, `order`) validates against `FAQSchema`.
-- The `FAQ` TypeScript type is derived from `FAQSchema` using `z.infer` and exposes `title`, `slug`, `description`, `category`, `order`, and `content` (body).
-- `FAQHub` and `FAQSnippet` render `title` and `content` correctly; no `undefined` questions or answers.
-- `sitemap.ts` stops emitting individual FAQ detail URLs (`/faq/${slug}`) unless `CT-004` is undertaken.
-- A test in `packages/lib` validates the schema against at least one real FAQ MDX frontmatter object.
-- `pnpm turbo check-types` and `pnpm turbo test` pass for `@repo/lib` and `@repo/firm-website`.
-
-**Out of scope**
-
-- Adding individual FAQ detail pages (covered by `CT-004` if chosen).
-- Renaming frontmatter fields in all FAQ MDX files.
-- Changing the visual design of the FAQ accordion.
-
-**Rules to follow**
-
-- Source of truth is the actual MDX frontmatter, not the old interface or old schema.
-- Derive TS types from Zod schemas.
-- Keep `category` as a required union of known categories (`general`, `pricing`, `process`) for type safety.
-- Preserve the rendered body as the answer source.
-
-**Advanced coding pattern**
-
-- Use `z.infer<typeof FAQSchema>` to create a single source of truth. The schema becomes the domain model; the TypeScript type is a projection, eliminating three-way divergence.
-
-**Anti-patterns**
-
-- Casting frontmatter with `as T` and bypassing validation.
-- Maintaining parallel hand-written interfaces that drift from the schema.
-- Using `any` or `unknown` to silence type errors.
-
-**Imports/exports**
-
-- `packages/lib/src/schemas/content.ts`: export `FAQSchema` with the aligned shape.
-- `packages/lib/src/types/content.ts`: export `FAQ = z.infer<typeof FAQSchema>`; remove hand-written `FAQ` interface.
-- `packages/lib/src/index.ts`: re-export schema and type.
-- `faq-hub.tsx` / `faq-snippet.tsx`: import `FAQ` type and use `title`, `slug`, `description`, `category`, `order`, `content`.
-
-**Depends on / blocks**
-
-- Depends on: `FIX-001`.
-- Blocks: `CT-002`, `CT-004`.
-
-**Subtasks**
-
-- `[AGENT]` `CT-001-01` — `packages/lib/src/schemas/content.ts` — Rewrite `FAQSchema` to match MDX frontmatter: `title`, `slug`, `description`, `category` (required string or enum), `order` (optional number).
-- `[AGENT]` `CT-001-02` — `packages/lib/src/types/content.ts` — Replace hand-written `FAQ` interface with `export type FAQ = z.infer<typeof FAQSchema>`.
-- `[AGENT]` `CT-001-03` — `apps/firm-website/src/lib/content.ts` — Add runtime validation using `FAQSchema.safeParse` in `getFAQ` / `getAllFAQs` or a shared helper; fail loudly on invalid frontmatter.
-- `[AGENT]` `CT-001-04` — `apps/firm-website/src/components/features/faq/faq-hub.tsx` — Replace `metadata.question` / `metadata.answer` usage with `title` / `content`; update grouping and sorting logic to use `title` and `order`.
-- `[AGENT]` `CT-001-05` — `apps/firm-website/src/components/features/faq/faq-snippet.tsx` — Replace `question` / `answer` usage with `title` / `content`.
-- `[AGENT]` `CT-001-06` — `apps/firm-website/src/lib/json-ld.ts` — Update `generateFAQSchema` to accept the new FAQ shape.
-- `[AGENT]` `CT-001-07` — `apps/firm-website/src/lib/sitemap.ts` — Remove individual FAQ detail URLs from the sitemap; they will be restored by `CT-004`.
-- `[AGENT]` `CT-001-08` — `packages/lib/src/__tests__/content-schemas.test.ts` — Add tests that assert `FAQSchema` parses a valid FAQ frontmatter object and rejects invalid ones.
-- `[AGENT]` `CT-001-09` — workspace root — Run `pnpm turbo check-types`, `pnpm turbo test --filter=@repo/lib`, and `pnpm turbo test --filter=@repo/firm-website`.
-
-**Validation commands**
-
-```powershell
-pnpm turbo check-types
-pnpm turbo test --filter=@repo/lib
-pnpm turbo test --filter=@repo/firm-website
+**Validation Commands:**
+```bash
+# Build UI package
+cd packages/ui && pnpm build
+# Test container queries in development
+cd apps/firm-website && pnpm dev
 ```
 
+**Testing/Validation:**
+- Create container query test in card.test.tsx
+- Test typography scaling in different container sizes
+- Verify browser compatibility for container queries
+
+**Repository Management:**
+- No documentation updates needed
+
 ---
 
-## CT-002 — Align Service, Industry, Demo, and Page schemas with MDX frontmatter
+#### UI-002-05: Document Typography System
 
-- [x] `CT-002` — `[DONE]`
+**Actor:** [HUMAN]
 
-**Implementation notes**
-- Removed `body` field from ServiceSchema, IndustrySchema, DemoSchema, and PageSchema (body is MDX content, not frontmatter)
-- Added `icon` field to IndustrySchema to match actual frontmatter
-- Added `industry` field to DemoSchema to match actual frontmatter
-- Replaced hand-written Service, Industry, Demo, and Page interfaces with `z.infer` exports from schemas
-- Added `validateContent` helper function in content.ts for centralized frontmatter validation
-- Updated getAllServices, getAllIndustries, getAllDemos, getAllPages to use validateContent helper
-- Replaced local interfaces in navigation.ts with imports from @repo/lib
-- Replaced `as { slug: string }` casts in sitemap.ts with proper type imports from @repo/lib
-- Deleted apps/firm-website/src/types/content.ts (it was just a re-export file, no consumers found)
-- Added comprehensive schema tests for Service, Industry, Demo, and Page in content-schemas.test.ts
-- Updated existing content.test.ts to remove `body` field from test data
-- All type checks pass, all tests pass (42 tests in lib, 165 tests in firm-website), build succeeds
+**Target File Path:** `packages/ui/src/stories/typography.stories.tsx`
 
-**Related file paths**
+**Description:**
+Create comprehensive typography documentation in Storybook showcasing the entire typography scale, font families, usage guidelines, and responsive behavior. Include examples of display vs body font usage, fluid typography in action, and container query typography. Document when to use each size and font combination.
 
-- `packages/lib/src/schemas/content.ts`
-- `packages/lib/src/types/content.ts`
-- `apps/firm-website/src/content/{services,industries,demos,pages}/*.mdx`
-- `apps/firm-website/src/lib/content.ts`
-- `apps/firm-website/src/lib/navigation.ts`
-- `apps/firm-website/src/lib/sitemap.ts`
-- `packages/lib/src/__tests__/content-schemas.test.ts`
-- `apps/firm-website/src/types/content.ts`
-
-**Definition of done**
-
-- All content schemas (`ServiceSchema`, `IndustrySchema`, `DemoSchema`, `PageSchema`) match their respective MDX frontmatter fields.
-- `body` is no longer required as frontmatter because it comes from MDX content.
-- TypeScript types are derived from schemas via `z.infer`.
-- `navigation.ts` and `sitemap.ts` use the shared `@repo/lib` types instead of local `as` casts.
-- `apps/firm-website/src/types/content.ts` either re-exports the derived types or is removed.
-- Schema tests cover valid and invalid frontmatter for each entity.
-
-**Out of scope**
-
-- Adding new fields to frontmatter that are not already present.
-- Restructuring the `content/` directory layout.
-- Extracting the content engine to a separate package.
-
-**Rules to follow**
-
-- Frontmatter shape is the source of truth.
-- Schemas use `z.strictObject()` so extra fields are rejected.
-- Types come from schemas.
-- Remove `as` casts when shared types are available.
-
-**Advanced coding pattern**
-
-- Create a small `validateContent<T>(schema: ZodSchema<T>, data: unknown)` helper in `content.ts`. This centralizes parsing, logging, and error handling for all content consumers.
-
-**Anti-patterns**
-
-- Keeping `body` in schemas when it is actually rendered MDX content.
-- Using multiple local interfaces for the same concept.
-- Ignoring Zod parse errors and falling back to `as` casts.
-
-**Imports/exports**
-
-- `packages/lib/src/schemas/content.ts`: aligned `ServiceSchema`, `IndustrySchema`, `DemoSchema`, `PageSchema`.
-- `packages/lib/src/types/content.ts`: `export type Service = z.infer<typeof ServiceSchema>`, etc.
-- `apps/firm-website/src/lib/content.ts`: import schemas from `@repo/lib` and validate frontmatter.
-- `apps/firm-website/src/lib/navigation.ts`: import shared types.
-- `apps/firm-website/src/lib/sitemap.ts`: import shared types.
-
-**Depends on / blocks**
-
-- Depends on: `FIX-001`, `CT-001`.
-- Blocks: `UI-002`, `UI-003` (detail components rely on correct types).
-
-**Subtasks**
-
-- `[AGENT]` `CT-002-01` — `packages/lib/src/schemas/content.ts` — Align `ServiceSchema` and `IndustrySchema` with actual frontmatter (remove `body`, keep `title`, `slug`, `description`, `featured`, `order`; add `icon` for Industry if present).
-- `[AGENT]` `CT-002-02` — `packages/lib/src/schemas/content.ts` — Align `DemoSchema` with actual frontmatter; add `industry` if present; remove `challenge`/`approach`/`outcome` if they live in body.
-- `[AGENT]` `CT-002-03` — `packages/lib/src/schemas/content.ts` — Align `PageSchema` with actual frontmatter (`title`, `slug`, `description` optional, no `body` in frontmatter).
-- `[AGENT]` `CT-002-04` — `packages/lib/src/types/content.ts` — Replace hand-written interfaces with `z.infer` exports.
-- `[AGENT]` `CT-002-05` — `apps/firm-website/src/lib/content.ts` — Add `validateContent` helper and use it for all `getAll*` and `getBySlug` functions.
-- `[AGENT]` `CT-002-06` — `apps/firm-website/src/lib/navigation.ts` — Replace local interfaces with imports from `@repo/lib`.
-- `[AGENT]` `CT-002-07` — `apps/firm-website/src/lib/sitemap.ts` — Replace `as { slug: string }` casts with shared types.
-- `[AGENT]` `CT-002-08` — `apps/firm-website/src/types/content.ts` — Evaluate whether to remove or convert to re-exports; update all consumers.
-- `[AGENT]` `CT-002-09` — `packages/lib/src/__tests__/content-schemas.test.ts` — Add per-entity schema tests.
-- `[AGENT]` `CT-002-10` — workspace root — Run `pnpm turbo check-types`, `pnpm turbo test --filter=@repo/lib`, `pnpm turbo test --filter=@repo/firm-website`.
-
-**Validation commands**
-
-```powershell
-pnpm turbo check-types
-pnpm turbo test --filter=@repo/lib
-pnpm turbo test --filter=@repo/firm-website
-pnpm turbo build --filter=@repo/firm-website
+**Validation Commands:**
+```bash
+# View typography documentation in Storybook
+cd packages/ui && pnpm storybook
 ```
 
+**Testing/Validation:**
+- No automated tests needed (documentation only)
+- Manual review of typography examples and guidelines
+
+**Repository Management:**
+- No documentation updates needed
+
 ---
 
-## CT-003 — Validate all MDX content at runtime
+### UI-003: Implement Animation System
 
-- [x] `CT-003` — `[DONE]`
+**Status:** [PENDING]
 
-**Implementation notes**
-- Implemented `parseFrontmatter` helper function using Zod schemas for runtime validation
-- Updated `getContentBySlug` and `getAllContent` to accept optional schema parameter
-- Applied validation in all type-specific helpers (getAllServices, getAllIndustries, getAllDemos, getAllFAQs, getAllPages)
-- Added `clearContentCache` export for test isolation
-- Added comprehensive unit tests for schema validation with valid and invalid frontmatter
-- Fixed test mock data across multiple test files to match schema requirements
-- Used `z.treeifyError()` instead of deprecated `.format()` for Zod v4 compatibility
-- All 172 tests pass, type check passes, build succeeds
+**Related File Paths:**
+- `packages/ui/src/styles.css`
+- `packages/ui/src/lib/utils.ts`
+- `apps/firm-website/src/app/globals.css`
 
-**Related file paths**
+**Definition of Done:**
+- Base animation system with CSS keyframes defined
+- Custom animation tokens added to Tailwind theme
+- Scroll-triggered animation hook created
+- Entry animations using @starting-style implemented
+- Micro-interaction patterns documented
+- Reduced motion support added
+- Animation performance optimized
+- Animation system documented in Storybook
 
-- `apps/firm-website/src/lib/content.ts`
-- `packages/lib/src/schemas/content.ts`
-- `packages/lib/src/index.ts`
-- `apps/firm-website/src/lib/content.test.ts`
-- `apps/firm-website/src/lib/navigation.test.ts`
-- `apps/firm-website/src/app/(marketing)/services/[slug]/page.test.tsx`
-- `apps/firm-website/src/app/(marketing)/demos/[slug]/page.test.tsx`
-- `apps/firm-website/src/app/(marketing)/industries/[slug]/page.test.tsx`
-- `apps/firm-website/src/components/features/demos/demo-detail.test.tsx`
-- `apps/firm-website/src/components/features/industries/industry-detail.test.tsx`
+**Out of Scope:**
+- Complex 3D animations (WebGL/Three.js)
+- Physics-based animations
+- Video or Lottie animations
 
-**Definition of done**
+**Rules to Follow:**
+- Respect prefers-reduced-motion media query
+- Use GPU-accelerated properties (transform, opacity)
+- Keep animations under 500ms for UI elements
+- Use will-change sparingly and only when needed
+- Test animations at 60fps
 
-- Every content read (`getContentBySlug`, `getAllContent`) validates frontmatter against the appropriate Zod schema.
-- Invalid content throws or logs a clear error and is excluded from production data.
-- Existing tests still pass.
-- A new unit test demonstrates validation rejecting malformed frontmatter.
+**Advanced Coding Pattern:**
+- @starting-style for entry animations (Tailwind v4)
+- Intersection Observer API for scroll triggers
+- CSS custom properties for animation timing
+- requestAnimationFrame for complex animations
 
-**Out of scope**
+**Anti-Patterns:**
+- Animating layout-affecting properties (width, height)
+- Long-running animations without user control
+- Missing reduced motion support
+- Overusing animations causing distraction
 
-- Adding a separate `packages/content` package.
-- Changing the MDX parsing pipeline beyond frontmatter validation.
+**Imports/Exports:**
+- Export useScrollTrigger hook from packages/ui/src/hooks/
 
-**Rules to follow**
+**Depends On:**
+- None
 
-- Fail fast on invalid content during static generation.
-- Keep the cache behavior intact.
-- Preserve TypeScript return signatures.
+**Blocks:**
+- UI-004 (Hero Section Redesign)
+- UI-005 (Component Redesign)
 
-**Advanced coding pattern**
+---
 
-- Generic validation helper:
-  ```ts
-  function parseFrontmatter<T>(schema: z.ZodSchema<T>, data: unknown, slug: string): T
-  ```
-  This hides parsing complexity and provides consistent error messages.
+#### UI-003-01: Define Base Animation Keyframes
 
-**Anti-patterns**
+**Actor:** [AGENT]
 
-- Returning `null` silently when validation fails.
-- Mixing parsing logic with filesystem I/O.
+**Target File Path:** `packages/ui/src/styles.css`
 
-**Imports/exports**
+**Description:**
+Define base animation keyframes in the @theme block for common UI animations. Include fade-in-up, fade-in, scale-in, slide-in-right, slide-in-left, and bounce-subtle animations. Use @keyframes with proper timing functions (ease-out, ease-in-out). Ensure animations are performant by only animating transform and opacity properties. Add corresponding --animate-* tokens to the theme.
 
-- `apps/firm-website/src/lib/content.ts`: import schemas from `@repo/lib`; export typed helper functions.
-
-**Depends on / blocks**
-
-- Depends on: `CT-001`, `CT-002`.
-- Blocks: none.
-
-**Subtasks**
-
-- ✅ `[AGENT]` `CT-003-01` — `apps/firm-website/src/lib/content.ts` — Implement `parseFrontmatter` helper using `z.infer` schemas.
-- ✅ `[AGENT]` `CT-003-02` — `apps/firm-website/src/lib/content.ts` — Apply validation in `getContentBySlug` and `getAllContent`.
-- ✅ `[AGENT]` `CT-003-03` — `apps/firm-website/src/lib/content.test.ts` — Add tests for valid and invalid content parsing.
-- ✅ `[AGENT]` `CT-003-04` — workspace root — Run targeted tests and build.
-
-**Validation commands**
-
-```powershell
-pnpm turbo test --filter=@repo/firm-website -- src/lib/__tests__/content.test.ts
-pnpm turbo build --filter=@repo/firm-website
+**Validation Commands:**
+```bash
+# Build UI package
+cd packages/ui && pnpm build
+# Test animations in development
+cd apps/firm-website && pnpm dev
 ```
 
+**Testing/Validation:**
+- Create animation.stories.tsx to showcase all keyframes
+- Test animation performance with Chrome DevTools
+- Verify animations respect reduced motion preference
+
+**Repository Management:**
+- No documentation updates needed
+
 ---
 
-## CT-004 — Add individual FAQ detail pages
+#### UI-003-02: Create Scroll Trigger Hook
 
-- [x] `CT-004` — `[DONE]`
+**Actor:** [AGENT]
 
-**Implementation notes**
-- Created `apps/firm-website/src/app/(marketing)/faq/[slug]/page.tsx` with `generateStaticParams` and `dynamicParams = false`
-- Page uses existing `getFAQ` helper and `ContentPage` component for consistent layout
-- Restored individual FAQ URLs in `apps/firm-website/src/app/sitemap.ts` by importing `getAllFAQs` and generating FAQ URLs
-- Added E2E tests for FAQ detail page: `faq detail page loads` and `faq detail displays content` (both passed)
-- Build successfully generated 10 static FAQ detail pages
-- Note: Pre-existing E2E test failure in `faq accordion expands` (webkit) is unrelated to CT-004 changes
+**Target File Path:** `packages/ui/src/hooks/use-scroll-trigger.ts`
 
-**Related file paths**
+**Description:**
+Create a custom React hook useScrollTrigger that uses Intersection Observer API to trigger animations when elements scroll into view. The hook should accept options for threshold, root margin, and trigger once behavior. Return a boolean indicating whether the element is in view and a ref to attach to the element. Include proper cleanup and TypeScript types.
 
-- `apps/firm-website/src/app/(marketing)/faq/[slug]/page.tsx` (create)
-- `apps/firm-website/src/lib/sitemap.ts`
-- `apps/firm-website/e2e/faq.spec.ts` (create or update)
-
-**Definition of done**
-
-- Each FAQ is reachable at `/faq/{slug}`.
-- `sitemap.ts` emits these URLs again if previously removed.
-- A basic detail page renders the FAQ title, description, and full answer content.
-- E2E or component test verifies at least one detail route.
-
-**Out of scope**
-
-- Adding FAQ editing or CMS functionality.
-- Changing the FAQ hub design.
-
-**Rules to follow**
-
-- Use `generateStaticParams` with `dynamicParams = false`.
-- Reuse the existing `getFAQ` helper.
-- Use shared types from `@repo/lib`.
-
-**Advanced coding pattern**
-
-- Extract a reusable `ContentDetailPage` layout for future entity types.
-
-**Anti-patterns**
-
-- Hardcoding the route list in `sitemap.ts` independently of the page route.
-
-**Imports/exports**
-
-- New page imports `getFAQ`, `FAQ` type, and `@repo/ui` layout primitives.
-
-**Depends on / blocks**
-
-- Depends on: `CT-001`.
-- Blocks: `INF-002` if individual FAQ URLs are included in E2E navigation tests.
-
-**Subtasks**
-
-- `[AGENT]` `CT-004-01` — `apps/firm-website/src/app/(marketing)/faq/[slug]/page.tsx` — Create detail page with `generateStaticParams` and `dynamicParams = false`.
-- `[AGENT]` `CT-004-02` — `apps/firm-website/src/lib/sitemap.ts` — Restore individual FAQ URLs.
-- `[AGENT]` `CT-004-03` — `apps/firm-website/e2e/faq.spec.ts` — Add E2E coverage for the detail route.
-- `[AGENT]` `CT-004-04` — workspace root — Run build and E2E tests.
-
-**Validation commands**
-
-```powershell
-pnpm turbo build --filter=@repo/firm-website
-pnpm turbo test:e2e --filter=@repo/firm-website -- faq
+**Validation Commands:**
+```bash
+# Run hook tests
+cd packages/ui && pnpm test src/hooks/use-scroll-trigger.test.tsx
+# Build UI package
+cd packages/ui && pnpm build
 ```
 
+**Testing/Validation:**
+- Create use-scroll-trigger.test.tsx with Intersection Observer mocks
+- Test trigger behavior with different thresholds
+- Test cleanup on unmount
+- Test with reduced motion preference
+
+**Repository Management:**
+- Export hook from packages/ui/src/index.ts
+
 ---
 
-## ENV-001 — Wire up environment validation module
+#### UI-003-03: Implement Entry Animations with @starting-style
 
-- [x] `ENV-001` — `[DONE]`
+**Actor:** [AGENT]
 
-**Implementation notes**
-- Removed `FORM_API_KEY` and `NEXT_PUBLIC_ANALYTICS_ID` from `.env.example`
-- Expanded `env.ts` schema to validate `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_GA_MEASUREMENT_ID`, `NEXT_PUBLIC_SENTRY_DSN`, `RESEND_API_KEY`, `CONTACT_EMAIL`, and `FROM_EMAIL`
-- Replaced hardcoded `SITE_URL` in `seo.ts` with `env.NEXT_PUBLIC_SITE_URL`
-- Replaced hardcoded `SITE_URL` in `json-ld.ts` with `env.NEXT_PUBLIC_SITE_URL`
-- Replaced hardcoded URL in `sitemap.ts` with `env.NEXT_PUBLIC_SITE_URL`
-- Replaced hardcoded URL in `robots.ts` with `env.NEXT_PUBLIC_SITE_URL`
-- Replaced hardcoded URL and placeholder contact email in `page.tsx` with `env.NEXT_PUBLIC_SITE_URL` and `env.CONTACT_EMAIL`
-- Updated `contact.ts` to use validated `env.RESEND_API_KEY`, `env.CONTACT_EMAIL`, and `env.FROM_EMAIL`
-- Client-side files (`gtag.ts`, `instrumentation-client.ts`) correctly use `process.env` for public variables
-- Added env module mocks to `seo.test.ts`, `page.test.tsx`, and `contact.test.ts` to handle `server-only` directive
-- All 171 tests pass, type check passes
+**Target File Path:** `packages/ui/src/styles.css`
 
-**What this is:** `apps/firm-website/src/lib/env.ts` is a small module that uses Zod to validate `process.env` at startup. It currently only checks `NEXT_PUBLIC_SITE_URL`, and it is never imported by any other file, so all the hardcoded URLs in `seo.ts`, `json-ld.ts`, `sitemap.ts`, `robots.ts`, and `page.tsx` bypass it entirely. The choice is between (a) keeping the module, expanding it to validate all required runtime variables, and importing it everywhere, or (b) deleting it and relying on `process.env` runtime checks. Recommendation: keep and wire it, because it catches missing env vars early and centralizes the site URL.
+**Description:**
+Implement entry animations using Tailwind v4's @starting-style directive for smooth element appearances. Define entry animation tokens that combine @starting-style with the base keyframes. Create utility classes for common entry patterns (fade-in-up-on-entry, scale-in-on-entry). Ensure these work with the scroll trigger hook for scroll-triggered animations.
 
-**Related file paths**
-
-- `apps/firm-website/src/lib/env.ts`
-- `apps/firm-website/src/lib/seo.ts`
-- `apps/firm-website/src/lib/json-ld.ts`
-- `apps/firm-website/src/lib/sitemap.ts`
-- `apps/firm-website/src/app/robots.ts`
-- `apps/firm-website/src/app/page.tsx`
-- `apps/firm-website/.env.example`
-- `apps/firm-website/src/app/actions/contact.ts`
-- `apps/firm-website/src/lib/gtag.ts`
-- `apps/firm-website/sentry.client.config.ts`
-
-**Definition of done**
-
-- `src/lib/env.ts` is imported and used as the source of truth for `NEXT_PUBLIC_SITE_URL`, `RESEND_API_KEY`, `CONTACT_EMAIL`, `FROM_EMAIL`, `NEXT_PUBLIC_SENTRY_DSN`, and `NEXT_PUBLIC_GA_MEASUREMENT_ID`.
-- Unused variables `FORM_API_KEY` and `NEXT_PUBLIC_ANALYTICS_ID` are removed from `.env.example`.
-- All hardcoded `https://yourdedicatedmarketer.com` references are replaced with `env.NEXT_PUBLIC_SITE_URL` or `process.env.NEXT_PUBLIC_SITE_URL`.
-- `pnpm turbo check-types` and `pnpm turbo test --filter=@repo/firm-website` pass.
-
-**Out of scope**
-
-- Moving environment validation to a shared `packages/env` package (long-term).
-- Adding runtime secrets rotation.
-
-**Rules to follow**
-
-- Server-only env vars must stay server-only; public vars must keep `NEXT_PUBLIC_` prefix.
-- Do not break client bundles by importing `server-only` code into client components.
-- Keep `env.ts` using `server-only` if it remains.
-
-**Advanced coding pattern**
-
-- Centralize the site URL and runtime secrets configuration in `env.ts`. Every metadata, JSON-LD, sitemap, robots, contact action, analytics, and Sentry consumer reads from one validated source, eliminating the 26 occurrences of hardcoded URLs.
-
-**Anti-patterns**
-
-- Keeping a validation module that no one imports.
-- Accessing `process.env` directly in many files with inconsistent fallbacks.
-- Deleting the module without replacing it with a documented validation strategy.
-
-**Imports/exports**
-
-- `apps/firm-website/src/lib/env.ts`: export `env` object if kept.
-- `seo.ts`, `json-ld.ts`, `sitemap.ts`, `robots.ts`, `page.tsx`: import `env` or use `process.env.NEXT_PUBLIC_SITE_URL`.
-- `contact.ts`: validate `RESEND_API_KEY`, `CONTACT_EMAIL`, `FROM_EMAIL` via the env module or keep runtime checks.
-
-**Depends on / blocks**
-
-- Depends on: `FIX-001`.
-- Blocks: `FIX-003` (placeholders often use the site URL).
-
-**Subtasks**
-
-- `[AGENT]` `ENV-001-01` — `apps/firm-website/.env.example` — Remove `FORM_API_KEY` and `NEXT_PUBLIC_ANALYTICS_ID`.
-- `[AGENT]` `ENV-001-02` — `apps/firm-website/src/lib/env.ts` — Expand schema to validate `NEXT_PUBLIC_SITE_URL`, `RESEND_API_KEY`, `CONTACT_EMAIL`, `FROM_EMAIL`, `NEXT_PUBLIC_SENTRY_DSN`, and `NEXT_PUBLIC_GA_MEASUREMENT_ID` with sensible defaults/optional flags where appropriate.
-- `[AGENT]` `ENV-001-03` — `apps/firm-website/src/lib/seo.ts` — Replace hardcoded `SITE_URL` with `env.NEXT_PUBLIC_SITE_URL`.
-- `[AGENT]` `ENV-001-04` — `apps/firm-website/src/lib/json-ld.ts` — Replace hardcoded `SITE_URL` with `env.NEXT_PUBLIC_SITE_URL`.
-- `[AGENT]` `ENV-001-05` — `apps/firm-website/src/lib/sitemap.ts` — Replace hardcoded URL with `env.NEXT_PUBLIC_SITE_URL`.
-- `[AGENT]` `ENV-001-06` — `apps/firm-website/src/app/robots.ts` — Replace hardcoded URL with `env.NEXT_PUBLIC_SITE_URL`.
-- `[AGENT]` `ENV-001-07` — `apps/firm-website/src/app/page.tsx` — Replace hardcoded URL and placeholder contact values in JSON-LD.
-- `[AGENT]` `ENV-001-08` — `apps/firm-website/src/app/actions/contact.ts` — Use validated env values for Resend/contact flow.
-- `[AGENT]` `ENV-001-09` — `apps/firm-website/src/lib/gtag.ts` and `sentry.client.config.ts` — Reference validated env values where client-side access is safe.
-- `[AGENT]` `ENV-001-10` — workspace root — Run `pnpm turbo check-types` and `pnpm turbo test --filter=@repo/firm-website`.
-
-**Validation commands**
-
-```powershell
-pnpm turbo check-types --filter=@repo/firm-website
-pnpm turbo test --filter=@repo/firm-website
+**Validation Commands:**
+```bash
+# Build UI package
+cd packages/ui && pnpm build
+# Test entry animations in development
+cd apps/firm-website && pnpm dev
 ```
 
+**Testing/Validation:**
+- Add entry animation tests to component test files
+- Test animations on page load and route transitions
+- Verify smooth 60fps animations
+
+**Repository Management:**
+- No documentation updates needed
+
 ---
 
-## FIX-003 — Replace placeholder business contact details
+#### UI-003-04: Add Reduced Motion Support
 
-- [!] `FIX-003` — `[BLOCKED]`
+**Actor:** [AGENT]
 
-**Block reason:** Requires human input for real phone number, address, business hours, and social media URLs. User indicated they will not provide this information yet.
+**Target File Path:** `packages/ui/src/styles.css`
 
-**Related file paths**
+**Description:**
+Add comprehensive reduced motion support to the animation system. Wrap all animation keyframes and utility classes in @media (prefers-reduced-motion: reduce) queries to disable or simplify animations for users who prefer reduced motion. Ensure the scroll trigger hook respects this preference and returns immediately without triggering animations. Document this behavior for developers.
 
-- `apps/firm-website/src/app/(marketing)/layout.tsx`
-- `apps/firm-website/src/app/(marketing)/contact/page.tsx`
-- `apps/firm-website/src/app/page.tsx`
-- `packages/ui/src/components/layout/footer.tsx`
+**Validation Commands:**
+```bash
+# Build UI package
+cd packages/ui && pnpm build
+# Test with reduced motion in development
+cd apps/firm-website && pnpm dev
+```
+
+**Testing/Validation:**
+- Test animations with OS reduced motion setting enabled
+- Update use-scroll-trigger.test.tsx to test reduced motion
+- Verify all animations respect the preference
+
+**Repository Management:**
+- No documentation updates needed
+
+---
+
+#### UI-003-05: Document Animation System
+
+**Actor:** [HUMAN]
+
+**Target File Path:** `packages/ui/src/stories/animation.stories.tsx`
+
+**Description:**
+Create comprehensive animation documentation in Storybook showcasing all available animations, usage patterns, and performance considerations. Include examples of scroll-triggered animations, entry animations, and reduced motion behavior. Document best practices for animation usage, performance tips, and accessibility considerations.
+
+**Validation Commands:**
+```bash
+# View animation documentation in Storybook
+cd packages/ui && pnpm storybook
+```
+
+**Testing/Validation:**
+- No automated tests needed (documentation only)
+- Manual review of animation examples and guidelines
+
+**Repository Management:**
+- No documentation updates needed
+
+---
+
+### UI-004: Redesign Hero Section with Bento Grid
+
+**Status:** [PENDING]
+
+**Related File Paths:**
+- `apps/firm-website/src/components/features/home/hero.tsx`
+- `apps/firm-website/src/components/features/home/hero.test.tsx`
+- `packages/ui/src/components/ui/bento-grid.tsx` (new)
+
+**Definition of Done:**
+- Hero section redesigned with bento grid layout
+- Asymmetric grid pattern for visual interest
+- Responsive grid that adapts to screen size
+- Glassmorphism effects applied to bento cards
+- Scroll-triggered animations on grid items
+- Gradient background or subtle motion
+- Mobile-optimized layout
+- Hero component tests updated
+- Storybook story for hero component
+
+**Out of Scope:**
+- 3D elements or illustrations (separate task)
+- Complex interactive elements in hero
+- Video backgrounds
+
+**Rules to Follow:**
+- Maintain semantic HTML structure
+- Ensure mobile-first responsive design
+- Use CSS Grid for bento layout
+- Apply glassmorphism sparingly for performance
+- Test at all viewport sizes
+
+**Advanced Coding Pattern:**
+- CSS Grid with named areas for bento layout
+- Container queries for responsive grid items
+- Compound component pattern for bento grid
+- Intersection Observer for staggered animations
+
+**Anti-Patterns:**
+- Fixed grid without responsiveness
+- Overusing glassmorphism causing performance issues
+- Complex grid that breaks on mobile
+- Missing accessibility (keyboard navigation, screen readers)
+
+**Imports/Exports:**
+- Export BentoGrid component from packages/ui/src/components/ui/
+- Export BentoCard component from packages/ui/src/components/ui/
+
+**Depends On:**
+- UI-001 (Color System)
+- UI-002 (Typography Overhaul)
+- UI-003 (Animation System)
+
+**Blocks:**
+- UI-005 (Component Redesign)
+
+---
+
+#### UI-004-01: Create Bento Grid Component
+
+**Actor:** [AGENT]
+
+**Target File Path:** `packages/ui/src/components/ui/bento-grid.tsx`
+
+**Description:**
+Create a reusable BentoGrid component using CSS Grid with named areas for flexible, asymmetric layouts. The component should accept children and optional layout configuration (columns, rows, gap). Implement responsive behavior using container queries or media queries. Include TypeScript types for props. Ensure the component is accessible with proper ARIA labels and keyboard navigation.
+
+**Validation Commands:**
+```bash
+# Run bento grid tests
+cd packages/ui && pnpm test src/components/ui/bento-grid.test.tsx
+# Build UI package
+cd packages/ui && pnpm build
+```
+
+**Testing/Validation:**
+- Create bento-grid.test.tsx with layout tests
+- Test responsive behavior at different viewport sizes
+- Test accessibility with keyboard navigation
+- Create bento-grid.stories.tsx showcasing different layouts
+
+**Repository Management:**
+- Export BentoGrid from packages/ui/src/index.ts
+
+---
+
+#### UI-004-02: Create Bento Card Component
+
+**Actor:** [AGENT]
+
+**Target File Path:** `packages/ui/src/components/ui/bento-card.tsx`
+
+**Description:**
+Create a BentoCard component that represents individual items in the bento grid. The component should support glassmorphism effects, gradient backgrounds, and hover animations. Accept props for content, span (row/column span), and variant. Implement proper TypeScript types. Ensure the card is accessible with focus states and ARIA attributes.
+
+**Validation Commands:**
+```bash
+# Run bento card tests
+cd packages/ui && pnpm test src/components/ui/bento-card.test.tsx
+# Build UI package
+cd packages/ui && pnpm build
+```
+
+**Testing/Validation:**
+- Create bento-card.test.tsx with variant tests
+- Test glassmorphism rendering and performance
+- Test hover animations and transitions
+- Create bento-card.stories.tsx showcasing variants
+
+**Repository Management:**
+- Export BentoCard from packages/ui/src/index.ts
+
+---
+
+#### UI-004-03: Redesign Hero Component with Bento Grid
+
+**Actor:** [AGENT]
+
+**Target File Path:** `apps/firm-website/src/components/features/home/hero.tsx`
+
+**Description:**
+Redesign the hero component to use the new BentoGrid and BentoCard components. Create an asymmetric bento layout with the main headline, subheadline, CTA buttons, and supporting content distributed across cards. Apply the new vibrant color palette and display typography. Implement scroll-triggered animations using the useScrollTrigger hook for staggered entry effects. Add a subtle gradient background.
+
+**Validation Commands:**
+```bash
+# Run hero component tests
+cd apps/firm-website && pnpm test src/components/features/home/hero.test.tsx
+# Build app to verify no errors
+cd apps/firm-website && pnpm build
+```
+
+**Testing/Validation:**
+- Update hero.test.tsx to test bento grid layout
+- Add visual regression test for new hero design
+- Test responsive behavior at mobile, tablet, and desktop
+- Test scroll-triggered animations
+
+**Repository Management:**
+- No documentation updates needed
+
+---
+
+#### UI-004-04: Optimize Hero Performance
+
+**Actor:** [AGENT]
+
+**Target File Path:** `apps/firm-website/src/components/features/home/hero.tsx`
+
+**Description:**
+Optimize the hero component for performance by implementing lazy loading for heavy elements, using CSS containment for bento cards, and ensuring animations are GPU-accelerated. Add proper loading states to prevent layout shift. Test Core Web Vitals (LCP, CLS, FID) to ensure the hero performs well. Optimize images and assets if present.
+
+**Validation Commands:**
+```bash
+# Build app with production mode
+cd apps/firm-website && pnpm build
+# Run Lighthouse audit
+npx lighthouse http://localhost:3000 --view
+```
+
+**Testing/Validation:**
+- Test Lighthouse scores (target: 90+ performance)
+- Test animation performance with Chrome DevTools
+- Verify no layout shift during loading
+- Test on slow 3G connection
+
+**Repository Management:**
+- No documentation updates needed
+
+---
+
+#### UI-004-05: Document Hero Component
+
+**Actor:** [HUMAN]
+
+**Target File Path:** `apps/firm-website/src/components/features/home/hero.stories.tsx` (new)
+
+**Description:**
+Create a Storybook story for the hero component showcasing the bento grid layout, different content configurations, and responsive behavior. Document the design decisions, layout patterns, and usage guidelines. Include examples of how to customize the hero for different pages or purposes.
+
+**Validation Commands:**
+```bash
+# View hero documentation in Storybook
+cd apps/firm-website && pnpm storybook
+```
+
+**Testing/Validation:**
+- No automated tests needed (documentation only)
+- Manual review of hero examples and guidelines
+
+**Repository Management:**
+- No documentation updates needed
+
+---
+
+### UI-005: Implement Glassmorphism Effects
+
+**Status:** [PENDING]
+
+**Related File Paths:**
+- `packages/ui/src/styles.css`
+- `packages/ui/src/lib/utils.ts`
+- `apps/firm-website/src/components/features/home/pillars.tsx`
+- `apps/firm-website/src/components/features/home/demo-preview.tsx`
+
+**Definition of Done:**
+- Glassmorphism utility classes defined in theme
+- Glass card component created
+- Existing components updated with glassmorphism
+- Performance optimized for backdrop-filter
+- Dark mode glassmorphism implemented
+- Glassmorphism documented in Storybook
+- Accessibility considered (contrast, focus states)
+
+**Out of Scope:**
+- Complete component redesign (glassmorphism only)
+- Complex glass morphing with 3D transforms
+
+**Rules to Follow:**
+- Use backdrop-filter sparingly for performance
+- Ensure text contrast remains readable
+- Provide fallback for browsers without backdrop-filter support
+- Test on mobile devices (performance varies)
+- Use subtle effects, not overwhelming glass
+
+**Advanced Coding Pattern:**
+- CSS custom properties for glassmorphism tokens
+- @supports queries for fallback behavior
+- CSS containment for performance optimization
+- GPU-accelerated compositing
+
+**Anti-Patterns:**
+- Overusing glassmorphism causing performance issues
+- Missing fallbacks for unsupported browsers
+- Poor contrast on glass backgrounds
+- Heavy blur values causing lag
+
+**Imports/Exports:**
+- Export glassmorphism utilities from packages/ui/src/lib/utils.ts
+
+**Depends On:**
+- UI-001 (Color System)
+
+**Blocks:**
+- UI-006 (Component Redesign)
+
+---
+
+#### UI-005-01: Define Glassmorphism Tokens
+
+**Actor:** [AGENT]
+
+**Target File Path:** `packages/ui/src/styles.css`
+
+**Description:**
+Define glassmorphism tokens in the @theme block for consistent glass effects across components. Create tokens for background transparency, blur amount, border opacity, and shadow. Use CSS custom properties for easy customization. Include light and dark mode variants. Add @supports query for browsers that don't support backdrop-filter.
+
+**Validation Commands:**
+```bash
+# Build UI package
+cd packages/ui && pnpm build
+# Test glassmorphism in development
+cd apps/firm-website && pnpm dev
+```
+
+**Testing/Validation:**
+- Create glassmorphism.stories.tsx to showcase tokens
+- Test rendering in different browsers
+- Test performance on mobile devices
+- Verify fallback behavior
+
+**Repository Management:**
+- No documentation updates needed
+
+---
+
+#### UI-005-02: Create Glass Card Component
+
+**Actor:** [AGENT]
+
+**Target File Path:** `packages/ui/src/components/ui/glass-card.tsx` (new)
+
+**Description:**
+Create a GlassCard component that applies glassmorphism effects to card content. The component should accept props for blur intensity, background opacity, and border strength. Implement proper TypeScript types. Ensure the component is accessible with focus states and maintains text contrast. Include fallback styles for browsers without backdrop-filter support.
+
+**Validation Commands:**
+```bash
+# Run glass card tests
+cd packages/ui && pnpm test src/components/ui/glass-card.test.tsx
+# Build UI package
+cd packages/ui && pnpm build
+```
+
+**Testing/Validation:**
+- Create glass-card.test.tsx with variant tests
+- Test backdrop-filter support detection
+- Test accessibility with screen readers
+- Create glass-card.stories.tsx showcasing variants
+
+**Repository Management:**
+- Export GlassCard from packages/ui/src/index.ts
+
+---
+
+#### UI-005-03: Update Pillars Component with Glassmorphism
+
+**Actor:** [AGENT]
+
+**Target File Path:** `apps/firm-website/src/components/features/home/pillars.tsx`
+
+**Description:**
+Update the pillars component to use glassmorphism effects on the service cards. Replace the standard Card component with GlassCard or apply glassmorphism utility classes. Ensure text remains readable and the effect is subtle. Test the component in both light and dark modes. Maintain existing functionality and tests.
+
+**Validation Commands:**
+```bash
+# Run pillars component tests
+cd apps/firm-website && pnpm test src/components/features/home/pillars.test.tsx
+# Build app to verify no errors
+cd apps/firm-website && pnpm build
+```
+
+**Testing/Validation:**
+- Update pillars.test.tsx to test glassmorphism rendering
+- Test contrast ratios with glass backgrounds
+- Test performance with multiple glass cards
+- Verify responsive behavior unchanged
+
+**Repository Management:**
+- No documentation updates needed
+
+---
+
+#### UI-005-04: Update Demo Preview with Glassmorphism
+
+**Actor:** [AGENT]
+
+**Target File Path:** `apps/firm-website/src/components/features/home/demo-preview.tsx`
+
+**Description:**
+Update the demo preview component to use glassmorphism effects on the demo cards. Apply glassmorphism to create visual depth and modernize the design. Ensure the effect doesn't interfere with card content readability. Test in both light and dark modes. Maintain existing functionality and tests.
+
+**Validation Commands:**
+```bash
+# Run demo preview tests
+cd apps/firm-website && pnpm test src/components/features/home/demo-preview.test.tsx
+# Build app to verify no errors
+cd apps/firm-website && pnpm build
+```
+
+**Testing/Validation:**
+- Update demo-preview.test.tsx to test glassmorphism rendering
+- Test contrast ratios with glass backgrounds
+- Test performance with multiple glass cards
+- Verify responsive behavior unchanged
+
+**Repository Management:**
+- No documentation updates needed
+
+---
+
+#### UI-005-05: Document Glassmorphism Usage
+
+**Actor:** [HUMAN]
+
+**Target File Path:** `packages/ui/src/stories/glassmorphism.stories.tsx`
+
+**Description:**
+Create comprehensive glassmorphism documentation in Storybook showcasing the GlassCard component, utility classes, usage patterns, and performance considerations. Include examples of when to use glassmorphism, browser support, fallback strategies, and accessibility guidelines. Document best practices for subtle vs bold glass effects.
+
+**Validation Commands:**
+```bash
+# View glassmorphism documentation in Storybook
+cd packages/ui && pnpm storybook
+```
+
+**Testing/Validation:**
+- No automated tests needed (documentation only)
+- Manual review of glassmorphism examples and guidelines
+
+**Repository Management:**
+- No documentation updates needed
+
+---
+
+### UI-006: Redesign Buttons with Advanced Variants
+
+**Status:** [PENDING]
+
+**Related File Paths:**
+- `packages/ui/src/components/ui/button.tsx`
+- `packages/ui/src/components/ui/button.test.tsx`
+- `packages/ui/src/components/ui/button.stories.tsx`
+
+**Definition of Done:**
+- Gradient button variants added
+- Glow effect on hover implemented
+- Magnetic hover effect added
+- Loading state with animation
+- Ripple effect on click
+- All variants documented in Storybook
+- Accessibility maintained (focus states, ARIA)
+- Performance optimized
+
+**Out of Scope:**
+- Complete button redesign (variants only)
+- Complex 3D button effects
+
+**Rules to Follow:**
+- Maintain existing button API for backward compatibility
+- Ensure all variants are accessible
+- Test button states (normal, hover, active, disabled, loading)
+- Use GPU-accelerated animations
+- Respect reduced motion preference
+
+**Advanced Coding Pattern:**
+- class-variance-authority (CVA) for variant management
+- CSS custom properties for dynamic effects
+- Compound component pattern for button with icon
+- requestAnimationFrame for smooth animations
+
+**Anti-Patterns:**
+- Breaking existing button API
+- Missing disabled state styling
+- Overusing effects causing performance issues
+- Inconsistent sizing across variants
+
+**Imports/Exports:**
+- No changes to imports/exports
+
+**Depends On:**
+- UI-001 (Color System)
+- UI-003 (Animation System)
+
+**Blocks:**
+- None
+
+---
+
+#### UI-006-01: Add Gradient Button Variants
+
+**Actor:** [AGENT]
+
+**Target File Path:** `packages/ui/src/components/ui/button.tsx`
+
+**Description:**
+Add gradient button variants to the buttonVariants CVA configuration. Create gradient-primary, gradient-accent, and gradient-secondary variants that use the new gradient color tokens. Ensure proper contrast for text on gradient backgrounds. Add hover states that subtly shift the gradient. Maintain accessibility with focus states.
+
+**Validation Commands:**
+```bash
+# Run button tests
+cd packages/ui && pnpm test src/components/ui/button.test.tsx
+# Build UI package
+cd packages/ui && pnpm build
+```
+
+**Testing/Validation:**
+- Update button.test.tsx to test gradient variants
+- Test contrast ratios on gradient backgrounds
+- Test gradient rendering across browsers
+- Update button.stories.tsx to showcase gradient variants
+
+**Repository Management:**
+- No documentation updates needed
+
+---
+
+#### UI-006-02: Implement Glow Effect on Hover
+
+**Actor:** [AGENT]
+
+**Target File Path:** `packages/ui/src/components/ui/button.tsx`
+
+**Description:**
+Add a glow effect variant that creates a subtle shadow/glow on button hover. Use CSS box-shadow with the primary color for the glow effect. Ensure the effect is performant and doesn't cause layout shifts. Add the glow as an optional variant or modifier. Test in both light and dark modes.
+
+**Validation Commands:**
+```bash
+# Run button tests
+cd packages/ui && pnpm test src/components/ui/button.test.tsx
+# Build UI package
+cd packages/ui && pnpm build
+```
+
+**Testing/Validation:**
+- Update button.test.tsx to test glow effect
+- Test performance with multiple glowing buttons
+- Test glow effect in dark mode
+- Update button.stories.tsx to showcase glow effect
+
+**Repository Management:**
+- No documentation updates needed
+
+---
+
+#### UI-006-03: Add Loading State with Animation
+
+**Actor:** [AGENT]
+
+**Target File Path:** `packages/ui/src/components/ui/button.tsx`
+
+**Description:**
+Enhance the button component to support a loading state with a spinner animation. Add a loading prop that disables the button and shows a loading indicator. Use CSS animation for the spinner. Ensure the loading state is accessible with proper ARIA attributes. Maintain the button's width during loading to prevent layout shift.
+
+**Validation Commands:**
+```bash
+# Run button tests
+cd packages/ui && pnpm test src/components/ui/button.test.tsx
+# Build UI package
+cd packages/ui && pnpm build
+```
+
+**Testing/Validation:**
+- Update button.test.tsx to test loading state
+- Test accessibility with screen readers
+- Test button width stability during loading
+- Update button.stories.tsx to showcase loading state
+
+**Repository Management:**
+- No documentation updates needed
+
+---
+
+#### UI-006-04: Document Button Variants
+
+**Actor:** [HUMAN]
+
+**Target File Path:** `packages/ui/src/components/ui/button.stories.tsx`
+
+**Description:**
+Update the button Storybook stories to comprehensively document all button variants, including the new gradient, glow, and loading states. Include usage guidelines for when to use each variant, accessibility considerations, and design patterns. Add examples of button composition with icons and different sizes.
+
+**Validation Commands:**
+```bash
+# View button documentation in Storybook
+cd packages/ui && pnpm storybook
+```
+
+**Testing/Validation:**
+- No automated tests needed (documentation only)
+- Manual review of button examples and guidelines
+
+**Repository Management:**
+- No documentation updates needed
+
+---
+
+### UI-007: Add Depth to Cards with Advanced Effects
+
+**Status:** [PENDING]
+
+**Related File Paths:**
+- `packages/ui/src/components/ui/card.tsx`
+- `packages/ui/src/components/ui/card.test.tsx`
+- `packages/ui/src/components/ui/card.stories.tsx`
+
+**Definition of Done:**
+- Hover lift effect added to cards
+- Gradient border variants implemented
+- Subtle inner shadows for depth
+- Staggered animation on scroll
+- All effects documented in Storybook
+- Performance optimized
+- Accessibility maintained
+
+**Out of Scope:**
+- Complete card redesign (effects only)
+- 3D card transforms
+
+**Rules to Follow:**
+- Maintain existing card API
+- Ensure effects are subtle, not overwhelming
+- Test performance with multiple cards
+- Respect reduced motion preference
+- Maintain accessibility (focus states, keyboard navigation)
+
+**Advanced Coding Pattern:**
+- CSS custom properties for dynamic effects
+- Transform with GPU acceleration
+- Box-shadow layering for depth
+- Transition timing functions for natural motion
+
+**Anti-Patterns:**
+- Breaking existing card API
+- Overusing effects causing distraction
+- Missing focus states on interactive cards
+- Performance issues with shadows
+
+**Imports/Exports:**
+- No changes to imports/exports
+
+**Depends On:**
+- UI-001 (Color System)
+- UI-003 (Animation System)
+
+**Blocks:**
+- None
+
+---
+
+#### UI-007-01: Add Hover Lift Effect
+
+**Actor:** [AGENT]
+
+**Target File Path:** `packages/ui/src/components/ui/card.tsx`
+
+**Description:**
+Add a hover lift effect to cards that subtly raises the card on hover using CSS transform. Add a corresponding shadow increase to enhance the depth effect. Ensure the effect is smooth with proper transition timing. Make the effect optional via a prop or variant. Test performance and ensure no layout shift.
+
+**Validation Commands:**
+```bash
+# Run card tests
+cd packages/ui && pnpm test src/components/ui/card.test.tsx
+# Build UI package
+cd packages/ui && pnpm build
+```
+
+**Testing/Validation:**
+- Update card.test.tsx to test hover lift effect
+- Test performance with multiple cards
+- Test smooth transitions
+- Update card.stories.tsx to showcase hover effect
+
+**Repository Management:**
+- No documentation updates needed
+
+---
+
+#### UI-007-02: Implement Gradient Border Variants
+
+**Actor:** [AGENT]
+
+**Target File Path:** `packages/ui/src/components/ui/card.tsx`
+
+**Description:**
+Add gradient border variants to cards using CSS border-image or pseudo-elements. Create gradient-primary and gradient-accent border variants. Ensure the gradient border works in both light and dark modes. Make the effect optional via a prop. Test browser compatibility and provide fallbacks if needed.
+
+**Validation Commands:**
+```bash
+# Run card tests
+cd packages/ui && pnpm test src/components/ui/card.test.tsx
+# Build UI package
+cd packages/ui && pnpm build
+```
+
+**Testing/Validation:**
+- Update card.test.tsx to test gradient border
+- Test rendering across browsers
+- Test in light and dark modes
+- Update card.stories.tsx to showcase gradient borders
+
+**Repository Management:**
+- No documentation updates needed
+
+---
+
+#### UI-007-03: Add Subtle Inner Shadows
+
+**Actor:** [AGENT]
+
+**Target File Path:** `packages/ui/src/components/ui/card.tsx`
+
+**Description:**
+Add subtle inner shadows to cards for additional depth and visual interest. Use inset box-shadow with low opacity for a subtle effect. Ensure the shadow works well with the card background color. Make the effect optional via a prop. Test in both light and dark modes.
+
+**Validation Commands:**
+```bash
+# Run card tests
+cd packages/ui && pnpm test src/components/ui/card.test.tsx
+# Build UI package
+cd packages/ui && pnpm build
+```
+
+**Testing/Validation:**
+- Update card.test.tsx to test inner shadows
+- Test visual appearance in different modes
+- Test performance impact
+- Update card.stories.tsx to showcase inner shadows
+
+**Repository Management:**
+- No documentation updates needed
+
+---
+
+#### UI-007-04: Document Card Effects
+
+**Actor:** [HUMAN]
+
+**Target File Path:** `packages/ui/src/components/ui/card.stories.tsx`
+
+**Description:**
+Update the card Storybook stories to document all card effects, including hover lift, gradient borders, and inner shadows. Include usage guidelines for when to use each effect, performance considerations, and design patterns. Add examples combining multiple effects for advanced use cases.
+
+**Validation Commands:**
+```bash
+# View card documentation in Storybook
+cd packages/ui && pnpm storybook
+```
+
+**Testing/Validation:**
+- No automated tests needed (documentation only)
+- Manual review of card examples and guidelines
+
+**Repository Management:**
+- No documentation updates needed
+
+---
+
+### UI-008: Implement Header Glassmorphism
+
+**Status:** [PENDING]
+
+**Related File Paths:**
 - `packages/ui/src/components/layout/header.tsx`
-- `apps/firm-website/.env.example`
-- `apps/firm-website/src/lib/env.ts` (if kept)
+- `packages/ui/src/components/layout/header.test.tsx`
 
-**Definition of done**
+**Definition of Done:**
+- Header updated with glassmorphism effect
+- Backdrop blur applied to header background
+- Border added for visual separation
+- Performance optimized
+- Mobile menu maintained
+- Accessibility maintained
+- Header documented in Storybook
 
-- All fake phone numbers (`+1 (555) 123-4567`), fake addresses, and generic social links are replaced with real business values or clearly sourced from environment variables.
-- Business hours on the contact page are accurate.
-- Email address is consistent across footer, header, contact page, home JSON-LD, and layout.
-- A regression test asserts that the contact page does not render the placeholder phone number.
-- `pnpm turbo test --filter=@repo/firm-website` and `pnpm turbo check-types --filter=@repo/firm-website` pass.
+**Out of Scope:**
+- Complete header redesign (glassmorphism only)
+- Mega menu implementation
 
-**Out of scope**
+**Rules to Follow:**
+- Maintain existing header functionality
+- Ensure glassmorphism doesn't affect readability
+- Test performance on scroll
+- Maintain mobile menu behavior
+- Keep accessibility (keyboard navigation, ARIA)
 
-- Adding a CMS for contact details.
-- Changing the visual layout of the contact page.
+**Advanced Coding Pattern:**
+- CSS custom properties for glass effect
+- Sticky positioning with backdrop-filter
+- CSS containment for performance
+- Intersection Observer for scroll effects
 
-**Rules to follow**
+**Anti-Patterns:**
+- Breaking existing header API
+- Overusing blur causing performance issues
+- Missing mobile menu functionality
+- Poor contrast on glass background
 
-- Source values from env vars where possible; hardcode only values that are truly static.
-- Keep the change localized to contact/NAP data.
-- Do not use placeholder values in production-facing JSON-LD.
+**Imports/Exports:**
+- No changes to imports/exports
 
-**Advanced coding pattern**
+**Depends On:**
+- UI-001 (Color System)
+- UI-005 (Glassmorphism Effects)
 
-- Treat contact details as a bounded context. Define a single `siteConfig` or env-derived object consumed by layout, footer, header, and contact page.
-
-**Anti-patterns**
-
-- Scattering the same phone number across five files with manual copy/paste.
-- Using fake data in schema.org structured data.
-
-**Imports/exports**
-
-- `apps/firm-website/src/lib/env.ts` or new `apps/firm-website/src/lib/site-config.ts`: export validated contact details.
-- Layout, footer, header, contact page, home page: import the shared config.
-
-**Depends on / blocks**
-
-- Depends on: `ENV-001`.
-- Blocks: none.
-
-**Subtasks**
-
-- `[HUMAN]` `FIX-003-01` — Decision/input required: Provide real phone, address, email, business hours, and social URLs when this task is executed. Alternatively, confirm that env vars should drive these values.
-- `[AGENT]` `FIX-003-02` — `apps/firm-website/src/lib/site-config.ts` (create if needed) — Centralize contact details from env or human-provided values.
-- `[AGENT]` `FIX-003-03` — `apps/firm-website/src/app/(marketing)/layout.tsx` — Replace placeholder contact props with shared config.
-- `[AGENT]` `FIX-003-04` — `apps/firm-website/src/app/(marketing)/contact/page.tsx` — Replace fake phone, address, and hours.
-- `[AGENT]` `FIX-003-05` — `apps/firm-website/src/app/page.tsx` — Replace fake contact values in Organization JSON-LD.
-- `[AGENT]` `FIX-003-06` — `packages/ui/src/components/layout/footer.tsx` — Replace hardcoded copyright/values or accept via props.
-- `[AGENT]` `FIX-003-07` — `packages/ui/src/components/layout/header.tsx` — Replace default "Logo" text or accept via props if business name is static.
-- `[AGENT]` `FIX-003-08` — workspace root — Run `pnpm turbo test --filter=@repo/firm-website` and `pnpm turbo check-types --filter=@repo/firm-website`.
-
-**Validation commands**
-
-```powershell
-pnpm turbo check-types --filter=@repo/firm-website
-pnpm turbo test --filter=@repo/firm-website
-```
+**Blocks:**
+- None
 
 ---
 
-## DOC-001 — Commit deleted documentation and remove references
+#### UI-008-01: Apply Glassmorphism to Header
 
-- [x] `DOC-001` — `[DONE]`
+**Actor:** [AGENT]
 
-**Implementation notes**
-- Deletions of `README.md` and all 19 `docs/` files were already committed in a previous commit
-- No source code references to deleted `docs/` paths or `README.md` exist (grep confirmed only external URLs and documentation about the deletion)
-- `.gitignore` does not contain entries for deleted docs
-- Git status is clean regarding documentation deletions
+**Target File Path:** `packages/ui/src/components/layout/header.tsx`
 
-**Related file paths**
+**Description:**
+Update the header component to apply glassmorphism effects. Add backdrop blur, semi-transparent background, and subtle border using the glassmorphism tokens. Ensure the effect works in both light and dark modes. Test that the header remains readable and navigation links are accessible. Maintain the sticky positioning behavior.
 
-- `README.md` (deleted)
-- `TODO.md` (this file)
-- `docs/` (deleted)
-- `.gitignore`
-- Any file that still imports or links to `docs/...` or `README.md`
-
-**Definition of done**
-
-- Deletions of `README.md`, `docs/`, and old `TODO.md` are staged/committed with a clear commit message.
-- `TODO.md` (this file) is committed.
-- No source file or script references the deleted `docs/` paths or old `README.md`.
-- `git status --short` shows a clean documentation state (no uncommitted deletions).
-
-**Out of scope**
-
-- Restoring any deleted documentation.
-- Removing the `.company/` business planning documents.
-- Writing a new README at this time.
-
-**Rules to follow**
-
-- Do not leave deleted files in an uncommitted state.
-- Do not restore any docs.
-- Update `.gitignore` only if it references deleted docs paths.
-
-**Advanced coding pattern**
-
-- Treat repository state as code. Uncommitted deletions are a form of technical debt; committing them makes the intended state explicit.
-
-**Anti-patterns**
-
-- Bulk-deleting docs and leaving them uncommitted.
-- Restoring docs after explicitly deciding not to.
-
-**Imports/exports**
-
-- None.
-
-**Depends on / blocks**
-
-- Depends on: none.
-- Blocks: none.
-
-**Subtasks**
-
-- `[AGENT]` `DOC-001-01` — workspace root — Search the repository for any remaining references to `docs/...` paths or `README.md` links.
-- `[AGENT]` `DOC-001-02` — workspace root — Stage the deletions: `git rm README.md docs/...` (all 19 docs files).
-- `[AGENT]` `DOC-001-03` — workspace root — Update `.gitignore` if it contains entries that only protected deleted docs.
-- `[AGENT]` `DOC-001-04` — workspace root — Run `git status --short` to confirm clean state.
-
-**Validation commands**
-
-```powershell
-grep -R "docs/" --include="*.md" --include="*.ts" --include="*.tsx" --include="*.js" --include="*.json" .
-git status --short
+**Validation Commands:**
+```bash
+# Run header tests
+cd packages/ui && pnpm test src/components/layout/header.test.tsx
+# Build UI package
+cd packages/ui && pnpm build
 ```
+
+**Testing/Validation:**
+- Update header.test.tsx to test glassmorphism rendering
+- Test header readability with glass background
+- Test performance on scroll
+- Test mobile menu functionality
+
+**Repository Management:**
+- No documentation updates needed
 
 ---
 
-## INF-002 — Add Sentry environment passthrough
+#### UI-008-02: Optimize Header Performance
 
-- [x] `INF-002` — `[DONE]`
+**Actor:** [AGENT]
 
-**Implementation notes**
-- Already completed as part of SEN-001
-- `SENTRY_AUTH_TOKEN` and `NEXT_PUBLIC_SENTRY_DSN` are in `turbo.json` `globalPassThroughEnv`
-- `SENTRY_AUTH_TOKEN` and `NEXT_PUBLIC_SENTRY_DSN` are in `turbo.json` build task `passThroughEnv`
-- `instrumentation-client.ts` was created per Next.js 15 guidance
-- `next.config.ts` uses `authToken: process.env.SENTRY_AUTH_TOKEN` and `silent: !process.env.CI`
+**Target File Path:** `packages/ui/src/components/layout/header.tsx`
 
-**Related file paths**
+**Description:**
+Optimize the header component for performance by using CSS containment, will-change sparingly, and ensuring the backdrop-filter doesn't cause jank. Test the header performance while scrolling. Ensure the glassmorphism effect doesn't impact frame rate. Consider using CSS transforms instead of position changes if needed.
 
+**Validation Commands:**
+```bash
+# Build UI package
+cd packages/ui && pnpm build
+# Test performance in development
+cd apps/firm-website && pnpm dev
+```
+
+**Testing/Validation:**
+- Test frame rate while scrolling with Chrome DevTools
+- Test on mobile devices for performance
+- Verify no layout shift
+- Test with multiple elements in header
+
+**Repository Management:**
+- No documentation updates needed
+
+---
+
+#### UI-008-03: Document Header Component
+
+**Actor:** [HUMAN]
+
+**Target File Path:** `packages/ui/src/components/layout/header.stories.tsx` (new)
+
+**Description:**
+Create a Storybook story for the header component showcasing the glassmorphism effect, navigation behavior, and responsive design. Document the glassmorphism implementation, performance considerations, and usage guidelines. Include examples of header customization and mobile menu behavior.
+
+**Validation Commands:**
+```bash
+# View header documentation in Storybook
+cd packages/ui && pnpm storybook
+```
+
+**Testing/Validation:**
+- No automated tests needed (documentation only)
+- Manual review of header examples and guidelines
+
+**Repository Management:**
+- No documentation updates needed
+
+---
+
+### UI-009: Add Micro-Interactions to Components
+
+**Status:** [PENDING]
+
+**Related File Paths:**
+- `packages/ui/src/components/ui/button.tsx`
+- `packages/ui/src/components/ui/card.tsx`
+- `apps/firm-website/src/components/features/home/pillars.tsx`
+- `apps/firm-website/src/components/features/home/demo-preview.tsx`
+
+**Definition of Done:**
+- Hover effects added to all interactive elements
+- Focus states enhanced for accessibility
+- Active states for buttons and links
+- Icon animations on hover
+- Smooth transitions throughout
+- All micro-interactions documented
+- Performance optimized
+- Reduced motion respected
+
+**Out of Scope:**
+- Complex gesture-based interactions
+- Physics-based animations
+
+**Rules to Follow:**
+- Keep animations under 300ms for micro-interactions
+- Use GPU-accelerated properties
+- Ensure interactions feel responsive
+- Maintain accessibility with visible focus states
+- Respect reduced motion preference
+
+**Advanced Coding Pattern:**
+- CSS custom properties for interaction states
+- Transition timing functions for natural feel
+- Transform for GPU acceleration
+- CSS :has() for parent-based interactions
+
+**Anti-Patterns:**
+- Over-animating causing distraction
+- Missing focus states for keyboard users
+- Slow transitions feeling sluggish
+- Breaking existing component behavior
+
+**Imports/Exports:**
+- No changes to imports/exports
+
+**Depends On:**
+- UI-003 (Animation System)
+
+**Blocks:**
+- None
+
+---
+
+#### UI-009-01: Enhance Button Hover States
+
+**Actor:** [AGENT]
+
+**Target File Path:** `packages/ui/src/components/ui/button.tsx`
+
+**Description:**
+Enhance button hover states with subtle scale, brightness, or position changes. Add smooth transitions for all hover effects. Ensure the effects are subtle and don't cause layout shift. Test all button variants with enhanced hover states. Maintain accessibility with visible focus states.
+
+**Validation Commands:**
+```bash
+# Run button tests
+cd packages/ui && pnpm test src/components/ui/button.test.tsx
+# Build UI package
+cd packages/ui && pnpm build
+```
+
+**Testing/Validation:**
+- Update button.test.tsx to test hover states
+- Test transition smoothness
+- Test with reduced motion preference
+- Update button.stories.tsx to showcase hover effects
+
+**Repository Management:**
+- No documentation updates needed
+
+---
+
+#### UI-009-02: Add Icon Animations on Hover
+
+**Actor:** [AGENT]
+
+**Target File Path:** `apps/firm-website/src/components/features/home/pillars.tsx`
+
+**Description:**
+Add subtle icon animations to the service cards in the pillars component. Icons should scale, rotate, or bounce slightly on hover. Use CSS transforms for performance. Ensure animations are subtle and don't distract from content. Test in both light and dark modes.
+
+**Validation Commands:**
+```bash
+# Run pillars tests
+cd apps/firm-website && pnpm test src/components/features/home/pillars.test.tsx
+# Build app to verify no errors
+cd apps/firm-website && pnpm build
+```
+
+**Testing/Validation:**
+- Update pillars.test.tsx to test icon animations
+- Test animation performance
+- Test with reduced motion preference
+- Verify animations don't affect readability
+
+**Repository Management:**
+- No documentation updates needed
+
+---
+
+#### UI-009-03: Enhance Card Hover Effects
+
+**Actor:** [AGENT]
+
+**Target File Path:** `packages/ui/src/components/ui/card.tsx`
+
+**Description:**
+Enhance card hover effects with subtle transitions on background, border, or shadow. Ensure effects work with the existing hover lift effect. Add smooth transitions for all hover properties. Test that effects don't cause performance issues with multiple cards.
+
+**Validation Commands:**
+```bash
+# Run card tests
+cd packages/ui && pnpm test src/components/ui/card.test.tsx
+# Build UI package
+cd packages/ui && pnpm build
+```
+
+**Testing/Validation:**
+- Update card.test.tsx to test enhanced hover effects
+- Test performance with multiple cards
+- Test transition smoothness
+- Update card.stories.tsx to showcase hover effects
+
+**Repository Management:**
+- No documentation updates needed
+
+---
+
+#### UI-009-04: Document Micro-Interactions
+
+**Actor:** [HUMAN]
+
+**Target File Path:** `packages/ui/src/stories/micro-interactions.stories.tsx` (new)
+
+**Description:**
+Create comprehensive micro-interaction documentation in Storybook showcasing all hover, focus, and active states across components. Include usage guidelines for implementing micro-interactions, performance considerations, and accessibility best practices. Document the transition timing functions and animation patterns used.
+
+**Validation Commands:**
+```bash
+# View micro-interaction documentation in Storybook
+cd packages/ui && pnpm storybook
+```
+
+**Testing/Validation:**
+- No automated tests needed (documentation only)
+- Manual review of micro-interaction examples and guidelines
+
+**Repository Management:**
+- No documentation updates needed
+
+---
+
+### UI-010: Performance Optimization
+
+**Status:** [PENDING]
+
+**Related File Paths:**
+- `apps/firm-website/src/app/layout.tsx`
+- `packages/ui/src/styles.css`
 - `turbo.json`
-- `apps/firm-website/next.config.ts`
-- `apps/firm-website/sentry.client.config.ts`
-- `apps/firm-website/instrumentation.ts`
 
-**Definition of done**
+**Definition of Done:**
+- Core Web Vitals optimized (LCP, FID, CLS)
+- CSS bundle size minimized
+- Font loading strategy optimized
+- Image optimization implemented
+- Animation performance ensured
+- Build configuration optimized
+- Performance monitoring added
+- Performance documented
 
-- `SENTRY_AUTH_TOKEN` and `NEXT_PUBLIC_SENTRY_DSN` are declared in `turbo.json` under `globalPassThroughEnv` or appropriate `passThroughEnv` blocks.
-- Build no longer emits "No auth token provided" and Turborepo pass-through warnings.
-- Optional: create `instrumentation-client.ts` per `@sentry/nextjs` Next.js 15 guidance.
+**Out of Scope:**
+- Server-side optimization (caching, CDN)
+- Database optimization
 
-**Out of scope**
+**Rules to Follow:**
+- Target Lighthouse scores above 90
+- Minimize layout shift (CLS < 0.1)
+- Ensure fast first contentful paint
+- Optimize for mobile devices
+- Test on slow connections
 
-- Setting actual secret values in CI/Vercel.
-- Adding Sentry to additional apps.
+**Advanced Coding Pattern:**
+- CSS containment for isolation
+- Font loading with font-display: swap
+- Lazy loading for heavy components
+- Code splitting with dynamic imports
 
-**Rules to follow**
+**Anti-Patterns:**
+- Blocking render with large CSS
+- Missing image optimization
+- Unnecessary JavaScript bundles
+- Poor font loading strategy
 
-- Only passthrough env vars that are safe to expose to the build pipeline.
-- Keep `NEXT_PUBLIC_SENTRY_DSN` public; keep `SENTRY_AUTH_TOKEN` server-side only.
+**Imports/Exports:**
+- No changes to imports/exports
 
-**Advanced coding pattern**
+**Depends On:**
+- UI-001 through UI-009 (All UI tasks)
 
-- Use `globalPassThroughEnv` for vars used across tasks, and `env` blocks per-task for build-specific vars.
+**Blocks:**
+- None
 
-**Anti-patterns**
+---
 
-- Adding secrets to `globalEnv` when only `globalPassThroughEnv` is needed.
-- Ignoring repeated build warnings.
+#### UI-010-01: Optimize CSS Bundle Size
 
-**Imports/exports**
+**Actor:** [AGENT]
 
-- `turbo.json`: add `globalPassThroughEnv` array.
+**Target File Path:** `packages/ui/src/styles.css`
 
-**Depends on / blocks**
+**Description:**
+Optimize the CSS bundle size by removing unused Tailwind utilities, minimizing custom CSS, and leveraging Tailwind's purge functionality. Ensure the CSS-first configuration in Tailwind v4 is properly set up for automatic content detection. Test the bundle size before and after optimization. Ensure no visual regressions.
 
-- Depends on: `FIX-001`.
-- Blocks: none.
-
-**Subtasks**
-
-- `[AGENT]` `INF-002-01` — `turbo.json` — Add `globalPassThroughEnv: ["SENTRY_AUTH_TOKEN", "NEXT_PUBLIC_SENTRY_DSN"]`.
-- `[AGENT]` `INF-002-02` — `apps/firm-website/instrumentation-client.ts` (optional) — Migrate client Sentry config if recommended.
-- `[AGENT]` `INF-002-03` — workspace root — Run `pnpm turbo build --filter=@repo/firm-website` and verify Sentry warnings are gone (auth token may still be absent in local dev, but pass-through warning should disappear).
-- `[AGENT]` `INF-002-04` — `.github/workflows/ci.yml` and `.devin/workflows/execute-todo.md` — Document required repository secrets.
-
-**Validation commands**
-
-```powershell
-pnpm turbo build --filter=@repo/firm-website
+**Validation Commands:**
+```bash
+# Build UI package
+cd packages/ui && pnpm build
+# Analyze bundle size
+cd packages/ui && pnpm build --analyze
 ```
 
+**Testing/Validation:**
+- Compare bundle sizes before and after
+- Test visual regression with screenshots
+- Verify all components still render correctly
+- Test in production build mode
+
+**Repository Management:**
+- No documentation updates needed
+
 ---
 
-## INF-003 — Align Playwright CI browser installation
+#### UI-010-02: Optimize Font Loading
 
-- [x] `INF-003` — `[DONE]`
+**Actor:** [AGENT]
 
-**Implementation notes**
-- Updated CI workflow to install all three browsers: chromium, firefox, webkit
-- Fixed Zod v4 deprecation warnings in env.ts (z.string().email() → z.email())
-- Changed envSchema from strictObject to object to allow extra env vars
-- Added default values for RESEND_API_KEY, CONTACT_EMAIL, FROM_EMAIL to allow build without .env.local
-- E2E tests now run on all three browsers: 70 passed (Chromium, Firefox), 5 pre-existing WebKit failures (noted in CT-004)
+**Target File Path:** `apps/firm-website/src/app/layout.tsx`
 
-**Related file paths**
+**Description:**
+Optimize font loading strategy by using font-display: swap, preloading critical fonts, and implementing a font loading state. Ensure no layout shift from font loading (CLS). Test font loading on slow connections. Use system fonts as fallback. Optimize font file sizes if using custom fonts.
 
-- `.github/workflows/ci.yml`
-- `apps/firm-website/playwright.config.ts`
-
-**Definition of done**
-
-- CI installs the same browsers that `playwright.config.ts` targets, OR `playwright.config.ts` is reduced to Chromium-only in CI.
-- E2E workflow can run without browser-not-found errors.
-- No unused browsers are installed (keeps CI fast).
-
-**Out of scope**
-
-- Adding new E2E tests.
-- Changing the local dev browser matrix.
-
-**Rules to follow**
-
-- Prefer installing only the browsers actually exercised by the chosen projects.
-- Document the decision.
-
-**Advanced coding pattern**
-
-- Use an environment variable to override projects in CI, keeping local config rich and CI config minimal.
-
-**Anti-patterns**
-
-- Installing Firefox and WebKit in CI but never running them.
-- Silently skipping projects in CI without config changes.
-
-**Imports/exports**
-
-- None.
-
-**Depends on / blocks**
-
-- Depends on: `FIX-001`.
-- Blocks: none.
-
-**Subtasks**
-
-- `[HUMAN]` `INF-003-01` — Decision required: Run E2E on all three browsers in CI, or only Chromium?
-- `[AGENT]` `INF-003-02` — `.github/workflows/ci.yml` — Update `npx playwright install --with-deps` to include the chosen browsers (e.g., `chromium firefox webkit` or keep `chromium`).
-- `[AGENT]` `INF-003-03` — `apps/firm-website/playwright.config.ts` — If Chromium-only in CI, add project filtering logic via env var.
-- `[AGENT]` `INF-003-04` — workspace root — Run E2E locally to validate config changes.
-
-**Validation commands**
-
-```powershell
-pnpm turbo test:e2e --filter=@repo/firm-website
+**Validation Commands:**
+```bash
+# Build app
+cd apps/firm-website && pnpm build
+# Run Lighthouse audit
+npx lighthouse http://localhost:3000 --view
 ```
 
+**Testing/Validation:**
+- Test CLS metric with Lighthouse
+- Test font loading on 3G connection
+- Verify no flash of unstyled text
+- Test font rendering across browsers
+
+**Repository Management:**
+- No documentation updates needed
+
 ---
 
-## UI-001 — Fix breadcrumb navigation links
+#### UI-010-03: Implement Lazy Loading for Components
 
-- [x] `UI-001` — `[DONE]`
+**Actor:** [AGENT]
 
-**Implementation notes**
-- Replaced breadcrumb `<a>` tags with Next.js `Link` component in service-detail.tsx, industry-detail.tsx, and demo-detail.tsx
-- Added Link import to service-detail.tsx (industry-detail.tsx and demo-detail.tsx already had it)
-- Used `as any` type assertion with eslint-disable comments to bypass strict Link href typing (breadcrumb hrefs are valid internal routes)
-- Added E2E test in navigation.spec.ts to verify breadcrumb navigation does not cause full page reload
-- All lint checks pass, all 171 tests pass
+**Target File Path:** `apps/firm-website/src/app/(marketing)/page.tsx`
 
-**Related file paths**
+**Description:**
+Implement lazy loading for heavy components below the fold using Next.js dynamic imports. Lazy load components like DemoPreview, HowItWorks, and FAQSnippet to improve initial page load. Add loading states or skeletons for lazy-loaded components. Ensure SEO is not affected by lazy loading.
 
-- `apps/firm-website/src/components/features/demos/demo-detail.tsx`
-- `apps/firm-website/src/components/features/services/service-detail.tsx`
-- `apps/firm-website/src/components/features/industries/industry-detail.tsx`
-- `apps/firm-website/src/e2e/navigation.spec.ts`
-
-**Definition of done**
-
-- All breadcrumb links use Next.js `Link` component instead of plain `<a>` tags.
-- Navigation between detail pages and list pages does not trigger full page reloads.
-- Existing tests pass.
-
-**Out of scope**
-
-- Redesigning breadcrumb styling.
-- Adding breadcrumbs to pages that do not have them.
-
-**Rules to follow**
-
-- Import `Link` from `next/link`.
-- Preserve existing styling classes and accessibility attributes.
-
-**Advanced coding pattern**
-
-- Extract a small `Breadcrumb` component if the same markup repeats across detail views.
-
-**Anti-patterns**
-
-- Using `<a href="...">` for internal navigation.
-- Duplicating breadcrumb markup without a shared component.
-
-**Imports/exports**
-
-- Components import `Link` from `next/link`.
-
-**Depends on / blocks**
-
-- Depends on: `CT-002` (detail components use aligned content types).
-- Blocks: none.
-
-**Subtasks**
-
-- `[AGENT]` `UI-001-01` — `apps/firm-website/src/components/features/services/service-detail.tsx` — Replace breadcrumb `<a>` with `Link`.
-- `[AGENT]` `UI-001-02` — `apps/firm-website/src/components/features/industries/industry-detail.tsx` — Replace breadcrumb `<a>` with `Link`.
-- `[AGENT]` `UI-001-03` — `apps/firm-website/src/components/features/demos/demo-detail.tsx` — Replace breadcrumb `<a>` with `Link`.
-- `[AGENT]` `UI-001-04` — `apps/firm-website/e2e/navigation.spec.ts` — Add test that breadcrumb navigation does not cause a full reload.
-- `[AGENT]` `UI-001-05` — workspace root — Run `pnpm turbo lint --filter=@repo/firm-website` and `pnpm turbo test --filter=@repo/firm-website`.
-
-**Validation commands**
-
-```powershell
-pnpm turbo lint --filter=@repo/firm-website
-pnpm turbo test --filter=@repo/firm-website
+**Validation Commands:**
+```bash
+# Build app
+cd apps/firm-website && pnpm build
+# Run Lighthouse audit
+npx lighthouse http://localhost:3000 --view
 ```
 
+**Testing/Validation:**
+- Test LCP improvement with Lighthouse
+- Test lazy loading behavior in development
+- Verify components load when scrolled into view
+- Test SEO with crawler tools
+
+**Repository Management:**
+- No documentation updates needed
+
 ---
 
-## UI-002 — Fix FAQ accordion React keys
+#### UI-010-04: Add Performance Monitoring
 
-- [x] `UI-002` — `[DONE]`
+**Actor:** [AGENT]
 
-**Implementation notes**
-- Updated FAQAccordionProps to include `slug` field in FAQ items
-- Changed React key from `index` to `faq.slug` for stable identity
-- Updated AccordionItem value prop to use `faq.slug` instead of `item-${index}`
-- Updated faq-hub.tsx to pass slug when building grouped FAQ arrays
-- Created comprehensive unit tests in faq-accordion.test.tsx
-- Tests verify stable keys across renders and reordering
-- All type checks pass, all lint checks pass, all tests pass
+**Target File Path:** `apps/firm-website/src/app/layout.tsx`
 
-**Related file paths**
+**Description:**
+Add performance monitoring using Web Vitals library to track LCP, FID, CLS, and other Core Web Vitals. Log performance metrics to analytics. Set up alerts for performance regressions. Document performance baselines and targets. Ensure monitoring doesn't affect performance itself.
 
-- `apps/firm-website/src/components/features/faq/faq-accordion.tsx`
-- `apps/firm-website/src/components/features/faq/faq-hub.tsx`
-- `apps/firm-website/src/components/features/faq/faq-accordion.test.tsx` (created)
-
-**Definition of done**
-
-- `FAQAccordion` uses a stable key (e.g., `faq.slug` or `faq.title`) instead of array index.
-- A unit test renders FAQs in two different orders and verifies keys are stable.
-- No React key warnings appear in test output.
-
-**Out of scope**
-
-- Changing the accordion open/close behavior.
-- Adding drag-and-drop reordering.
-
-**Rules to follow**
-
-- Key must be unique and stable across renders.
-- Do not use `key={index}`.
-
-**Advanced coding pattern**
-
-- Pass the full FAQ object (with `slug`) into `FAQAccordion` so the component owns its own stable identity.
-
-**Anti-patterns**
-
-- Using array index as React key.
-- Generating keys from rendered HTML content.
-
-**Imports/exports**
-
-- `FAQAccordion` prop type updated to include `slug` if not already present.
-
-**Depends on / blocks**
-
-- Depends on: `CT-001`.
-- Blocks: none.
-
-**Subtasks**
-
-- ✅ `[AGENT]` `UI-002-01` — `apps/firm-website/src/components/features/faq/faq-accordion.tsx` — Update `key` to use stable identifier.
-- ✅ `[AGENT]` `UI-002-02` — `apps/firm-website/src/components/features/faq/faq-accordion.test.ts` — Create or update test to assert stable keys and reorder behavior.
-- ✅ `[AGENT]` `UI-002-03` — workspace root — Run `pnpm turbo test --filter=@repo/firm-website -- src/components/features/faq/faq-accordion.test.ts`.
-
-**Validation commands**
-
-```powershell
-pnpm turbo test --filter=@repo/firm-website -- src/components/features/faq/faq-accordion.test.ts
+**Validation Commands:**
+```bash
+# Build app
+cd apps/firm-website && pnpm build
+# Test in development
+cd apps/firm-website && pnpm dev
 ```
 
+**Testing/Validation:**
+- Test Web Vitals reporting
+- Verify metrics are logged correctly
+- Test monitoring doesn't affect performance
+- Set up performance baselines
+
+**Repository Management:**
+- No documentation updates needed
+
 ---
 
-## UI-003 — Guard error boundary console logging
+#### UI-010-05: Document Performance Optimizations
 
-- [x] `UI-003` — `[DONE]`
+**Actor:** [HUMAN]
 
-**Implementation notes**
-- Created `logError` helper function that wraps console.error calls in `process.env.NODE_ENV === 'development'` guard
-- All console.error calls now only execute in development environment
-- Created comprehensive test suite in error.test.tsx with 5 tests:
-  - Logs error to console in development
-  - Does not log error to console in production
-  - Displays error details in development
-  - Hides error details in production
-  - Calls reset function when Try again button is clicked
-- All 5 tests pass, type check passes
+**Target File Path:** `packages/ui/src/stories/performance.md` (new)
 
-**Related file paths**
+**Description:**
+Create documentation for all performance optimizations implemented, including CSS optimization, font loading, lazy loading, and monitoring. Include performance targets, measurement techniques, and maintenance guidelines. Document how to run performance audits and interpret results.
 
-- `apps/firm-website/src/app/(marketing)/error.tsx`
-- `apps/firm-website/src/app/(marketing)/error.test.tsx` (created)
-
-**Definition of done**
-
-- `console.error` calls in `error.tsx` only run in development.
-- The user-facing error details remain hidden in production (the `<details>` UI is already dev-only).
-- A test asserts no `console.error` is called in production-like environment.
-
-**Out of scope**
-
-- Removing the error boundary.
-- Adding Sentry error capture here (Sentry `onRequestError` already exists).
-
-**Rules to follow**
-
-- Use `process.env.NODE_ENV === 'development'` guard.
-- Keep the reset button and user-facing message unchanged.
-
-**Advanced coding pattern**
-
-- Encapsulate environment-aware logging in a tiny `logError(error)` helper so the boundary component stays declarative.
-
-**Anti-patterns**
-
-- Logging full stack traces in production.
-- Using `console.log` for errors.
-
-**Imports/exports**
-
-- None new.
-
-**Depends on / blocks**
-
-- Depends on: none.
-- Blocks: none.
-
-**Subtasks**
-
-- ✅ `[AGENT]` `UI-003-01` — `apps/firm-website/src/app/(marketing)/error.tsx` — Wrap `console.error(error.stack)` and `console.error(error.message)` in dev-only guards.
-- ✅ `[AGENT]` `UI-003-02` — `apps/firm-website/src/app/(marketing)/error.tsx` — Extract `logError` helper if it improves readability.
-- ✅ `[AGENT]` `UI-003-03` — `apps/firm-website/src/app/(marketing)/error.test.tsx` — Create test asserting `console.error` is not called when `NODE_ENV` is `production`.
-- ✅ `[AGENT]` `UI-003-04` — workspace root — Run `pnpm turbo test --filter=@repo/firm-website -- src/app/(marketing)/error.test.tsx`.
-
-**Validation commands**
-
-```powershell
-pnpm turbo test --filter=@repo/firm-website -- src/app/(marketing)/error.test.tsx
+**Validation Commands:**
+```bash
+# View performance documentation
+cat packages/ui/src/stories/performance.md
 ```
 
+**Testing/Validation:**
+- No automated tests needed (documentation only)
+- Manual review of performance documentation
+
+**Repository Management:**
+- No documentation updates needed
+
 ---
 
-## INF-004 — Remove unused dependencies and empty package
+### UI-011: Accessibility Audit and Fixes
 
-- [x] `INF-004` — `[DONE]`
+**Status:** [PENDING]
 
-**Implementation notes**
-- Verified `@hookform/resolvers` has no imports in the codebase (grep search confirmed)
-- Removed `@hookform/resolvers` from `packages/ui/package.json` dependencies
-- Deleted empty `packages/tailwind-config/` directory
-- Ran `pnpm install` to update lockfile (packages: +3 -5)
-- All type checks pass (5 packages)
-- All tests pass (323 total: 42 in lib, 178 in firm-website, 145 in ui)
-- Pre-existing peer dependency warnings (typescript, valibot) are unrelated to INF-004 changes
+**Related File Paths:**
+- All component files
+- `apps/firm-website/src/app/layout.tsx`
 
-**Related file paths**
+**Definition of Done:**
+- WCAG AA compliance achieved
+- Color contrast ratios verified
+- Keyboard navigation tested
+- Screen reader compatibility verified
+- Focus management implemented
+- ARIA labels added where needed
+- Accessibility documented
+- Automated accessibility tests added
 
-- `packages/ui/package.json`
-- `packages/tailwind-config/` (empty directory)
-- `pnpm-workspace.yaml`
-- `pnpm-lock.yaml`
+**Out of Scope:**
+- WCAG AAA compliance (not required)
+- Specialized assistive technology beyond screen readers
 
-**Definition of done**
+**Rules to Follow:**
+- Target WCAG 2.1 Level AA compliance
+- Test with keyboard only
+- Test with screen readers (NVDA, JAWS, VoiceOver)
+- Ensure color contrast minimum 4.5:1
+- Provide text alternatives for non-text content
 
-- `@hookform/resolvers` is removed from `packages/ui`.
-- Empty `packages/tailwind-config` directory is removed.
-- Lockfile updated and workspace still installs cleanly.
-- `pnpm turbo check-types` and `pnpm turbo test` pass.
+**Advanced Coding Pattern:**
+- ARIA attributes for semantic information
+- Focus trap for modals
+- Skip links for keyboard users
+- Semantic HTML over ARIA
 
-**Out of scope**
+**Anti-Patterns:**
+- Relying on color alone for meaning
+- Missing focus indicators
+- Inaccessible form controls
+- Poor heading structure
 
-- Removing `react-hook-form` (it is actively used).
-- Removing the umbrella `radix-ui` package unless `form.tsx` is migrated to individual Radix packages.
+**Imports/Exports:**
+- No changes to imports/exports
 
-**Rules to follow**
+**Depends On:**
+- UI-001 through UI-009 (All UI tasks)
 
-- Verify no imports exist before removing a dependency.
-- Run install after lockfile changes.
+**Blocks:**
+- None
 
-**Advanced coding pattern**
+---
 
-- Keep package manifests honest. An unused dependency is technical debt and a supply-chain risk.
+#### UI-011-01: Audit Color Contrast
 
-**Anti-patterns**
+**Actor:** [AGENT]
 
-- Removing a dependency without checking imports.
-- Leaving an empty directory in the workspace.
+**Target File Path:** `packages/ui/src/styles.css`
 
-**Imports/exports**
+**Description:**
+Audit all color combinations for WCAG AA compliance (4.5:1 for normal text, 3:1 for large text). Use axe-core or similar tool to automate contrast checking. Fix any contrast issues by adjusting color tokens. Ensure contrast works in both light and dark modes. Document contrast ratios for all color combinations.
 
-- None new.
-
-**Depends on / blocks**
-
-- Depends on: `FIX-001`.
-- Blocks: none.
-
-**Subtasks**
-
-- `[AGENT]` `INF-004-01` — `packages/ui/package.json` — Verify `@hookform/resolvers` has no imports, then remove it.
-- `[AGENT]` `INF-004-02` — `packages/tailwind-config/` — Delete the empty directory.
-- `[AGENT]` `INF-004-03` — workspace root — Run `pnpm install` to update lockfile.
-- `[AGENT]` `INF-004-04` — workspace root — Run `pnpm turbo check-types` and `pnpm turbo test`.
-
-**Validation commands**
-
-```powershell
-pnpm install
-pnpm turbo check-types
-pnpm turbo test
+**Validation Commands:**
+```bash
+# Run accessibility audit
+cd apps/firm-website && pnpm test:e2e --grep "accessibility"
+# Or use axe-core
+npx axe http://localhost:3000
 ```
 
+**Testing/Validation:**
+- Run automated contrast checks
+- Manual verification of color combinations
+- Test in both light and dark modes
+- Document contrast ratios
+
+**Repository Management:**
+- No documentation updates needed
+
 ---
 
-## INF-005 — Document Content Security Policy limitation
+#### UI-011-02: Test Keyboard Navigation
 
-- [x] `INF-005` — `[DONE]`
+**Actor:** [AGENT]
 
-**Implementation notes**
-- Added code comment in `next.config.ts` above CSP block explaining why `'unsafe-inline'` and `'unsafe-eval'` are required
-- Created `.company/security-notes.md` with comprehensive documentation of CSP limitations, security implications, and future hardening plan
-- Documented that `'unsafe-eval'` is required by React in development for enhanced debugging (server-side error stack reconstruction)
-- Documented that `'unsafe-inline'` is required for Sentry scripts, GA4, and inline JSON-LD/MDX rendering
-- Provided future hardening plan using CSP nonces via middleware with example implementation pattern
-- Fixed pre-existing ESLint errors in error.test.tsx (replaced @ts-ignore with @ts-expect-error)
-- Build succeeds with no regressions
+**Target File Path:** All interactive component files
 
-**Related file paths**
+**Description:**
+Test keyboard navigation across all interactive elements. Ensure all buttons, links, and form controls are keyboard accessible. Verify focus order is logical. Add visible focus indicators if missing. Test skip links if implemented. Ensure no keyboard traps exist.
 
-- `apps/firm-website/next.config.ts`
-- `.devin/workflows/execute-todo.md`
-- `.company/security-notes.md` (create if not present)
-
-**Definition of done**
-
-- A documented security note exists explaining why `'unsafe-inline'` and `'unsafe-eval'` are currently required in `script-src`.
-- The note lists the exact inline scripts/dependencies that necessitate the exception (e.g., Sentry, GA4, JSON-LD, MDX output).
-- The note includes a future work item for adopting nonces/hashes when feasible.
-- Build succeeds and site functionality remains intact.
-
-**Out of scope**
-
-- Adding a full security audit.
-- Changing other security headers that are already correct.
-- Implementing CSP nonces or hashes in this task.
-
-**Rules to follow**
-
-- Preserve GA4, Vercel Analytics, and Sentry functionality.
-- Do not break MDX rendering or JSON-LD injection.
-- Do not weaken the CSP further.
-
-**Advanced coding pattern**
-
-- Document the current security posture clearly. Future hardening should generate CSP nonces via a middleware, inject them into headers, and share the nonce with `next/script` and inline scripts.
-
-**Anti-patterns**
-
-- Tightening CSP until user-facing features break.
-- Documenting CSP as "TODO" without explaining the current rationale.
-- Leaving the exception undocumented.
-
-**Imports/exports**
-
-- No code changes required.
-
-**Depends on / blocks**
-
-- Depends on: `FIX-001`.
-- Blocks: none.
-
-**Subtasks**
-
-- `[AGENT]` `INF-005-01` — `apps/firm-website/next.config.ts` — Add a code comment above the CSP block explaining why `'unsafe-inline'` and `'unsafe-eval'` are required.
-- `[AGENT]` `INF-005-02` — `.devin/workflows/execute-todo.md` or `.company/security-notes.md` (create) — Add a security note documenting the CSP exception and future hardening plan.
-- `[AGENT]` `INF-005-03` — workspace root — Run `pnpm turbo build --filter=@repo/firm-website` to confirm no regressions.
-
-**Validation commands**
-
-```powershell
-pnpm turbo build --filter=@repo/firm-website
+**Validation Commands:**
+```bash
+# Run accessibility tests
+cd apps/firm-website && pnpm test:e2e --grep "keyboard"
+# Manual keyboard navigation test
+cd apps/firm-website && pnpm dev
 ```
 
+**Testing/Validation:**
+- Manual keyboard navigation testing
+- Test with Tab, Enter, Escape keys
+- Verify focus indicators are visible
+- Test focus order is logical
+
+**Repository Management:**
+- No documentation updates needed
+
 ---
 
-## INF-006 — Fix missing eslint dependencies in packages
+#### UI-011-03: Verify Screen Reader Compatibility
 
-- [x] `INF-006` — `[DONE]`
+**Actor:** [HUMAN]
 
-**Implementation notes**
-- Added `eslint: "^9.18.0"` to devDependencies in `packages/lib/package.json`
-- Added `eslint: "^9.18.0"` to devDependencies in `packages/ui/package.json`
-- Added `eslint: "^9.18.0"` to devDependencies in `packages/test-utils/package.json`
-- Ran `pnpm install` to update lockfile
-- Lint command now passes across all packages
-- Root cause: pnpm does not hoist binaries from transitive dependencies, so packages that run eslint must have it as a direct devDependency
+**Target File Path:** All component files
 
-**Related file paths**
+**Description:**
+Test the application with screen readers (NVDA for Windows, VoiceOver for Mac, TalkBack for Android). Verify semantic HTML is properly announced. Add ARIA labels where semantic HTML is insufficient. Test form controls, navigation, and interactive elements. Ensure dynamic content updates are announced.
 
-- `packages/lib/package.json`
-- `packages/ui/package.json`
-- `packages/test-utils/package.json`
-- `pnpm-lock.yaml`
-
-**Definition of done**
-
-- `eslint` is present in devDependencies of all packages that have a lint script.
-- `pnpm run lint` passes across all workspace packages.
-- Lockfile is updated with `pnpm install`.
-
-**Out of scope**
-
-- Changing the lint configuration or rules.
-- Removing the lint script from any package.
-
-**Rules to follow**
-
-- Each package with a lint script must have eslint as a direct devDependency.
-- Use the same eslint version across packages (currently ^9.18.0).
-
-**Advanced coding pattern**
-
-- In pnpm workspaces, binaries from transitive dependencies are not hoisted. Tools must be direct dependencies of the packages that use them.
-
-**Anti-patterns**
-
-- Relying on transitive dependencies for CLI tools in pnpm.
-- Inconsistent eslint versions across packages.
-
-**Imports/exports**
-
-- No code imports/exports affected.
-
-**Depends on / blocks**
-
-- Depends on: none.
-- Blocks: none.
-
-**Subtasks**
-
-- `[AGENT]` `INF-006-01` — `packages/lib/package.json` — Add `eslint: "^9.18.0"` to devDependencies.
-- `[AGENT]` `INF-006-02` — `packages/ui/package.json` — Add `eslint: "^9.18.0"` to devDependencies.
-- `[AGENT]` `INF-006-03` — `packages/test-utils/package.json` — Add `eslint: "^9.18.0"` to devDependencies.
-- `[AGENT]` `INF-006-04` — workspace root — Run `pnpm install` to update lockfile.
-- `[AGENT]` `INF-006-05` — workspace root — Run `pnpm run lint` to verify fix.
-
-**Validation commands**
-
-```powershell
-pnpm install
-pnpm run lint
+**Validation Commands:**
+```bash
+# Manual screen reader testing
+cd apps/firm-website && pnpm dev
 ```
 
----
+**Testing/Validation:**
+- Manual testing with screen readers
+- Verify ARIA labels are appropriate
+- Test dynamic content announcements
+- Document any issues found
 
-## Task Priority Summary
-
-| ID | Priority | Status |
-|---|---|---|
-| `INF-006` | Critical | `[DONE]` |
-| `INF-007` | Critical | `[DONE]` |
-| `FIX-001` | Critical | `[DONE]` |
-| `INF-001` | Critical | `[DONE]` |
-| `FIX-002` | Critical | `[DONE]` |
-| `CT-001` | Critical | `[DONE]` |
-| `DOC-001` | Critical | `[DONE]` |
-| `ENV-001` | High | `[DONE]` |
-| `FIX-003` | High | `[BLOCKED]` |
-| `INF-002` | High | `[DONE]` |
-| `INF-003` | High | `[DONE]` |
-| `CT-002` | High | `[DONE]` |
-| `TS-001` | High | `[DONE]` |
-| `SEN-001` | High | `[DONE]` |
-| `CT-003` | Medium | `[DONE]` |
-| `CT-004` | Medium | `[DONE]` |
-| `UI-001` | Medium | `[DONE]` |
-| `UI-002` | Medium | `[DONE]` |
-| `UI-003` | Medium | `[DONE]` |
-| `INF-004` | Medium | `[DONE]` |
-| `INF-005` | Medium | `[DONE]` |
+**Repository Management:**
+- No documentation updates needed
 
 ---
 
-## Legend
+#### UI-011-04: Add Automated Accessibility Tests
 
-| Field | Meaning |
-|---|---|
-| `[AGENT]` | Subtask can be executed autonomously by the coding agent. |
-| `[HUMAN]` | Subtask requires a human decision, value, or approval. |
-| `Depends on` | Tasks that must be completed before this one. |
-| `Blocks` | Tasks that cannot start until this one is done. |
-| `Definition of done` | Objective criteria that must be true to mark the task complete. |
-| `Out of scope` | Boundaries that prevent scope creep. |
-| `Anti-patterns` | Approaches to avoid. |
+**Actor:** [AGENT]
+
+**Target File Path:** `apps/firm-website/src/test/accessibility.test.tsx` (new)
+
+**Description:**
+Add automated accessibility tests using axe-core or @axe-core/react. Create tests for critical user flows including navigation, form submission, and content consumption. Integrate tests into the test suite. Set up accessibility testing in CI/CD pipeline. Document test coverage and maintenance.
+
+**Validation Commands:**
+```bash
+# Run accessibility tests
+cd apps/firm-website && pnpm test src/test/accessibility.test.tsx
+# Run full test suite
+cd apps/firm-website && pnpm test
+```
+
+**Testing/Validation:**
+- Verify automated tests catch known issues
+- Test integration with CI/CD
+- Document test coverage
+- Maintain test suite
+
+**Repository Management:**
+- No documentation updates needed
 
 ---
 
-## How to use this document
+#### UI-011-05: Document Accessibility Features
 
-1. Start at the top of the Critical Path and work downward.
-2. Before any `[HUMAN]` subtask, pause and ask the user for input. Current HUMAN subtasks: `FIX-003-01` (real business contact details) and `INF-003-01` (Playwright CI browser matrix).
-3. After completing a parent task, update its status marker to `[DONE]` and run the listed validation commands.
-4. Commit after each parent task when it reaches a green state.
-5. Do not skip validation commands; they are chosen to be fast and specific.
+**Actor:** [HUMAN]
+
+**Target File Path:** `packages/ui/src/stories/accessibility.md` (new)
+
+**Description:**
+Create comprehensive accessibility documentation covering WCAG compliance, keyboard navigation, screen reader support, and accessibility features implemented. Include testing guidelines, maintenance procedures, and resources for developers. Document known limitations and future improvements.
+
+**Validation Commands:**
+```bash
+# View accessibility documentation
+cat packages/ui/src/stories/accessibility.md
+```
+
+**Testing/Validation:**
+- No automated tests needed (documentation only)
+- Manual review of accessibility documentation
+
+**Repository Management:**
+- No documentation updates needed
+
+---

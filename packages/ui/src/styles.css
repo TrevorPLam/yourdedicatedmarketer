@@ -3,16 +3,21 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  /* Brand Colors - Electric Blue Palette */
-  --color-primary: oklch(0.55 0.22 264);
+  /* Brand Colors - Vibrant Blue Palette */
+  --color-primary: oklch(0.65 0.24 264);
   --color-primary-foreground: oklch(0.98 0.01 264);
-  --color-primary-light: oklch(0.75 0.18 264);
-  --color-primary-dark: oklch(0.45 0.20 264);
+  --color-primary-light: oklch(0.75 0.22 264);
+  --color-primary-dark: oklch(0.55 0.23 264);
 
-  /* Accent Colors - Purple/Cyan for Eclectic Feel */
-  --color-accent: oklch(0.55 0.25 290);
-  --color-accent-foreground: oklch(0.98 0.01 290);
-  --color-accent-secondary: oklch(0.65 0.20 220);
+  /* Accent Colors - Vibrant Pink/Purple and Cyan */
+  --color-accent: oklch(0.68 0.25 320);
+  --color-accent-foreground: oklch(0.98 0.01 320);
+  --color-accent-secondary: oklch(0.70 0.22 200);
+
+  /* Gradient Colors */
+  --gradient-primary: linear-gradient(135deg, oklch(0.65 0.24 264), oklch(0.68 0.25 320));
+  --gradient-accent: linear-gradient(135deg, oklch(0.68 0.25 320), oklch(0.70 0.22 200));
+  --gradient-secondary: linear-gradient(135deg, oklch(0.70 0.22 200), oklch(0.65 0.24 264));
 
   /* Background Colors - Deep Black & Light */
   --color-background: oklch(0.98 0 0);
@@ -96,18 +101,18 @@
 
 /* Dark Mode Variables */
 .dark {
-  --color-background: oklch(0.05 0 0);
-  --color-foreground: oklch(0.95 0 0);
-  --color-card: oklch(0.08 0 0);
-  --color-card-foreground: oklch(0.95 0 0);
-  --color-popover: oklch(0.08 0 0);
-  --color-popover-foreground: oklch(0.95 0 0);
-  --color-secondary: oklch(0.15 0 0);
-  --color-secondary-foreground: oklch(0.95 0 0);
-  --color-muted: oklch(0.15 0 0);
-  --color-muted-foreground: oklch(0.65 0 0);
-  --color-border: oklch(0.20 0 0);
-  --color-input: oklch(0.20 0 0);
+  --color-background: oklch(0.08 0.01 264);
+  --color-foreground: oklch(0.95 0.01 264);
+  --color-card: oklch(0.12 0.02 264);
+  --color-card-foreground: oklch(0.95 0.01 264);
+  --color-popover: oklch(0.12 0.02 264);
+  --color-popover-foreground: oklch(0.95 0.01 264);
+  --color-secondary: oklch(0.18 0.02 264);
+  --color-secondary-foreground: oklch(0.95 0.01 264);
+  --color-muted: oklch(0.18 0.02 264);
+  --color-muted-foreground: oklch(0.70 0.01 264);
+  --color-border: oklch(0.25 0.02 264);
+  --color-input: oklch(0.25 0.02 264);
 }
 
 * {
