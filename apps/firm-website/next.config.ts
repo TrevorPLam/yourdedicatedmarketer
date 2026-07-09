@@ -68,7 +68,11 @@ const withMDX = createMDX({
 
 const sentryOptions = {
   hideSourceMaps: true,
-  autoInstrumentServerFunctions: true,
+  webpack: {
+    autoInstrumentServerFunctions: true,
+  },
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  silent: !process.env.CI,
 };
 
 export default withSentryConfig(withMDX(nextConfig), sentryOptions);

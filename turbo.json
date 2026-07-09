@@ -9,6 +9,10 @@
     "packages/eslint-config/**/*.cjs",
     "packages/eslint-config/**/*.mjs"
   ],
+  "globalPassThroughEnv": [
+    "SENTRY_AUTH_TOKEN",
+    "NEXT_PUBLIC_SENTRY_DSN"
+  ],
   "cacheMaxAge": "7d",
   "tasks": {
     "dev": {
@@ -17,7 +21,8 @@
     },
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"],
+      "passThroughEnv": ["SENTRY_AUTH_TOKEN", "NEXT_PUBLIC_SENTRY_DSN"]
     },
     "lint": {
       "dependsOn": ["^lint"],

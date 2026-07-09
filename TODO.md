@@ -158,14 +158,27 @@ pnpm turbo check-types
 
 ## SEN-001 — Migrate Sentry client config to `instrumentation-client.ts`
 
-- [ ] `SEN-001` — `[PENDING]`
+- [x] `SEN-001` — `[DONE]`
+
+**Implementation notes**
+- Created `apps/firm-website/instrumentation-client.ts` with client-side Sentry configuration
+- Added `export const onRouterTransitionStart = Sentry.captureRouterTransitionStart` to instrument router navigations
+- Deleted `apps/firm-website/sentry.client.config.ts` (deprecated file)
+- Added `SENTRY_AUTH_TOKEN` and `NEXT_PUBLIC_SENTRY_DSN` to `turbo.json` `globalPassThroughEnv`
+- Added `SENTRY_AUTH_TOKEN` and `NEXT_PUBLIC_SENTRY_DSN` to `turbo.json` build task `passThroughEnv`
+- Updated `next.config.ts` to use `webpack.autoInstrumentServerFunctions` instead of deprecated `autoInstrumentServerFunctions`
+- Added `authToken: process.env.SENTRY_AUTH_TOKEN` and `silent: !process.env.CI` to `sentryOptions` in `next.config.ts`
+- Server Sentry config remains in `instrumentation.ts` under `register()`
+- Build succeeds without Turborepo pass-through warnings (silent mode suppresses auth token warnings in non-CI)
+- Type checking passes
 
 **Related file paths**
 
-- `apps/firm-website/sentry.client.config.ts`
+- `apps/firm-website/sentry.client.config.ts` (deleted)
+- `apps/firm-website/instrumentation-client.ts` (created)
 - `apps/firm-website/instrumentation.ts`
-- `apps/firm-website/instrumentation-client.ts` (create)
 - `turbo.json`
+- `apps/firm-website/next.config.ts`
 
 **Definition of done**
 
