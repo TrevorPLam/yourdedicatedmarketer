@@ -8,7 +8,7 @@ export function Hero() {
     <section className="bg-gradient-to-b from-primary/10 to-background py-20 md:py-32">
       <Container>
         <div className="flex flex-col items-center text-center space-y-8">
-          <h1 className="text-4xl md:text-6xl font-bold text-foreground tracking-tight">
+          <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-bold text-foreground tracking-tight">
             Professional Marketing Services
             <br />
             <span className="text-primary">For Local Businesses</span>

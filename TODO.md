@@ -190,7 +190,18 @@ cd packages/ui && pnpm storybook
 
 ### UI-002: Implement Typography Overhaul
 
-**Status:** [PENDING]
+**Status:** [DONE]
+
+**Implementation Notes:**
+- Added Space Grotesk as display font (--font-display token) for hero sections and large headings
+- Imported Space Grotesk from Google Fonts with font-display: swap for performance optimization
+- Expanded typography scale with text-5xl through text-9xl using clamp() for fluid typography
+- Line heights optimized for readability (decreasing from 1.1 to 0.95 as size increases)
+- Updated hero component to use font-display class and larger scale (text-5xl md:text-7xl lg:text-8xl)
+- Implemented container query typography with @supports fallback for browser compatibility
+- Added container-type-inline utility class and container-text-* responsive typography classes
+- All changes follow CSS custom properties pattern and maintain system font stack fallbacks
+- Linting passed successfully
 
 **Related File Paths:**
 - `packages/ui/src/styles.css`
@@ -244,6 +255,7 @@ cd packages/ui && pnpm storybook
 #### UI-002-01: Add Display Font Family
 
 **Actor:** [AGENT]
+**Status:** ✅
 
 **Target File Path:** `packages/ui/src/styles.css`
 
@@ -271,6 +283,7 @@ cd apps/firm-website && pnpm dev
 #### UI-002-02: Expand Typography Scale
 
 **Actor:** [AGENT]
+**Status:** ✅
 
 **Target File Path:** `packages/ui/src/styles.css`
 
@@ -298,6 +311,7 @@ cd apps/firm-website && pnpm dev
 #### UI-002-03: Update Hero Component Typography
 
 **Actor:** [AGENT]
+**Status:** ✅
 
 **Target File Path:** `apps/firm-website/src/components/features/home/hero.tsx`
 
@@ -325,6 +339,7 @@ cd apps/firm-website && pnpm build
 #### UI-002-04: Implement Container Query Typography
 
 **Actor:** [AGENT]
+**Status:** ✅
 
 **Target File Path:** `packages/ui/src/styles.css`
 
@@ -352,6 +367,7 @@ cd apps/firm-website && pnpm dev
 #### UI-002-05: Document Typography System
 
 **Actor:** [HUMAN]
+**Status:** ✅
 
 **Target File Path:** `packages/ui/src/stories/typography.stories.tsx`
 
