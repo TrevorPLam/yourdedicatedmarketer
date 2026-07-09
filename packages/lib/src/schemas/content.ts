@@ -8,7 +8,6 @@ export const ServiceSchema = z.strictObject({
   title: z.string(),
   slug: z.string(),
   description: z.string(),
-  body: z.string(),
   featured: z.boolean().optional(),
   order: z.number().optional(),
 });
@@ -17,7 +16,7 @@ export const IndustrySchema = z.strictObject({
   title: z.string(),
   slug: z.string(),
   description: z.string(),
-  body: z.string(),
+  icon: z.string().optional(),
   featured: z.boolean().optional(),
   order: z.number().optional(),
 });
@@ -26,7 +25,7 @@ export const DemoSchema = z.strictObject({
   title: z.string(),
   slug: z.string(),
   description: z.string(),
-  body: z.string(),
+  industry: z.string().optional(),
   liveUrl: z.string().optional(),
   repoUrl: z.string().optional(),
   thumbnail: z.string().optional(),
@@ -46,7 +45,6 @@ export const PageSchema = z.strictObject({
   title: z.string(),
   slug: z.string(),
   description: z.string().optional(),
-  body: z.string(),
   metaTitle: z.string().optional(),
   metaDescription: z.string().optional(),
 });

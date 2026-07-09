@@ -5,6 +5,7 @@
 
 import type { MetadataRoute } from 'next';
 import { getAllServices, getAllIndustries, getAllDemos, getAllPages } from '@/lib/content';
+import type { Service, Industry, Demo, Page } from '@repo/lib';
 
 const SITE_URL = 'https://yourdedicatedmarketer.com';
 
@@ -62,7 +63,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Generate service URLs
   const serviceUrls = services.map((service) => ({
-    url: `${SITE_URL}/services/${(service.data as { slug: string }).slug}`,
+    url: `${SITE_URL}/services/${(service.data as Service).slug}`,
     lastModified: new Date(),
     changeFrequency: 'weekly' as const,
     priority: 0.8,
@@ -70,7 +71,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Generate industry URLs
   const industryUrls = industries.map((industry) => ({
-    url: `${SITE_URL}/industries/${(industry.data as { slug: string }).slug}`,
+    url: `${SITE_URL}/industries/${(industry.data as Industry).slug}`,
     lastModified: new Date(),
     changeFrequency: 'weekly' as const,
     priority: 0.8,
@@ -78,7 +79,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Generate demo URLs
   const demoUrls = demos.map((demo) => ({
-    url: `${SITE_URL}/demos/${(demo.data as { slug: string }).slug}`,
+    url: `${SITE_URL}/demos/${(demo.data as Demo).slug}`,
     lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.7,
@@ -86,7 +87,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Generate static page URLs (about, pricing, etc.)
   const pageUrls = pages.map((page) => ({
-    url: `${SITE_URL}/${(page.data as { slug: string }).slug}`,
+    url: `${SITE_URL}/${(page.data as Page).slug}`,
     lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.8,

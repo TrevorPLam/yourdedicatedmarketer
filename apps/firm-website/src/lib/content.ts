@@ -3,12 +3,30 @@ import path from 'path';
 import matter from 'gray-matter';
 import { remark } from 'remark';
 import html from 'remark-html';
-import { FAQSchema } from '@repo/lib';
+import { z } from 'zod';
+import { FAQSchema, ServiceSchema, IndustrySchema, DemoSchema, PageSchema } from '@repo/lib';
 
 const CONTENT_DIR = path.join(process.cwd(), 'src', 'content');
 
 // In-memory cache to avoid repeated file reads
 const contentCache = new Map<string, { data: unknown; content: string }>();
+
+/**
+ * Generic validation helper for content frontmatter.
+ * Validates data against a Zod schema and logs errors if validation fails.
+ */
+function validateContent<T>(
+  schema: z.ZodSchema<T>,
+  data: unknown,
+  slug: string
+): T | null {
+  const result = schema.safeParse(data);
+  if (!result.success) {
+    console.error(`Invalid frontmatter for ${slug}:`, result.error);
+    return null;
+  }
+  return result.data;
+}
 
 export async function getAllSlugs(dir: string): Promise<string[]> {
   try {
@@ -88,7 +106,11 @@ export async function getAllContent<T>(dir: string): Promise<{
 
 // Type-specific helper functions
 export async function getAllServices() {
-  return getAllContent('services');
+  const services = await getAllContent('services');
+  return services.filter((service) => {
+    const validated = validateContent(ServiceSchema, service.data, (service.data as { slug?: string }).slug || 'unknown');
+    return validated !== null;
+  });
 }
 
 export async function getService(slug: string) {
@@ -96,7 +118,11 @@ export async function getService(slug: string) {
 }
 
 export async function getAllIndustries() {
-  return getAllContent('industries');
+  const industries = await getAllContent('industries');
+  return industries.filter((industry) => {
+    const validated = validateContent(IndustrySchema, industry.data, (industry.data as { slug?: string }).slug || 'unknown');
+    return validated !== null;
+  });
 }
 
 export async function getIndustry(slug: string) {
@@ -104,7 +130,11 @@ export async function getIndustry(slug: string) {
 }
 
 export async function getAllDemos() {
-  return getAllContent('demos');
+  const demos = await getAllContent('demos');
+  return demos.filter((demo) => {
+    const validated = validateContent(DemoSchema, demo.data, (demo.data as { slug?: string }).slug || 'unknown');
+    return validated !== null;
+  });
 }
 
 export async function getDemo(slug: string) {
@@ -135,7 +165,11 @@ export async function getFAQ(slug: string) {
 }
 
 export async function getAllPages() {
-  return getAllContent('pages');
+  const pages = await getAllContent('pages');
+  return pages.filter((page) => {
+    const validated = validateContent(PageSchema, page.data, (page.data as { slug?: string }).slug || 'unknown');
+    return validated !== null;
+  });
 }
 
 export async function getPage(slug: string) {

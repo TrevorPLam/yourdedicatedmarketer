@@ -4,44 +4,7 @@
  */
 
 import { getAllServices, getAllIndustries, getAllDemos, getAllFAQs } from './content';
-
-// Content type interfaces matching the frontmatter structure
-interface Service {
-  title: string;
-  slug: string;
-  description: string;
-  featured?: boolean;
-  order?: number;
-}
-
-interface Industry {
-  title: string;
-  slug: string;
-  description: string;
-  featured?: boolean;
-  order?: number;
-  icon?: string;
-}
-
-interface Demo {
-  title: string;
-  slug: string;
-  description: string;
-  challenge: string;
-  approach: string;
-  outcome: string;
-  industry: string;
-}
-
-interface FAQ {
-  title: string;
-  slug: string;
-  description: string;
-  question: string;
-  answer: string;
-  category: 'general' | 'pricing' | 'process';
-  order?: number;
-}
+import type { Service, Industry, Demo, FAQ } from '@repo/lib';
 
 /**
  * Navigation item interface.
@@ -237,7 +200,7 @@ export async function getRelatedContent(
       
       sameCategoryFAQs.forEach((faq) => {
         related.push({
-          title: (faq.data as FAQ).question,
+          title: (faq.data as FAQ).title,
           slug: (faq.data as FAQ).slug,
           type: 'faq',
         });

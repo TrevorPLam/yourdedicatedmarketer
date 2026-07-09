@@ -18,65 +18,25 @@ export type Slug = string & { __brand: 'slug' };
 export type FAQCategory = 'general' | 'pricing' | 'process';
 
 /**
- * Service content interface.
+ * Service content type.
  * Represents a service offering provided by the firm.
+ * Derived from ServiceSchema to ensure single source of truth.
  */
-export interface Service {
-  /** Display title of the service */
-  title: string;
-  /** URL-friendly identifier for the service */
-  slug: Slug;
-  /** Short description of the service */
-  description: string;
-  /** Full body content of the service page */
-  body: string;
-  /** Whether to feature this service prominently */
-  featured?: boolean;
-  /** Display order for sorting */
-  order?: number;
-}
+export type Service = z.infer<typeof ServiceSchema>;
 
 /**
- * Industry content interface.
+ * Industry content type.
  * Represents an industry vertical the firm serves.
+ * Derived from IndustrySchema to ensure single source of truth.
  */
-export interface Industry {
-  /** Display title of the industry */
-  title: string;
-  /** URL-friendly identifier for the industry */
-  slug: Slug;
-  /** Short description of the industry focus */
-  description: string;
-  /** Full body content of the industry page */
-  body: string;
-  /** Whether to feature this industry prominently */
-  featured?: boolean;
-  /** Display order for sorting */
-  order?: number;
-  /** Optional icon for the industry (emoji or icon identifier) */
-  icon?: string;
-}
+export type Industry = z.infer<typeof IndustrySchema>;
 
 /**
- * Demo/Proof-of-Concept content interface.
+ * Demo/Proof-of-Concept content type.
  * Represents a portfolio item or demo project.
+ * Derived from DemoSchema to ensure single source of truth.
  */
-export interface Demo {
-  /** Display title of the demo */
-  title: string;
-  /** URL-friendly identifier for the demo */
-  slug: Slug;
-  /** Short description of the demo */
-  description: string;
-  /** The challenge this demo addresses */
-  challenge: string;
-  /** The approach taken to solve the challenge */
-  approach: string;
-  /** The outcome or results achieved */
-  outcome: string;
-  /** The industry this demo relates to */
-  industry: Slug;
-}
+export type Demo = z.infer<typeof DemoSchema>;
 
 /**
  * FAQ content type.
@@ -86,16 +46,8 @@ export interface Demo {
 export type FAQ = z.infer<typeof FAQSchema>;
 
 /**
- * Page content interface.
+ * Page content type.
  * Represents a static page on the website.
+ * Derived from PageSchema to ensure single source of truth.
  */
-export interface Page {
-  /** Display title of the page */
-  title: string;
-  /** URL-friendly identifier for the page */
-  slug: Slug;
-  /** Short description of the page */
-  description: string;
-  /** Full body content of the page */
-  body: string;
-}
+export type Page = z.infer<typeof PageSchema>;

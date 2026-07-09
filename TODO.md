@@ -504,7 +504,21 @@ pnpm turbo test --filter=@repo/firm-website
 
 ## CT-002 — Align Service, Industry, Demo, and Page schemas with MDX frontmatter
 
-- [ ] `CT-002` — `[PENDING]`
+- [x] `CT-002` — `[DONE]`
+
+**Implementation notes**
+- Removed `body` field from ServiceSchema, IndustrySchema, DemoSchema, and PageSchema (body is MDX content, not frontmatter)
+- Added `icon` field to IndustrySchema to match actual frontmatter
+- Added `industry` field to DemoSchema to match actual frontmatter
+- Replaced hand-written Service, Industry, Demo, and Page interfaces with `z.infer` exports from schemas
+- Added `validateContent` helper function in content.ts for centralized frontmatter validation
+- Updated getAllServices, getAllIndustries, getAllDemos, getAllPages to use validateContent helper
+- Replaced local interfaces in navigation.ts with imports from @repo/lib
+- Replaced `as { slug: string }` casts in sitemap.ts with proper type imports from @repo/lib
+- Deleted apps/firm-website/src/types/content.ts (it was just a re-export file, no consumers found)
+- Added comprehensive schema tests for Service, Industry, Demo, and Page in content-schemas.test.ts
+- Updated existing content.test.ts to remove `body` field from test data
+- All type checks pass, all tests pass (42 tests in lib, 165 tests in firm-website), build succeeds
 
 **Related file paths**
 

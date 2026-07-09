@@ -13,7 +13,6 @@ describe('ServiceSchema', () => {
       title: 'Web Development',
       slug: 'web-development',
       description: 'Custom web development services',
-      body: 'We build custom websites...',
     };
     const result = ServiceSchema.parse(validService);
     expect(result).toEqual(validService);
@@ -24,7 +23,6 @@ describe('ServiceSchema', () => {
       title: 'Web Development',
       slug: 'web-development',
       description: 'Custom web development services',
-      body: 'We build custom websites...',
       featured: true,
       order: 1,
     };
@@ -45,7 +43,6 @@ describe('ServiceSchema', () => {
       title: 'Web Development',
       slug: 'web-development',
       description: 'Custom web development services',
-      body: 'We build custom websites...',
       extraField: 'should not be here',
     };
     expect(() => ServiceSchema.parse(serviceWithExtra)).toThrow();
@@ -58,7 +55,6 @@ describe('IndustrySchema', () => {
       title: 'Healthcare',
       slug: 'healthcare',
       description: 'Healthcare industry solutions',
-      body: 'We serve healthcare providers...',
     };
     const result = IndustrySchema.parse(validIndustry);
     expect(result).toEqual(validIndustry);
@@ -69,7 +65,6 @@ describe('IndustrySchema', () => {
       title: 'Healthcare',
       slug: 'healthcare',
       description: 'Healthcare industry solutions',
-      body: 'We serve healthcare providers...',
       featured: true,
       order: 2,
     };
@@ -89,7 +84,6 @@ describe('IndustrySchema', () => {
       title: 'Healthcare',
       slug: 'healthcare',
       description: 'Healthcare industry solutions',
-      body: 'We serve healthcare providers...',
       extraField: 'should not be here',
     };
     expect(() => IndustrySchema.parse(industryWithExtra)).toThrow();
@@ -102,7 +96,6 @@ describe('DemoSchema', () => {
       title: 'E-commerce Platform',
       slug: 'e-commerce-platform',
       description: 'Full-featured e-commerce solution',
-      body: 'A complete e-commerce platform...',
     };
     const result = DemoSchema.parse(validDemo);
     expect(result).toEqual(validDemo);
@@ -113,7 +106,6 @@ describe('DemoSchema', () => {
       title: 'E-commerce Platform',
       slug: 'e-commerce-platform',
       description: 'Full-featured e-commerce solution',
-      body: 'A complete e-commerce platform...',
       liveUrl: 'https://example.com',
       repoUrl: 'https://github.com/example/repo',
       thumbnail: '/images/demo-thumb.jpg',
@@ -136,7 +128,6 @@ describe('DemoSchema', () => {
       title: 'E-commerce Platform',
       slug: 'e-commerce-platform',
       description: 'Full-featured e-commerce solution',
-      body: 'A complete e-commerce platform...',
       extraField: 'should not be here',
     };
     expect(() => DemoSchema.parse(demoWithExtra)).toThrow();
@@ -191,7 +182,6 @@ describe('PageSchema', () => {
     const validPage = {
       title: 'About Us',
       slug: 'about-us',
-      body: 'Learn more about our company...',
     };
     const result = PageSchema.parse(validPage);
     expect(result).toEqual(validPage);
@@ -202,7 +192,6 @@ describe('PageSchema', () => {
       title: 'About Us',
       slug: 'about-us',
       description: 'Company information',
-      body: 'Learn more about our company...',
       metaTitle: 'About Our Company',
       metaDescription: 'Learn about our mission and values',
     };
@@ -221,7 +210,6 @@ describe('PageSchema', () => {
     const pageWithExtra = {
       title: 'About Us',
       slug: 'about-us',
-      body: 'Learn more about our company...',
       extraField: 'should not be here',
     };
     expect(() => PageSchema.parse(pageWithExtra)).toThrow();
