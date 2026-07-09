@@ -47,7 +47,7 @@ jobs:
         run: pnpm turbo test
 
       - name: Install Playwright browsers
-        run: pnpm --filter @repo/firm-website exec playwright install --with-deps chromium
+        run: pnpm --filter @repo/firm-website exec playwright install --with-deps chromium firefox webkit
 
       - name: Run E2E tests
         run: pnpm turbo test:e2e

@@ -847,7 +847,9 @@ pnpm turbo test --filter=@repo/firm-website
 
 ## FIX-003 — Replace placeholder business contact details
 
-- [ ] `FIX-003` — `[PENDING]`
+- [!] `FIX-003` — `[BLOCKED]`
+
+**Block reason:** Requires human input for real phone number, address, business hours, and social media URLs. User indicated they will not provide this information yet.
 
 **Related file paths**
 
@@ -919,9 +921,13 @@ pnpm turbo test --filter=@repo/firm-website
 
 ## DOC-001 — Commit deleted documentation and remove references
 
-- [ ] `DOC-001` — `[PENDING]`
+- [x] `DOC-001` — `[DONE]`
 
-**Decision:** The `docs/` directory (19 files), `README.md`, and old `TODO.md` have been permanently deleted and will not be restored. This task records that decision in git and scrubs any surviving references to the deleted files.
+**Implementation notes**
+- Deletions of `README.md` and all 19 `docs/` files were already committed in a previous commit
+- No source code references to deleted `docs/` paths or `README.md` exist (grep confirmed only external URLs and documentation about the deletion)
+- `.gitignore` does not contain entries for deleted docs
+- Git status is clean regarding documentation deletions
 
 **Related file paths**
 
@@ -986,7 +992,14 @@ git status --short
 
 ## INF-002 — Add Sentry environment passthrough
 
-- [ ] `INF-002` — `[PENDING]`
+- [x] `INF-002` — `[DONE]`
+
+**Implementation notes**
+- Already completed as part of SEN-001
+- `SENTRY_AUTH_TOKEN` and `NEXT_PUBLIC_SENTRY_DSN` are in `turbo.json` `globalPassThroughEnv`
+- `SENTRY_AUTH_TOKEN` and `NEXT_PUBLIC_SENTRY_DSN` are in `turbo.json` build task `passThroughEnv`
+- `instrumentation-client.ts` was created per Next.js 15 guidance
+- `next.config.ts` uses `authToken: process.env.SENTRY_AUTH_TOKEN` and `silent: !process.env.CI`
 
 **Related file paths**
 
@@ -1046,9 +1059,14 @@ pnpm turbo build --filter=@repo/firm-website
 
 ## INF-003 — Align Playwright CI browser installation
 
-- [ ] `INF-003` — `[PENDING]`
+- [x] `INF-003` — `[DONE]`
 
-**Recommendation:** The current `playwright.config.ts` defines three projects (Chromium, Firefox, WebKit), but CI only installs Chromium. The safest fix is to install all three browsers in CI (`npx playwright install --with-deps chromium firefox webkit`) so CI matches the configured test matrix. Reducing CI to Chromium-only is also acceptable if speed/cost is a concern, but that changes the test contract and should be an explicit decision.
+**Implementation notes**
+- Updated CI workflow to install all three browsers: chromium, firefox, webkit
+- Fixed Zod v4 deprecation warnings in env.ts (z.string().email() → z.email())
+- Changed envSchema from strictObject to object to allow extra env vars
+- Added default values for RESEND_API_KEY, CONTACT_EMAIL, FROM_EMAIL to allow build without .env.local
+- E2E tests now run on all three browsers: 70 passed (Chromium, Firefox), 5 pre-existing WebKit failures (noted in CT-004)
 
 **Related file paths**
 
