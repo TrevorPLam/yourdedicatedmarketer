@@ -40,7 +40,7 @@ export function Pillars() {
             <Link key={pillar.title} href={pillar.link as Route} className="group">
               <GlassCard className="h-full transition-all hover:shadow-lg hover:border-primary/50">
                 <GlassCardHeader>
-                  <div className="mb-4">{pillar.icon}</div>
+                  <div className="mb-4 transition-transform duration-200 ease-out group-hover:scale-110 group-hover:rotate-3 motion-reduce:group-hover:scale-100 motion-reduce:group-hover:rotate-0">{pillar.icon}</div>
                   <GlassCardTitle className="group-hover:text-primary transition-colors">
                     {pillar.title}
                   </GlassCardTitle>

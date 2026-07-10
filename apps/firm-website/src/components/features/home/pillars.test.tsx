@@ -51,4 +51,17 @@ describe('Pillars', () => {
       expect(link).toHaveAttribute('href', '/services');
     });
   });
+
+  it('applies icon hover animation classes', () => {
+    const { container } = render(<Pillars />);
+    const iconWrappers = container.querySelectorAll('[class*="group-hover:scale-110"]');
+    expect(iconWrappers).toHaveLength(3);
+    iconWrappers.forEach((wrapper) => {
+      const className = wrapper.className;
+      expect(className).toContain('group-hover:scale-110');
+      expect(className).toContain('group-hover:rotate-3');
+      expect(className).toContain('motion-reduce:group-hover:scale-100');
+      expect(className).toContain('motion-reduce:group-hover:rotate-0');
+    });
+  });
 });

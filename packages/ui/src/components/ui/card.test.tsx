@@ -131,4 +131,19 @@ describe('Card', () => {
     expect(card).toHaveClass('hover:-translate-y-1', 'hover:shadow-lg');
     expect(card).toHaveStyle({ boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.06)' });
   });
+
+  it('applies hover shadow effect', () => {
+    render(<Card>Card content</Card>);
+    const card = screen.getByText('Card content').closest('div');
+    expect(card).toHaveClass('hover:shadow-md');
+  });
+
+  it('has reduced motion fallbacks for hover effects', () => {
+    render(<Card lift>Card content</Card>);
+    const card = screen.getByText('Card content').closest('div');
+    const className = card?.className ?? '';
+    expect(className).toContain('motion-reduce:hover:translate-y-0');
+    expect(className).toContain('motion-reduce:hover:shadow-none');
+    expect(className).toContain('motion-reduce:transition-none');
+  });
 });

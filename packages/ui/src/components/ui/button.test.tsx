@@ -2,6 +2,10 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { Button } from './button';
 
+function hoverClasses(button: HTMLElement) {
+  return button.className;
+}
+
 describe('Button', () => {
   it('renders button with default variant', () => {
     render(<Button>Click me</Button>);
@@ -74,5 +78,35 @@ describe('Button', () => {
     render(<Button loading disabled>Double Disabled</Button>);
     const button = screen.getByRole('button', { name: 'Double Disabled' });
     expect(button).toBeDisabled();
+  });
+
+  it('has subtle hover lift and scale micro-interactions', () => {
+    render(<Button>Hover Me</Button>);
+    const button = screen.getByRole('button', { name: 'Hover Me' });
+    const classes = hoverClasses(button);
+    expect(classes).toContain('hover:scale-[1.02]');
+    expect(classes).toContain('hover:-translate-y-0.5');
+    expect(classes).toContain('active:scale-[0.98]');
+  });
+
+  it('has reduced motion fallbacks for hover and active states', () => {
+    render(<Button>Reduced Motion</Button>);
+    const button = screen.getByRole('button', { name: 'Reduced Motion' });
+    const classes = hoverClasses(button);
+    expect(classes).toContain('motion-reduce:hover:scale-100');
+    expect(classes).toContain('motion-reduce:active:scale-100');
+    expect(classes).toContain('motion-reduce:transition-none');
+  });
+
+  it('applies hover shadow to default variant', () => {
+    render(<Button>Default</Button>);
+    const button = screen.getByRole('button', { name: 'Default' });
+    expect(button.className).toContain('hover:shadow-sm');
+  });
+
+  it('applies hover shadow to gradient variant', () => {
+    render(<Button variant="gradient">Gradient</Button>);
+    const button = screen.getByRole('button', { name: 'Gradient' });
+    expect(button.className).toContain('hover:shadow-md');
   });
 });

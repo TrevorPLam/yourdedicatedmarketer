@@ -130,3 +130,22 @@ export const LoadingWithGradient: Story = {
     children: 'Submitting...',
   },
 };
+
+export const HoverEffects: Story = {
+  render: () => (
+    <div className="flex flex-wrap gap-4">
+      <Button variant="default">Hover Lift</Button>
+      <Button variant="outline">Outline Hover</Button>
+      <Button variant="gradient">Gradient Hover</Button>
+      <Button variant="glow">Glow Hover</Button>
+      <Button variant="link">Link Hover</Button>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Buttons use subtle scale, lift, brightness, and shadow on hover, with an active press state and reduced-motion fallbacks.',
+      },
+    },
+  },
+};

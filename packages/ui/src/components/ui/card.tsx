@@ -30,8 +30,9 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         <div
           ref={ref}
           className={cn(
-            "rounded-lg p-[1px] transition-all duration-300 ease-out",
+            "rounded-lg p-[1px] shadow-sm transition-all duration-300 ease-out hover:shadow-md",
             lift && "hover:-translate-y-1 hover:shadow-lg",
+            "motion-reduce:hover:translate-y-0 motion-reduce:hover:shadow-none motion-reduce:transition-none",
             className
           )}
           style={gradientStyles[variant]}
@@ -39,8 +40,8 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         >
           <div
             className={cn(
-              "rounded-lg border bg-card text-card-foreground shadow-sm h-full w-full",
-              "border-transparent"
+              "rounded-lg border bg-card text-card-foreground shadow-none h-full w-full transition-all duration-300 ease-out",
+              "border-transparent hover:brightness-[1.02]"
             )}
             style={innerShadowStyle}
           >
@@ -54,8 +55,9 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       <div
         ref={ref}
         className={cn(
-          "rounded-lg border bg-card text-card-foreground shadow-sm transition-all duration-300 ease-out",
+          "rounded-lg border bg-card text-card-foreground shadow-sm transition-all duration-300 ease-out hover:border-primary/20 hover:brightness-[1.02] hover:shadow-md",
           lift && "hover:-translate-y-1 hover:shadow-lg",
+          "motion-reduce:hover:translate-y-0 motion-reduce:hover:shadow-none motion-reduce:transition-none",
           className
         )}
         style={innerShadowStyle}

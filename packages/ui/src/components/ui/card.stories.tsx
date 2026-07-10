@@ -198,3 +198,44 @@ export const CombinedEffects: Story = {
     </Card>
   ),
 };
+
+export const HoverEffects: Story = {
+  render: () => (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <Card className="w-[300px]" lift>
+        <CardHeader>
+          <CardTitle>Lift + Shadow</CardTitle>
+          <CardDescription>Hover to see lift and shadow deepen</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <p>Uses transform and box-shadow for a subtle elevation effect.</p>
+        </CardContent>
+      </Card>
+      <Card className="w-[300px]">
+        <CardHeader>
+          <CardTitle>Subtle Hover</CardTitle>
+          <CardDescription>Hover for border and shadow changes</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <p>Border color, brightness, and shadow transition smoothly.</p>
+        </CardContent>
+      </Card>
+      <Card className="w-[300px]" variant="gradient-primary" lift>
+        <CardHeader>
+          <CardTitle>Gradient Hover</CardTitle>
+          <CardDescription>Hover for lift and outer shadow</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <p>Gradient border with lift and shadow micro-interactions.</p>
+        </CardContent>
+      </Card>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Cards use subtle lift, shadow, border, and brightness transitions on hover. All motion is disabled when prefers-reduced-motion is active.',
+      },
+    },
+  },
+};

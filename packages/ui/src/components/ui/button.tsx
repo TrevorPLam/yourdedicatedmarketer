@@ -6,26 +6,26 @@ import { Loader2 } from "lucide-react"
 import { cn } from "#lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 disabled:transform-none disabled:hover:scale-100 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98] active:duration-50 motion-reduce:hover:scale-100 motion-reduce:active:scale-100 motion-reduce:hover:translate-y-0 motion-reduce:transition-none",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        default: "bg-primary text-primary-foreground hover:bg-primary/90 hover:brightness-105 hover:shadow-sm",
         destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90 hover:brightness-105 hover:shadow-sm",
         outline:
-          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+          "border border-input bg-background hover:bg-accent hover:text-accent-foreground hover:shadow-sm",
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80 hover:brightness-105 hover:shadow-sm",
+        ghost: "hover:bg-accent hover:text-accent-foreground hover:shadow-sm",
+        link: "text-primary underline-offset-4 hover:underline hover:scale-100 active:scale-100",
         gradient:
-          "bg-gradient-primary text-primary-foreground hover:opacity-90 transition-opacity",
+          "bg-gradient-primary text-primary-foreground hover:opacity-90 hover:shadow-md",
         "gradient-accent":
-          "bg-gradient-accent text-primary-foreground hover:opacity-90 transition-opacity",
+          "bg-gradient-accent text-primary-foreground hover:opacity-90 hover:shadow-md",
         "gradient-secondary":
-          "bg-gradient-secondary text-primary-foreground hover:opacity-90 transition-opacity",
-        glow: "bg-primary text-primary-foreground hover:shadow-lg hover:shadow-primary/50 transition-shadow duration-200",
+          "bg-gradient-secondary text-primary-foreground hover:opacity-90 hover:shadow-md",
+        glow: "bg-primary text-primary-foreground hover:shadow-lg hover:shadow-primary/50 hover:brightness-105 transition-shadow duration-200",
       },
       size: {
         default: "h-10 px-4 py-2",
@@ -59,8 +59,12 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         aria-busy={loading}
         {...props}
       >
-        {loading && <Loader2 className="animate-spin" />}
-        {children}
+        {asChild ? children : (
+          <>
+            {loading && <Loader2 className="animate-spin" />}
+            {children}
+          </>
+        )}
       </Comp>
     )
   }
