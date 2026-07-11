@@ -5,13 +5,19 @@ import React from 'react';
 import { ThemeProvider } from '@repo/ui';
 import { Toaster } from 'sonner';
 import { GA4Script } from '@/components/analytics/ga4-script';
+import { WebVitals } from '@/components/analytics/web-vitals';
 import { Analytics } from '@vercel/analytics/next';
 
-const inter = Inter({ subsets: ['latin'] });
-const spaceGrotesk = Space_Grotesk({ 
+const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-display'
+  variable: '--font-inter',
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-space-grotesk',
 });
 
 export const metadata: Metadata = {
@@ -25,8 +31,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} ${spaceGrotesk.className}`}>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${spaceGrotesk.variable}`}>
+      <body className="font-sans">
+        <WebVitals />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
